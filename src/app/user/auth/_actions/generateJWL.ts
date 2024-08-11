@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 
 import { typeUserVisible } from "@/types/user";
-import { isErrored } from "stream";
 
 function generateJwtToken(user: typeUserVisible): string {
 	const secretKey = process.env.JWT_SECRET; // Replace with your own secret key

@@ -56,7 +56,7 @@ export function validateSignup(data: any) {
 				{} as { [key: string]: string }
 			);
 
-			console.log(formErrors);
+			
 
 			return formErrors;
 		}

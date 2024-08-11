@@ -1,56 +1,108 @@
 "use server";
-
 import { PrismaClient } from "@prisma/client";
+
+import { typeUserVisible } from "@/types/user";
 
 const prisma = new PrismaClient();
 
-export default async function getAllUsers() {
-  const users = await prisma.user.findMany();
+export default async function getAllUsers(): Promise<typeUserVisible[]> {
+	const users = await prisma.user.findMany();
 
-  //strip out sensitive data
-  users.forEach((user: { password: any }) => {
-    delete user.password;
-  });
+	if (!users) {
+		return [];
+	}
 
-  return users;
+	let usersVisible: typeUserVisible[] = [];
+
+	users.forEach((user) => {
+		//change the type of user to typeUserVisible
+		const userVisible: typeUserVisible = {
+			id: user.id,
+			name: user.name,
+			email: user.email,
+			department: user.department,
+			profilePic: user.profilePic,
+			permissions: user.permissions,
+		};
+
+		usersVisible.push(userVisible);
+	});
+
+	return usersVisible;
 }
 
-export async function getAUser(id: number) {
-  const user = await prisma.user.findUnique({
-    where: {
-      id: id,
-    },
-  });
+export async function getAUser(id: string): Promise<typeUserVisible | null> {
+	const user = await prisma.user.findUnique({
+		where: {
+			id: id,
+		},
+	});
 
-  //strip out sensitive data
-  delete user.password;
+	if (!user) {
+		return null;
+	}
 
-  return user;
+	//change the type of user to typeUserVisible
+	const userVisible: typeUserVisible = {
+		id: user.id,
+		name: user.name,
+		email: user.email,
+		department: user.department,
+		profilePic: user.profilePic,
+		permissions: user.permissions,
+	};
+
+	return userVisible;
 }
 
-export async function updateUser(id: number, data: any) {
-  const user = await prisma.user.update({
-    where: {
-      id: id,
-    },
-    data: data,
-  });
+export async function updateUser(
+	id: string,
+	data: any
+): Promise<typeUserVisible | null> {
+	const user = await prisma.user.update({
+		where: {
+			id: id,
+		},
+		data: data,
+	});
 
-  //strip out sensitive data
-  delete user.password;
+	if (!user) {
+		return null;
+	}
 
-  return user;
+	//change the type of user to typeUserVisible
+	const userVisible: typeUserVisible = {
+		id: user.id,
+		name: user.name,
+		email: user.email,
+		department: user.department,
+		profilePic: user.profilePic,
+		permissions: user.permissions,
+	};
+
+	return userVisible;
 }
 
-export async function deleteUser(id: number) {
-  const user = await prisma.user.delete({
-    where: {
-      id: id,
-    },
-  });
+export async function deleteUser(id: string): Promise<typeUserVisible | null> {
+	const user = await prisma.user.delete({
+		where: {
+			id: id,
+		},
+	});
 
-  //strip out sensitive data
-  delete user.password;
+	if (!user) {
+		return null;
+	}
 
-  return user;
+	//change the type of user to typeUserVisible
+	const userVisible: typeUserVisible = {
+		id: user.id,
+		name: user.name,
+		email: user.email,
+		department: user.department,
+		profilePic: user.profilePic,
+		permissions: user.permissions,
+	};
+
+	return userVisible;
 }
