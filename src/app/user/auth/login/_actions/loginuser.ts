@@ -3,7 +3,7 @@
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
-import generateJwtToken from "./../../_actions/generateJWL";
+import generateJwtToken from "../../_actions/generateJWT";
 
 const prisma = new PrismaClient();
 
