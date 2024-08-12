@@ -5,7 +5,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const srcDir = "/home/lobst/jwl_nextjs_auth/src/";
+const srcDir = "./src/";
 
 let permissions = [];
 
