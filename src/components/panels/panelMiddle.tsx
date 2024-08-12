@@ -9,12 +9,12 @@ type PanelProps = {
 	className?: string;
 };
 
-const Panel: React.FC<PanelProps> = (props) => {
+const PanelMiddle: React.FC<PanelProps> = (props) => {
 	return (
 		<div className="flex h-screen items-center justify-center">
 			<div
 				className={cn(
-					`h-3/6 w-3/6 rounded-2xl bg-white dark:text-slate-900`,
+					`w-3/6 rounded-2xl bg-white dark:text-slate-900`,
 					props.className
 				)}
 			>
@@ -30,4 +30,4 @@ const Panel: React.FC<PanelProps> = (props) => {
 	);
 };
 
-export default Panel;
+export default PanelMiddle;

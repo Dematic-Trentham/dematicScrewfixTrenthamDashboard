@@ -1,65 +1,40 @@
-"use client";
-import { useEffect, useState } from "react";
+"use server";
+import { env } from "process";
+
+import { getCookies } from "next-client-cookies/server";
 
 import { decodeJWT } from "@/utils/decodeJWT";
-import { typeUserVisible } from "@/types/user";
+//import { typeUserVisible } from "@/types/user";
 
-const useUser = () => {
-	const [user, setUser] = useState<typeUserVisible | null>(null);
+const getUser = async () => {
+	const cookies = getCookies();
 
-	useEffect(() => {
-		//is this on the client?
-		if (typeof window === "undefined") {
-			return;
-		}
+	//get the cookie
+	const cookie = cookies.get("user-token");
 
-		//listen for storage changes
-		const listenStorageChange = () => {
-			const user = getUser();
-
-			if (!user) {
-				setUser(null);
-			}
-
-			setUser(user);
-		};
-
-		listenStorageChange();
-		window.addEventListener("storage", listenStorageChange);
-
-		return () => {
-			window.removeEventListener("storage", listenStorageChange);
-		};
-	}, []);
-
-	return { user };
-};
-
-const getUser = () => {
-	//is this on the client?
-	if (typeof window === "undefined") {
-		return;
-	}
-
-	let token = localStorage.getItem("token");
-
-	if (!token) {
+	//if no cookie return null
+	if (!cookie) {
 		return null;
 	}
 
-	const user = decodeJWT(token);
+	//decode the JWT
+	const user = decodeJWT(cookie);
 
+	//if the JWT is invalid return null
+	if (!user) {
+		return null;
+	}
+
+	//if expired return null
 	if (user.exp < Date.now() / 1000) {
-		localStorage.removeItem("token");
-
 		return null;
 	}
 
 	return user;
 };
 
-const isLoggedIn = () => {
-	const user = getUser();
+const isLoggedIn = async () => {
+	const user = await getUser();
 
 	if (!user) {
 		return false;
@@ -68,14 +43,20 @@ const isLoggedIn = () => {
 	return true;
 };
 
-const hasPermission = (permission: string) => {
-	const user = getUser();
+const hasPermission = async (permission: string) => {
+	const user = await getUser();
 
 	if (!user || !user.permissions || typeof user.permissions !== "string") {
 		return false;
 	}
 
 	const permissions = user.permissions.split(",");
+
+	console.log(env.admin_allowed_all_pages);
+
+	if (env.admin_allowed_all_pages === "true" && permissions.includes("admin")) {
+		return true;
+	}
 
 	if (!permissions.includes(permission)) {
 		return false;
@@ -84,4 +65,4 @@ const hasPermission = (permission: string) => {
 	return true;
 };
 
-export { useUser, getUser, isLoggedIn, hasPermission };
+export { getUser, isLoggedIn, hasPermission };

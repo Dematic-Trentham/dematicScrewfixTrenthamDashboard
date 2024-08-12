@@ -12,7 +12,7 @@ const HorizontalBar: React.FC<HorizontalBarProps> = ({ width, styles }) => {
 		<div
 			className={cn(
 				styles,
-				"ml-0 h-1 w-5 rounded-r-full bg-blue-500 opacity-50"
+				"ml-0 h-1 w-10 rounded-r-full bg-blue-500 opacity-50"
 			)}
 			style={{ width }}
 		/>

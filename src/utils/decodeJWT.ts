@@ -4,9 +4,10 @@ export function decodeJWT(token: string) {
 	}
 	const base64Url = token.split(".")[1];
 	const base64 = base64Url.replace("-", "+").replace("_", "/");
-	const object = JSON.parse(window.atob(base64));
+	const decoded = atob(base64);
+	const decodedObject = JSON.parse(decoded);
 
-	return object;
+	return decodedObject;
 }
 
 export default {};

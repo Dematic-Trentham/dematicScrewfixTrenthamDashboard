@@ -2,18 +2,18 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
+import { deleteCookie, setCookie } from "cookies-next";
 
 import Spinner from "@/components/visual/spinner";
-import Panel from "@/components/panels/panel";
+import Panel from "@/components/panels/panelMiddle";
 
 const LogoutPage: React.FC = () => {
 	const router = useRouter();
 
 	useEffect(() => {
-		// Delete user's token from local storage
-		localStorage.removeItem("token");
-
-		window.dispatchEvent(new Event("storage"));
+		//delete the token as a cookie
+		deleteCookie("user-token");
+		setCookie("reloadNeeded", "true");
 
 		// Get the return URL from the query parameters
 		const returnUrl = new URLSearchParams(location.search).get("returnUrl");
@@ -29,15 +29,7 @@ const LogoutPage: React.FC = () => {
 			progress: undefined,
 		});
 
-		// Redirect to the dashboard
-		if (!returnUrl) {
-			router.push("/");
-
-			return;
-		}
-
-		// Redirect to the return path
-		router.push(returnUrl);
+		router.back();
 	});
 
 	return (

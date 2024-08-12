@@ -11,7 +11,7 @@ interface typeUser {
 }
 
 interface typeUserVisible {
-	id: string | null;
+	id: string | null | undefined;
 	name: string;
 	email: string;
 	department: string | null;
@@ -19,4 +19,9 @@ interface typeUserVisible {
 	permissions: string;
 }
 
-export type { typeUser, typeUserVisible };
+interface typeUserPermissions {
+	id: string;
+	permissions: string;
+}
+
+export type { typeUser, typeUserVisible, typeUserPermissions };

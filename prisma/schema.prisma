@@ -35,3 +35,9 @@ model User {
   updatedAt   DateTime @updatedAt
   permissions String   @default("")
 }
+
+model UserPermissions {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+}

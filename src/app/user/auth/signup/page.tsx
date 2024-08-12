@@ -5,11 +5,12 @@ import { Button } from "@nextui-org/button";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useRouter, useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
+import { setCookie } from "cookies-next";
 
 import { validateSignup } from "./_util/validation";
 import signupUser from "./_actions/signupuser";
 
-import Panel from "@/components/panels/panel";
+import PanelMiddle from "@/components/panels/panelMiddle";
 
 const Signup = () => {
 	const returnPath = useSearchParams().get("returnPath");
@@ -70,20 +71,15 @@ const Signup = () => {
 				progress: undefined,
 			});
 
-			//set the token in local storage
-			localStorage.setItem("token", result.token);
-			window.dispatchEvent(new Event("storage"));
+			//set the token as a cookie
+			setCookie("user-token", result.token, {
+				maxAge: 60 * 60 * 24 * 7, // 1 week
+			});
+			setCookie("reloadNeeded", "true");
 
 			setIsLoading(false);
 
-			if (!returnPath) {
-				router.push("/");
-
-				return;
-			}
-
-			// Redirect to the return path
-			router.push(returnPath);
+			router.back();
 		} else {
 			setError(
 				result as {
@@ -108,7 +104,7 @@ const Signup = () => {
 		setIsVisibleConfirmPassword(!isVisibleConfirmPassword);
 
 	return (
-		<Panel>
+		<PanelMiddle>
 			<form onSubmit={onSubmit}>
 				<div className="flex-col gap-4 space-y-2">
 					<div className="flex w-full flex-col md:flex-nowrap">
@@ -200,7 +196,7 @@ const Signup = () => {
 					</div>
 				</div>
 			</form>
-		</Panel>
+		</PanelMiddle>
 	);
 };
 

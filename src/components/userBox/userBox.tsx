@@ -1,30 +1,23 @@
-"use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { FaAngleDown, FaUserAstronaut } from "react-icons/fa";
 import Link from "next/link";
 
 import HorizontalBar from "../visual/horizontalBar";
+import HoverPopup from "../visual/hoverPopupUserBox";
 
-import { useUser } from "@/utils/getUser";
+import { getUser } from "@/utils/getUser";
 
 interface UserBoxProps {}
 
-const UserBox: React.FC<UserBoxProps> = () => {
-	const [returnPath, setReturnPath] = useState("");
-	const [isShowing, setIsShowing] = useState(false);
-	const { user } = useUser();
+const UserBox: React.FC<UserBoxProps> = async () => {
+	const user = await getUser();
 
-	useEffect(() => {
-		//get the return URL
-		setReturnPath(encodeURIComponent(window.location.pathname));
-	}, []);
+	//console.log(user);
 
 	//if no user is logged in show the login button
 	if (!user) {
 		return (
-			<div
-				className={`flex w-56 flex-wrap transition-all duration-500 ${isShowing ? "bg-slate-400" : ""}`}
-			>
+			<div className={`flex w-56 flex-wrap transition-all duration-500`}>
 				<div className="p-1">
 					<div className="h-14 rounded-full bg-orange-700 p-3">
 						<FaUserAstronaut className="h-full w-full" />
@@ -35,17 +28,11 @@ const UserBox: React.FC<UserBoxProps> = () => {
 					<div>Not Logged In</div>
 					<div>
 						Please{" "}
-						<Link
-							className="hover:underline"
-							href={`/user/auth/login?returnPath=${returnPath}`}
-						>
+						<Link className="hover:underline" href={`/user/auth/login`}>
 							Login
 						</Link>{" "}
 						Or{" "}
-						<Link
-							className="hover:underline"
-							href={`/user/auth/signup?returnPath=${returnPath}`}
-						>
+						<Link className="hover:underline" href={`/user/auth/signup`}>
 							Sign Up
 						</Link>
 					</div>
@@ -55,9 +42,7 @@ const UserBox: React.FC<UserBoxProps> = () => {
 	}
 
 	const userboxTrigger = (
-		<div
-			className={`flex w-56 flex-wrap transition-all duration-500 ${isShowing ? "bg-slate-400" : ""}`}
-		>
+		<div className={`flex w-56 flex-wrap transition-all duration-500`}>
 			<div className="p-1">
 				{user.profilePic ? (
 					<img
@@ -82,33 +67,22 @@ const UserBox: React.FC<UserBoxProps> = () => {
 		</div>
 	);
 
-	return (
-		<div
-			className=""
-			onMouseEnter={() => setIsShowing(true)}
-			onMouseLeave={() => setIsShowing(false)}
-		>
-			{userboxTrigger}
-
-			<div
-				className={`fixed right-1 top-16 w-56 rounded-b bg-slate-400 p-2 shadow-md transition-all duration-500 ${
-					isShowing ? "opacity-100" : "opacity-0"
-				}`}
-			>
-				<div className="flex flex-col items-center justify-center space-y-2 text-sm">
-					<HorizontalBar />
-					<div className="text-center">
-						<Link href="/user/profile">My Profile</Link>
-					</div>
-					<HorizontalBar />
-					<div className="text-center">
-						<Link href={`/user/auth/logout?returnPath=${returnPath}`}>
-							Logout
-						</Link>
-					</div>
-				</div>
+	const userboxContent = (
+		<div className="flex flex-col items-center justify-center space-y-2 text-sm">
+			<HorizontalBar />
+			<div className="text-center">
+				<Link href="/user/profile">My Profile</Link>
+			</div>
+			<HorizontalBar />
+			<div className="text-center">
+				<Link href={`/user/auth/logout`}>Logout</Link>
 			</div>
 		</div>
+	);
+
+	//if the user is logged in show the user box
+	return (
+		<HoverPopup itemToHover={userboxTrigger} itemToPopUp={userboxContent} />
 	);
 };
 
