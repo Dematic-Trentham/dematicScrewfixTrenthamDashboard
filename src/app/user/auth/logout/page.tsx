@@ -15,9 +15,6 @@ const LogoutPage: React.FC = () => {
 		deleteCookie("user-token");
 		setCookie("reloadNeeded", "true");
 
-		// Get the return URL from the query parameters
-		const returnUrl = new URLSearchParams(location.search).get("returnUrl");
-
 		//toast the user
 		toast("Logout success", {
 			position: "bottom-right",
