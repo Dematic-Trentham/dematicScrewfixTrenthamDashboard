@@ -2,6 +2,7 @@ import React from "react";
 import TableCell from "@mui/material/TableCell";
 import TableRow from "@mui/material/TableRow";
 import { FaCogs, FaUserAstronaut } from "react-icons/fa";
+import { Button } from "@nextui-org/button";
 import Link from "next/link";
 
 import { typeUserVisible } from "@/types/user"; // Assuming the User type is defined in a module named "types"
@@ -10,6 +11,8 @@ import HoverPopup from "@/components/visual/hoverPopupFloat";
 interface UserRowProps {
 	key: string | null;
 	user: typeUserVisible;
+	copyPermissions: (id: string) => void;
+	pastePermissions: (id: string) => void;
 }
 
 const UserRow = (props: UserRowProps) => {
@@ -46,15 +49,38 @@ const UserRow = (props: UserRowProps) => {
 							</button>
 						}
 						itemToPopUp={
-							<div className="flex space-x-2 rounded-full border-1 border-black bg-neutral-200 px-4 py-2 dark:bg-neutral-800">
-								<Link
-									className="fle text-blue-500 hover:text-blue-700"
-									href={"/admin/users/" + props.user.id}
+							<div className="flex flex-col space-y-2 rounded-xl border-1 border-black bg-neutral-200 p-4 dark:bg-neutral-800">
+								<Button className="w-52">
+									<Link
+										className="fle text-blue-500 hover:text-blue-700"
+										href={"/admin/users/" + props.user.id}
+									>
+										Edit
+									</Link>
+								</Button>
+								<Button
+									className="w-52"
+									onClick={() => {
+										if (props.user.id) {
+											props.copyPermissions(props.user.id);
+										}
+									}}
 								>
-									Edit
-								</Link>
+									Copy Permissions
+								</Button>
+								<Button
+									className="w-52"
+									onClick={() => {
+										if (props.user.id) {
+											props.pastePermissions(props.user.id);
+										}
+									}}
+								>
+									Paste Permissions
+								</Button>
 							</div>
 						}
+						xOffset={-200}
 					/>
 				}
 			</TableCell>
