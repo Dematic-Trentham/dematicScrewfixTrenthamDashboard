@@ -52,8 +52,6 @@ const hasPermission = async (permission: string) => {
 
 	const permissions = user.permissions.split(",");
 
-	console.log(env.admin_allowed_all_pages);
-
 	if (env.admin_allowed_all_pages === "true" && permissions.includes("admin")) {
 		return true;
 	}
