@@ -21,6 +21,7 @@ import PanelTop from "@/components/panels/panelTop";
 import { typeUserVisible } from "@/types/user";
 import YesNoBox from "@/components/visual/yesNoBox";
 import updateUserToken from "@/app/user/auth/_actions/updateUserToken";
+import { makeFirstLetterUpperCase } from "@/utils/strings";
 
 type AdminUserContentProps = {
 	user: string;
@@ -393,7 +394,3 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 };
 
 export default AdminUserContent;
-
-function makeFirstLetterUpperCase(string: string) {
-	return string.charAt(0).toUpperCase() + string.slice(1);
-}
