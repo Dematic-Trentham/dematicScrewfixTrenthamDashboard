@@ -35,6 +35,8 @@ const AdminUsersContent = () => {
 			//get data from server
 			const users = await getAllUsers();
 
+			console.log(users);
+
 			setUsers(users);
 			setLoading(false);
 		}
@@ -127,6 +129,53 @@ const AdminUsersContent = () => {
 		setLoading(false);
 	}
 
+	async function setDisabled(id: string, disabled: boolean) {
+		setLoading(true);
+
+		//get user data from server
+		const user = await getAUser(id);
+
+		if (!user) {
+			setErrors("User not found for disabling");
+			setLoading(false);
+
+			return;
+		}
+
+		//update the user with the new permissions
+		const updatedUser = {
+			...user,
+			disabled: disabled,
+		};
+
+		//save the user to the server
+		const result = await updateUser(id, updatedUser);
+
+		if (!result) {
+			setErrors("Error saving disabled status");
+			setLoading(false);
+
+			return;
+		}
+
+		//get the updated user list
+		const users = await getAllUsers();
+
+		if (!users) {
+			setErrors("Error getting users");
+			setLoading(false);
+
+			return;
+		}
+
+		setUsers(users);
+
+		setErrors("");
+
+		toast.success("User disabled status updated");
+		setLoading(false);
+	}
+
 	if (loading) {
 		return (
 			<PanelTop className="h-auto w-11/12" title="User Administration">
@@ -203,6 +252,7 @@ const AdminUsersContent = () => {
 									key={user.id ?? null}
 									copyPermissions={copyPermissions}
 									pastePermissions={pastePermissions}
+									setDisabled={setDisabled}
 									user={user}
 								/>
 							))}
@@ -221,6 +271,10 @@ const AdminUsersContent = () => {
 					<div>
 						Total Admins (green) :
 						{users.filter((user) => user.permissions.includes("admin")).length}
+					</div>
+					<div>
+						Total Disabled (Gray) :
+						{users.filter((user) => user.disabled).length}
 					</div>
 				</div>
 			</PanelTop>

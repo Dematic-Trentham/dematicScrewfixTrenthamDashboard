@@ -40,6 +40,7 @@ export async function getUser(
 		department: userResult.department,
 		profilePic: userResult.profilePic,
 		permissions: userResult.permissions,
+		disabled: userResult.disabled,
 	};
 
 	//get the user data from the server
@@ -102,6 +103,7 @@ export async function modifyUser(
 			department: user.department || "", // Provide a default value if department is null
 			profilePic: user.profilePic || "", // Provide a default value if profilePic is null
 			permissions: user.permissions,
+			disabled: user.disabled,
 		},
 	});
 

@@ -32,7 +32,10 @@ export default async function getAllUsers(): Promise<typeUserVisible[]> {
 			department: user.department,
 			profilePic: user.profilePic,
 			permissions: user.permissions,
+			disabled: user.disabled,
 		};
+
+		console.log(userVisible);
 
 		usersVisible.push(userVisible);
 	});
@@ -62,6 +65,7 @@ export async function getAUser(id: string): Promise<typeUserVisible | null> {
 		department: user.department,
 		profilePic: user.profilePic,
 		permissions: user.permissions,
+		disabled: user.disabled,
 	};
 
 	return userVisible;
@@ -93,6 +97,7 @@ export async function updateUser(
 		department: user.department,
 		profilePic: user.profilePic,
 		permissions: user.permissions,
+		disabled: user.disabled,
 	};
 
 	return userVisible;
@@ -121,6 +126,7 @@ export async function deleteUser(id: string): Promise<typeUserVisible | null> {
 		department: user.department,
 		profilePic: user.profilePic,
 		permissions: user.permissions,
+		disabled: user.disabled,
 	};
 
 	return userVisible;

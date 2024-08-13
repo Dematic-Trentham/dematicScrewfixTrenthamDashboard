@@ -11,6 +11,7 @@ import HoverPopup from "@/components/visual/hoverPopupFloat";
 interface UserRowProps {
 	key: string | null;
 	user: typeUserVisible;
+	setDisabled(id: string, disabled: boolean): void;
 	copyPermissions: (id: string) => void;
 	pastePermissions: (id: string) => void;
 }
@@ -18,10 +19,11 @@ interface UserRowProps {
 const UserRow = (props: UserRowProps) => {
 	//does the user have the admin permission
 	const isAdmin = props.user.permissions.includes("admin");
+	const isDisabled = props.user.disabled;
 
 	return (
 		<TableRow
-			className={isAdmin ? "bg-green-300 dark:text-white" : "dark:text-white"}
+			className={`${isAdmin ? "bg-green-300" : ""} ${isDisabled ? "bg-gray-600" : ""}`}
 		>
 			<TableCell>
 				{props.user.profilePic ? (
@@ -50,14 +52,13 @@ const UserRow = (props: UserRowProps) => {
 						}
 						itemToPopUp={
 							<div className="flex flex-col space-y-2 rounded-xl border-1 border-black bg-neutral-200 p-4 dark:bg-neutral-800">
-								<Button className="w-52">
-									<Link
-										className="fle text-blue-500 hover:text-blue-700"
-										href={"/admin/users/" + props.user.id}
-									>
-										Edit
-									</Link>
-								</Button>
+								<Link
+									className="group relative z-0 box-border inline-flex h-10 w-52 min-w-20 select-none appearance-none items-center justify-center gap-2 overflow-hidden whitespace-nowrap rounded-medium bg-default px-4 text-small font-normal text-default-foreground subpixel-antialiased outline-none tap-highlight-transparent transition-transform-colors-opacity data-[focus-visible=true]:z-10 data-[pressed=true]:scale-[0.97] data-[hover=true]:opacity-hover data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-offset-2 data-[focus-visible=true]:outline-focus motion-reduce:transition-none [&>svg]:max-w-[theme(spacing.8)]"
+									href={"/admin/users/" + props.user.id}
+								>
+									Edit
+								</Link>
+
 								<Button
 									className="w-52"
 									onClick={() => {
@@ -77,6 +78,16 @@ const UserRow = (props: UserRowProps) => {
 									}}
 								>
 									Paste Permissions
+								</Button>
+								<Button
+									className="w-52"
+									onClick={() => {
+										if (props.user.id) {
+											props.setDisabled(props.user.id, !props.user.disabled);
+										}
+									}}
+								>
+									{props.user.disabled ? "Enable" : "Disable"} User
 								</Button>
 							</div>
 						}

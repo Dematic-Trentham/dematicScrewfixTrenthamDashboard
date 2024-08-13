@@ -291,6 +291,21 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 									))}
 							</div>
 						</div>
+						<div className="grid grid-cols-3 gap-2 rounded-xl bg-zinc-100 px-3 py-2 ps-2 dark:bg-zinc-800 dark:text-white">
+							<div className="flex justify-evenly space-x-2 text-sm text-zinc-600 dark:text-zinc-300">
+								<div> User Disabled</div>
+
+								<input
+									defaultChecked={user.disabled}
+									id="disabled"
+									name="disabled"
+									type="checkbox"
+									onChange={(e) => {
+										compareUser({ ...user, disabled: e.target.checked });
+									}}
+								/>
+							</div>
+						</div>
 
 						<div className="bg- flex flex-row items-center justify-evenly space-x-2 pt-2">
 							<Button

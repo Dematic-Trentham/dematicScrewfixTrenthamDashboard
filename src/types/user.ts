@@ -8,6 +8,7 @@ interface typeUser {
 	department: string | null;
 	profilePic: string;
 	permissions: string;
+	disabled: boolean;
 }
 
 interface typeUserVisible {
@@ -17,6 +18,7 @@ interface typeUserVisible {
 	department: string | null;
 	profilePic: string | null;
 	permissions: string;
+	disabled: boolean;
 }
 
 interface typeUserPermissions {
