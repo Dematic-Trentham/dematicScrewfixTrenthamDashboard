@@ -7,8 +7,6 @@ import Sidebarparentcomponent from "./sidebarparentcomponent";
 import Sidebaradmin from "./admin/sidebaradmin";
 
 const Sidebar = () => {
-	const isHidden = false;
-
 	return (
 		<SideMini>
 			<div>
@@ -31,7 +29,7 @@ const Sidebar = () => {
 							link="/blog"
 							text="blog"
 						/>
-						<Sidebaradmin isHidden={isHidden} />
+						<Sidebaradmin />
 					</nav>
 				</div>
 			</div>
