@@ -6,18 +6,21 @@ import { useEffect, useState } from "react";
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { toast } from "react-toastify";
+import { setCookie } from "cookies-next";
 
 import {
 	deleteUser,
 	getAllPermissions,
 	getUser as getUser2,
 	modifyUser,
+	uploadProfilePic,
 } from "./_actions/";
 
 import { getUser } from "@/utils/getUser";
 import PanelTop from "@/components/panels/panelTop";
 import { typeUserVisible } from "@/types/user";
 import YesNoBox from "@/components/visual/yesNoBox";
+import updateUserToken from "@/app/user/auth/_actions/updateUserToken";
 
 type AdminUserContentProps = {
 	user: string;
@@ -40,8 +43,6 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 	function compareUser(localNewUser: typeUserVisible) {
 		//set the new user
 		setNewUser(localNewUser);
-
-		console.log(localNewUser);
 
 		if (!user || !newUser) {
 			return;
@@ -91,9 +92,6 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 
 			setCurrentUser(currentUser);
 
-			console.log(user);
-			console.log(allPermissions);
-
 			if ("error" in user) {
 				setUser(null);
 				setNewUser(null);
@@ -102,12 +100,6 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 
 				return;
 			}
-
-			allPermissions.map((permission) =>
-				console.log(
-					permission.name + " " + user.permissions.includes(permission.name)
-				)
-			);
 
 			setAllPermissions(allPermissions);
 			setUser(user);
@@ -202,21 +194,64 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 							}}
 						/>
 
-						<Input
-							defaultValue={user.profilePic || ""}
-							disabled={isLoading}
-							id="profilePic"
-							label="Profile Picture"
-							name="profilePic"
-							placeholder="Enter a profile picture"
-							type="text"
-							onChange={(e) => {
-								compareUser({ ...user, profilePic: e.target.value });
-							}}
-						/>
+						<div className="rounded-xl bg-zinc-100 px-3 py-2 dark:bg-zinc-800 dark:text-white">
+							<div className="text-sm text-zinc-600 dark:text-zinc-300">
+								Profile Picture
+							</div>
+							<div className="flex items-center justify-between space-y-0 self-auto">
+								{user.profilePic ? (
+									<img
+										alt="User Profile"
+										className="size-36 rounded-full object-cover"
+										src={user.profilePic}
+									/>
+								) : (
+									<div className="size-36 rounded-full bg-orange-700 p-3">
+										<IoCloseCircleSharp className="h-full w-full" />
+									</div>
+								)}
 
-						<div>
-							<div>User Permissions</div>
+								<form className="flex flex-col items-end">
+									<input
+										name="fileUpload"
+										style={{ color: "transparent", width: "100px" }}
+										type="file"
+										onChange={async (e) => {
+											if (!e.target.files) {
+												return;
+											}
+
+											const file = e.target.files[0];
+											const formData = new FormData();
+
+											//add the file to the form
+											const fileData = new Blob([file], { type: file.type });
+
+											formData.append("fileUpload", file);
+											formData.append("fileData", fileData);
+
+											//add the username to the form data
+											formData.append("username", user.name);
+											formData.append("id", user.id ?? "");
+
+											// handle the formData here
+											const result = await uploadProfilePic(formData);
+
+											toast.success("Profile picture uploaded");
+
+											setCookie("user-token", result.token, {
+												maxAge: 60 * 60 * 24 * 7, // 1 week
+											});
+											setCookie("reloadNeeded", "true");
+										}}
+									/>
+								</form>
+							</div>
+						</div>
+						<div className="rounded-xl bg-zinc-100 px-3 py-2 dark:bg-zinc-800 dark:text-white">
+							<div className="text-sm text-zinc-600 dark:text-zinc-300">
+								User Permissions
+							</div>
 							<div className="grid grid-cols-3 gap-2 ps-2">
 								{allPermissions.map((permission) => (
 									<div key={permission.id} className="flex justify-evenly">
@@ -232,6 +267,7 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 												id={permission.id}
 												name={permission.name}
 												type="checkbox"
+												// eslint-disable-next-line @typescript-eslint/no-unused-vars
 												onChange={(e) => {
 													permissionsChanged();
 												}}
@@ -242,7 +278,7 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 							</div>
 						</div>
 
-						<div className="flex flex-row items-center justify-evenly space-x-2">
+						<div className="bg- flex flex-row items-center justify-evenly space-x-2 pt-2">
 							<Button
 								color="primary"
 								isDisabled={!saveRequired}
@@ -265,18 +301,24 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 
 									setUser(result);
 
-									toast.success("User saved");
+									toast.success("User saved", {
+										position: "bottom-right",
+										autoClose: 5000,
+										hideProgressBar: false,
+										closeOnClick: true,
+										pauseOnHover: true,
+										draggable: true,
+										progress: undefined,
+									});
 
 									//did we update ourselves?
 									if (newUser.id === currentUser?.id) {
-										toast.success(
-											"You updated yourself, logging out. please log back in to refresh your account",
-											{
-												autoClose: 10000,
-											}
-										);
-										//logout
-										router.push("/user/auth/logout");
+										const result = await updateUserToken();
+
+										setCookie("user-token", result.token, {
+											maxAge: 60 * 60 * 24 * 7, // 1 week
+										});
+										setCookie("reloadNeeded", "true");
 									}
 
 									setSaveRequired(false);

@@ -6,6 +6,7 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import { TableFooter } from "@mui/material";
 
 import getAllUsers from "./_actions/adminUsers";
 import UserRow from "./(components)/userRow";
@@ -32,15 +33,17 @@ const AdminUsersContent = () => {
 	if (loading) {
 		return (
 			<PanelTop className="h-auto w-11/12" title="User Administration">
-				<TableContainer className="sm:rounded-tl-2xl sm:rounded-tr-2xl">
+				<TableContainer className="rounded-2xl border">
 					<Table size="small" sx={{ minWidth: 650 }}>
 						<TableHead className="bg-slate-200 dark:bg-slate-600">
 							<TableRow>
-								<TableCell />
-								<TableCell>Username</TableCell>
-								<TableCell>Email</TableCell>
-								<TableCell>Department</TableCell>
-								<TableCell>Actions</TableCell>
+								<TableCell className="dark:text-slate-200">Profile</TableCell>
+								<TableCell className="dark:text-slate-200">Username</TableCell>
+								<TableCell className="dark:text-slate-200">Email</TableCell>
+								<TableCell className="dark:text-slate-200">
+									Department
+								</TableCell>
+								<TableCell className="dark:text-slate-200">Actions</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
@@ -48,8 +51,15 @@ const AdminUsersContent = () => {
 								<TableCell>Loading...</TableCell>
 								<TableCell />
 								<TableCell />
+								<TableCell />
+								<TableCell />
 							</TableRow>
 						</TableBody>
+						<TableFooter>
+							<TableRow className="bg-slate-200 dark:bg-slate-600">
+								<TableCell colSpan={5}> </TableCell>
+							</TableRow>
+						</TableFooter>
 					</Table>
 				</TableContainer>
 			</PanelTop>
@@ -59,15 +69,17 @@ const AdminUsersContent = () => {
 	return (
 		<>
 			<PanelTop className="h-auto w-11/12" title="User Administration">
-				<TableContainer className="sm:rounded-tl-2xl sm:rounded-tr-2xl sm:border">
+				<TableContainer className="rounded-2xl border">
 					<Table size="small" sx={{ minWidth: 650 }}>
 						<TableHead>
 							<TableRow className="bg-slate-200 dark:bg-slate-600">
-								<TableCell>Profile</TableCell>
-								<TableCell>Username</TableCell>
-								<TableCell>Email</TableCell>
-								<TableCell>Department</TableCell>
-								<TableCell>Actions</TableCell>
+								<TableCell className="dark:text-slate-200">Profile</TableCell>
+								<TableCell className="dark:text-slate-200">Username</TableCell>
+								<TableCell className="dark:text-slate-200">Email</TableCell>
+								<TableCell className="dark:text-slate-200">
+									Department
+								</TableCell>
+								<TableCell className="dark:text-slate-200">Actions</TableCell>
 							</TableRow>
 						</TableHead>
 						<TableBody>
@@ -75,6 +87,11 @@ const AdminUsersContent = () => {
 								<UserRow key={user.id ?? null} user={user} />
 							))}
 						</TableBody>
+						<TableFooter>
+							<TableRow className="bg-slate-200 dark:bg-slate-600">
+								<TableCell colSpan={5}> </TableCell>
+							</TableRow>
+						</TableFooter>
 					</Table>
 				</TableContainer>
 

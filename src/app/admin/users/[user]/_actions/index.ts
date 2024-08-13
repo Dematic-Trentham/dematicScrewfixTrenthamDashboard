@@ -2,6 +2,8 @@
 import { PrismaClient } from "@prisma/client";
 
 import { typeUserVisible } from "@/types/user";
+import uploadImage from "@/utils/uploadImage";
+import updateUserToken from "@/app/user/auth/_actions/updateUserToken";
 
 const prisma = new PrismaClient();
 
@@ -100,7 +102,6 @@ export async function modifyUser(
 
 //get all permissions from the server
 export async function getAllPermissions() {
-	console.log("getAllPermissions");
 	//get all permissions from the server
 	const permissions = await prisma.userPermissions.findMany();
 
@@ -111,4 +112,46 @@ export async function getAllPermissions() {
 	//	}
 	//return the users
 	return permissions;
+}
+
+//upload a user profile picture to the server
+export async function uploadProfilePic(
+	data: FormData
+): Promise<{ error?: string; token?: string }> {
+	const { error, filePath } = await uploadImage(data);
+
+	if (error) {
+		return { error };
+	}
+
+	if (!filePath) {
+		return { error: "File path is undefined" };
+	}
+
+	if (typeof data.get("id") !== "string") {
+		return { error: "Invalid id" };
+	}
+
+	const result = await prisma.user.update({
+		where: {
+			id: data.get("id") as string,
+		},
+		data: {
+			profilePic: filePath,
+		},
+	});
+
+	if (!result) {
+		return { error: "User not found" };
+	}
+
+	const newToken = await updateUserToken();
+
+	if ("error" in newToken) {
+		return { error: newToken.error };
+	}
+
+	const token = newToken.token;
+
+	return { token };
 }
