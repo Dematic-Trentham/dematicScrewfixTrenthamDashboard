@@ -30,7 +30,7 @@ const Sidebarparentcomponent = (props: SidebarparentcomponentProps) => {
 
 	const content = (
 		<div
-			className={`flex h-10 items-center px-0 py-0 text-gray-100 hover:bg-gray-600 ${highlighted ? "bg-gray-500" : ""}`}
+			className={`flex h-10 items-center px-0 py-0 text-gray-100 hover:bg-gray-600 ${highlighted ? "rounded-r-full bg-gray-500" : ""}`}
 			title={props.text}
 		>
 			<button className="w-10 justify-start px-3 py-0">{props.icon}</button>
