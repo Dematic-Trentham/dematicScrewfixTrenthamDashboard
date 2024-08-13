@@ -23,7 +23,7 @@ export default async function getAllUsers(): Promise<typeUserVisible[]> {
 
 	let usersVisible: typeUserVisible[] = [];
 
-	users.forEach((user) => {
+	users.forEach((user:typeUserVisible) => {
 		//change the type of user to typeUserVisible
 		const userVisible: typeUserVisible = {
 			id: user.id,

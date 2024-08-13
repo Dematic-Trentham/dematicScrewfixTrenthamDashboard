@@ -98,6 +98,7 @@ export default async function signupUser(data: any) {
 		department: creationResult.department,
 		profilePic: creationResult.profilePic,
 		permissions: creationResult.permissions,
+		disabled: creationResult.disabled,
 	};
 
 	//make jwt token
