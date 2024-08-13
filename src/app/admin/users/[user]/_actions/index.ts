@@ -4,6 +4,7 @@ import { PrismaClient } from "@prisma/client";
 import { typeUserVisible } from "@/types/user";
 import uploadImage from "@/utils/uploadImage";
 import updateUserToken from "@/app/user/auth/_actions/updateUserToken";
+import { hasPermission } from "@/utils/getUser";
 
 const prisma = new PrismaClient();
 
@@ -11,6 +12,10 @@ const prisma = new PrismaClient();
 export async function getUser(
 	id: string
 ): Promise<typeUserVisible | { error: string }> {
+	if (!hasPermission("admin")) {
+		return { error: "Permission denied" };
+	}
+
 	//if id is not a string, return an error
 	if (typeof id !== "string") {
 		return { error: "Invalid id" };
@@ -42,10 +47,16 @@ export async function getUser(
 }
 
 //delete a user from the server
-export async function deleteUser(id: string): Promise<boolean> {
+//delete a user from the server
+export async function deleteUser(
+	id: string
+): Promise<boolean | { error: string }> {
+	if (!hasPermission("admin")) {
+		return { error: "Permission denied" };
+	}
 	//if id is not a string, return an error
 	if (typeof id !== "string") {
-		return false;
+		return { error: "Invalid id" };
 	}
 
 	//delete the user
@@ -57,7 +68,7 @@ export async function deleteUser(id: string): Promise<boolean> {
 
 	//if the user is not found, return an error
 	if (!result) {
-		return false;
+		return { error: "User not found" };
 	}
 
 	//return true if the user was deleted
@@ -68,6 +79,9 @@ export async function deleteUser(id: string): Promise<boolean> {
 export async function modifyUser(
 	user: typeUserVisible
 ): Promise<typeUserVisible | { error: string }> {
+	if (!hasPermission("admin")) {
+		return { error: "Permission denied" };
+	}
 	//if user is not a typeUserVisible object, return an error
 	if (!user) {
 		return { error: "Invalid user" };
@@ -101,16 +115,23 @@ export async function modifyUser(
 }
 
 //get all permissions from the server
-export async function getAllPermissions() {
+
+export async function getAllPermissions(): Promise<
+	{ id: string; name: string }[] | { error: string }
+> {
+	if (!(await hasPermission("admin"))) {
+		return { error: "Permission denied" };
+	}
+
 	//get all permissions from the server
 	const permissions = await prisma.userPermissions.findMany();
 
-	//	console.log("permissions", permissions);
 	//if there are no permissions, return an error
-	//	if (!permissions) {
-	//		return { error: "No permissions found" };
-	//	}
-	//return the users
+	if (!permissions) {
+		return { error: "No permissions found" };
+	}
+
+	//return the permissions
 	return permissions;
 }
 
@@ -118,6 +139,10 @@ export async function getAllPermissions() {
 export async function uploadProfilePic(
 	data: FormData
 ): Promise<{ error?: string; token?: string }> {
+	if (!hasPermission("admin")) {
+		return { error: "Permission denied" };
+	}
+
 	const { error, filePath } = await uploadImage(data);
 
 	if (error) {
