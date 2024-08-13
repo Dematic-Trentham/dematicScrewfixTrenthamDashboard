@@ -3,7 +3,7 @@ import React, { useState, FormEvent } from "react";
 import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { setCookie } from "cookies-next";
 
@@ -13,8 +13,6 @@ import signupUser from "./_actions/signupuser";
 import PanelMiddle from "@/components/panels/panelMiddle";
 
 const Signup = () => {
-	const returnPath = useSearchParams().get("returnPath");
-
 	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState<boolean>(false);
