@@ -11,7 +11,8 @@
 		"prisma-merge": "npx prismix && prisma format && prisma generate && echo 'complete!'",
 		"prisma-pull": "npx prisma db pull",
 		"prisma-push": "npx prisma db push",
-		"make-permissions": "node ./tools/makePermissions.js"
+		"make-permissions": "node ./tools/makePermissions.js",
+		"update-all": "npm run prisma-merge && npm run prisma-push && npm run make-permissions"
 	},
 	"dependencies": {
 		"@auth/prisma-adapter": "^2.4.2",
