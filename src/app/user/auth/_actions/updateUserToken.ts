@@ -34,6 +34,7 @@ export default async function updateUserToken(): Promise<{
 		department: userFromDb.department,
 		profilePic: userFromDb.profilePic,
 		permissions: userFromDb.permissions,
+		disabled: userFromDb.disabled,
 	};
 
 	//make jwt token
