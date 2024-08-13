@@ -42,6 +42,7 @@ export async function getUser(): Promise<typeUserVisible | { error: string }> {
 		department: userResult.department,
 		profilePic: userResult.profilePic,
 		permissions: userResult.permissions,
+		disabled: userResult.disabled,
 	};
 
 	//get the user data from the server
