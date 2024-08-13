@@ -4,7 +4,6 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 import { validateSignup } from "../_util/validation";
-
 import generateJwtToken from "../../_actions/generateJWT";
 
 const prisma = new PrismaClient();
