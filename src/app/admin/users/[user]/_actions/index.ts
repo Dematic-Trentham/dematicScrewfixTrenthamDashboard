@@ -117,7 +117,7 @@ export async function modifyUser(
 //get all permissions from the server
 
 export async function getAllPermissions(): Promise<
-	{ id: string; name: string }[] | { error: string }
+	{ id: string; name: string; description: string | null }[] | { error: string }
 > {
 	if (!(await hasPermission("admin"))) {
 		return { error: "Permission denied" };

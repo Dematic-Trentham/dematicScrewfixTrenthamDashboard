@@ -31,7 +31,8 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 
 	const [user, setUser] = useState<typeUserVisible | null>(null);
 	const [allPermissions, setAllPermissions] = useState<
-		{ id: string; name: string }[] | { error: string }
+		| { id: string; name: string; description: string | null }[]
+		| { error: string }
 	>([]);
 	const [currentUser, setCurrentUser] = useState<typeUserVisible | null>(null);
 	const [error, setError] = useState<string | null>(null);
@@ -262,7 +263,11 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 
 								{Array.isArray(allPermissions) &&
 									allPermissions.map((permission) => (
-										<div key={permission.id} className="flex justify-evenly">
+										<div
+											key={permission.id}
+											className="flex justify-evenly"
+											title={permission.description ?? ""}
+										>
 											<div className="">
 												{makeFirstLetterUpperCase(permission.name)}
 											</div>

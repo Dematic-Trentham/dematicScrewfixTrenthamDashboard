@@ -145,7 +145,7 @@ export async function uploadProfilePic(
 }
 
 export async function getAllPermissions(): Promise<
-	{ id: string; name: string }[] | { error: string }
+	{ id: string; name: string; description: string | null }[] | { error: string }
 > {
 	//get all permissions from the server
 	const permissions = await prisma.userPermissions.findMany();

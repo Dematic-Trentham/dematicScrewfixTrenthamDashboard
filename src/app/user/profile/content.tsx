@@ -25,7 +25,8 @@ const ProfileContent = () => {
 	const [newUser, setNewUser] = useState<typeUserVisible | null>(null);
 	const [saveRequired, setSaveRequired] = useState(false);
 	const [allPermissions, setAllPermissions] = useState<
-		{ id: string; name: string }[] | { error: string }
+		| { id: string; name: string; description: string | null }[]
+		| { error: string }
 	>([]);
 
 	useEffect(() => {
@@ -197,7 +198,11 @@ const ProfileContent = () => {
 
 						{Array.isArray(allPermissions) &&
 							allPermissions.map((permission) => (
-								<div key={permission.id} className="flex justify-evenly">
+								<div
+									key={permission.id}
+									className="flex justify-evenly"
+									title={permission.description ?? ""}
+								>
 									<div className="">
 										{makeFirstLetterUpperCase(permission.name)}
 									</div>
