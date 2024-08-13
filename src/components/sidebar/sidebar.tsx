@@ -12,7 +12,7 @@ const Sidebar = () => {
 			<div>
 				{/* sidebar */}
 
-				<div className="flex flex-1 flex-col overflow-y-auto overflow-x-hidden">
+				<div className="flex h-max flex-1 flex-col overflow-y-auto overflow-x-hidden">
 					<nav className="flex-1 bg-gray-800">
 						<Sidebarparentcomponent
 							icon={<FaHome />}

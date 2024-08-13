@@ -54,7 +54,7 @@ const SideMini: React.FC<SideMiniProps> = ({ children }) => {
 				</div>
 			</div>
 
-			<div className="flex-1">{children}</div>
+			<div className="h-1 flex-1 overflow-auto">{children}</div>
 
 			<div className="bottom-0 flex-col bg-gray-900 pb-2 pt-3 text-white">
 				<ThemeSwitch />
