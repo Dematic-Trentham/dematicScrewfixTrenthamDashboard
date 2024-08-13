@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaBars } from "react-icons/fa";
+import { useCookies } from "next-client-cookies";
 
 import { ThemeSwitch } from "../theme-switch";
 
@@ -11,10 +12,25 @@ type SideMiniProps = {
 };
 
 const SideMini: React.FC<SideMiniProps> = ({ children }) => {
-	const [isMinimized, setIsMinimized] = useState(false);
+	const cookies = useCookies();
+
+	const [isMinimized, setIsMinimized] = useState(true);
+
+	useEffect(() => {
+		const sidebarIsMinimized = cookies.get("sidebarIsMinimized");
+
+		if (sidebarIsMinimized === "true") {
+			setIsMinimized(true);
+		} else {
+			setIsMinimized(false);
+		}
+	}, []);
 
 	const toggleMinimize = () => {
 		setIsMinimized(!isMinimized);
+
+		//make a string of the boolean "true" or "false"
+		cookies.set("sidebarIsMinimized", isMinimized ? "false" : "true");
 	};
 
 	return (
