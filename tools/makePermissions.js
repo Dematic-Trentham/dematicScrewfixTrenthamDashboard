@@ -45,6 +45,31 @@ function checkFile(filePath) {
 	});
 }
 
+async function checkUsersAndDelete() {
+	const allUsers = await prisma.user.findMany();
+
+	allUsers.forEach(async (user) => {
+		const usersPermissions = user.permissions.split(",");
+
+		let newPermissions = usersPermissions.filter((permission) => {
+			return permissions.includes(permission);
+		});
+
+		if (newPermissions.length !== usersPermissions.length) {
+			const result = await prisma.user.update({
+				where: {
+					id: user.id,
+				},
+				data: {
+					permissions: newPermissions.join(","),
+				},
+			});
+
+			console.log(`User permissions updated for ${result.email}`);
+		}
+	});
+}
+
 async function main() {
 	await readFilesRecursively(srcDir);
 
@@ -82,6 +107,8 @@ async function main() {
 
 		console.log(`Permission created: ${result.name}`);
 	});
+
+	await checkUsersAndDelete();
 
 	prisma.$disconnect();
 
