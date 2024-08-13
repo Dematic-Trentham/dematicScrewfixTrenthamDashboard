@@ -8,7 +8,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import { TableFooter } from "@mui/material";
 
-import getAllUsers from "./_actions/adminUsers";
+import getAllUsers from "./_actions";
 import UserRow from "./(components)/userRow";
 
 import { typeUserVisible } from "@/types/user"; // Assuming the User type is defined in a module named "types"

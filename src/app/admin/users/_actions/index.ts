@@ -2,11 +2,20 @@
 import { PrismaClient } from "@prisma/client";
 
 import { typeUserVisible } from "@/types/user";
+import { hasPermission } from "@/utils/getUser";
 
 const prisma = new PrismaClient();
 
 export default async function getAllUsers(): Promise<typeUserVisible[]> {
-	const users = await prisma.user.findMany();
+	if (!(await hasPermission("admin"))) {
+		return [];
+	}
+
+	const users = await prisma.user.findMany({
+		orderBy: {
+			createdAt: "asc",
+		},
+	});
 
 	if (!users) {
 		return [];
@@ -32,6 +41,9 @@ export default async function getAllUsers(): Promise<typeUserVisible[]> {
 }
 
 export async function getAUser(id: string): Promise<typeUserVisible | null> {
+	if (!(await hasPermission("admin"))) {
+		return null;
+	}
 	const user = await prisma.user.findUnique({
 		where: {
 			id: id,
@@ -59,6 +71,9 @@ export async function updateUser(
 	id: string,
 	data: any
 ): Promise<typeUserVisible | null> {
+	if (!(await hasPermission("admin"))) {
+		return null;
+	}
 	const user = await prisma.user.update({
 		where: {
 			id: id,
@@ -84,6 +99,10 @@ export async function updateUser(
 }
 
 export async function deleteUser(id: string): Promise<typeUserVisible | null> {
+	if (!(await hasPermission("admin"))) {
+		return null;
+	}
+
 	const user = await prisma.user.delete({
 		where: {
 			id: id,
