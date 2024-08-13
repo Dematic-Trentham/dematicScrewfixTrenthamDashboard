@@ -31,7 +31,7 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 
 	const [user, setUser] = useState<typeUserVisible | null>(null);
 	const [allPermissions, setAllPermissions] = useState<
-		{ id: string; name: string }[]
+		{ id: string; name: string }[] | { error: string }
 	>([]);
 	const [currentUser, setCurrentUser] = useState<typeUserVisible | null>(null);
 	const [error, setError] = useState<string | null>(null);
@@ -59,18 +59,21 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 	function permissionsChanged() {
 		let newPermissions: string[] = [];
 
-		//loop through all the permissions
-		allPermissions.map((permission) => {
-			//check if the permission is checked
-			const checked = (
-				document.getElementById(permission.id) as HTMLInputElement
-			)?.checked;
+		//check if allPermissions is an array
+		if (Array.isArray(allPermissions)) {
+			//loop through all the permissions
+			allPermissions.map((permission) => {
+				//check if the permission is checked
+				const checked = (
+					document.getElementById(permission.id) as HTMLInputElement
+				)?.checked;
 
-			//if it is checked, add it to the new permissions
-			if (checked) {
-				newPermissions.push(permission.name);
-			}
-		});
+				//if it is checked, add it to the new permissions
+				if (checked) {
+					newPermissions.push(permission.name);
+				}
+			});
+		}
 
 		if (!user) {
 			return;
@@ -253,28 +256,33 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 								User Permissions
 							</div>
 							<div className="grid grid-cols-3 gap-2 ps-2">
-								{allPermissions.map((permission) => (
-									<div key={permission.id} className="flex justify-evenly">
-										<div className="">
-											{makeFirstLetterUpperCase(permission.name)}
+								{allPermissions && "error" in allPermissions && (
+									<div className="text-red-500">{allPermissions.error}</div>
+								)}
+
+								{Array.isArray(allPermissions) &&
+									allPermissions.map((permission) => (
+										<div key={permission.id} className="flex justify-evenly">
+											<div className="">
+												{makeFirstLetterUpperCase(permission.name)}
+											</div>
+											<div className="">
+												<input
+													key={permission.id}
+													defaultChecked={user.permissions.includes(
+														permission.name
+													)}
+													id={permission.id}
+													name={permission.name}
+													type="checkbox"
+													// eslint-disable-next-line @typescript-eslint/no-unused-vars
+													onChange={(e) => {
+														permissionsChanged();
+													}}
+												/>
+											</div>
 										</div>
-										<div className="">
-											<input
-												key={permission.id}
-												defaultChecked={user.permissions.includes(
-													permission.name
-												)}
-												id={permission.id}
-												name={permission.name}
-												type="checkbox"
-												// eslint-disable-next-line @typescript-eslint/no-unused-vars
-												onChange={(e) => {
-													permissionsChanged();
-												}}
-											/>
-										</div>
-									</div>
-								))}
+									))}
 							</div>
 						</div>
 
