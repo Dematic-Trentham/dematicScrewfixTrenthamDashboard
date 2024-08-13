@@ -42,3 +42,6 @@ next-env.d.ts
 
 #uploaded files
 /public/images/uploadedImages
+
+#prisma (built)
+/prisma/schema.prisma
