@@ -236,7 +236,7 @@ const AdminUserContent = (AdminUserContentProps: AdminUserContentProps) => {
 											formData.append("fileData", fileData);
 
 											//add the username to the form data
-											formData.append("username", user.name);
+											formData.append("username", user.email);
 											formData.append("id", user.id ?? "");
 
 											// handle the formData here
