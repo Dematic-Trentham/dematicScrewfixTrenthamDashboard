@@ -19,7 +19,7 @@ const UserBox: React.FC<UserBoxProps> = async () => {
 		return (
 			<div className={`flex w-56 flex-wrap transition-all duration-500`}>
 				<div className="p-1">
-					<div className="h-14 rounded-full bg-orange-700 p-3">
+					<div className="size-14 rounded-full bg-orange-700 p-3">
 						<FaUserAstronaut className="h-full w-full" />
 					</div>
 				</div>
@@ -47,11 +47,11 @@ const UserBox: React.FC<UserBoxProps> = async () => {
 				{user.profilePic ? (
 					<img
 						alt="User Profile"
-						className="h-14 w-14 rounded-full"
+						className="size-14 rounded-full object-cover"
 						src={user.profilePic}
 					/>
 				) : (
-					<div className="h-14 rounded-full bg-orange-700 p-3">
+					<div className="size-14 rounded-full bg-orange-700 p-3">
 						<FaUserAstronaut className="h-full w-full" />
 					</div>
 				)}

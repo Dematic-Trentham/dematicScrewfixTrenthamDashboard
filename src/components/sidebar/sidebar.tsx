@@ -1,11 +1,10 @@
 import React from "react";
-import { FaBars, FaBell, FaHome, FaScrewdriver } from "react-icons/fa";
+import { FaBell, FaHome, FaScrewdriver } from "react-icons/fa";
 
-import { ThemeSwitch } from "../theme-switch";
+import SideMini from "../visual/sideMini";
 
 import Sidebarparentcomponent from "./sidebarparentcomponent";
 import Sidebaradmin from "./admin/sidebaradmin";
-import SideMini from "../visual/sideMini";
 
 const Sidebar = () => {
 	const isHidden = false;

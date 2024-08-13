@@ -19,7 +19,7 @@ const PanelTop: React.FC<PanelProps> = (props) => {
 				)}
 			>
 				<div
-					className={`rounded-t-2xl bg-orange-400 text-lg font-bold ${props.title === undefined ? "p-0" : "p-4"}`}
+					className={`rounded-t-2xl bg-orange-400 text-lg font-bold ${props.title === undefined ? "p-0" : "p-4"} `}
 				>
 					{props.title}
 					{props.topRight ? (
@@ -29,7 +29,7 @@ const PanelTop: React.FC<PanelProps> = (props) => {
 					)}
 				</div>
 
-				<div className="h-full p-4">{props.children}</div>
+				<div className="h-full px-4 pb-4 pt-2">{props.children}</div>
 			</div>
 		</div>
 	);

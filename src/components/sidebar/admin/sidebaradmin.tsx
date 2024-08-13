@@ -8,11 +8,7 @@ import Sidebarparentcomponent from "../sidebarparentcomponent";
 import { hasPermission } from "@/utils/getUser";
 import HorizontalBar from "@/components/visual/horizontalBar";
 
-interface SidebaradminProps {
-	isHidden: boolean;
-}
-
-const Sidebaradmin = async (props: SidebaradminProps) => {
+const Sidebaradmin = async () => {
 	const userHasPermission = await hasPermission("admin");
 
 	if (!userHasPermission) {

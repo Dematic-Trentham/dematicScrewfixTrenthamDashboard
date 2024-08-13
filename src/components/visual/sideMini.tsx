@@ -2,8 +2,9 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 "use client";
 import { useState } from "react";
-import { ThemeSwitch } from "../theme-switch";
 import { FaBars } from "react-icons/fa";
+
+import { ThemeSwitch } from "../theme-switch";
 
 type SideMiniProps = {
 	children: React.ReactNode;

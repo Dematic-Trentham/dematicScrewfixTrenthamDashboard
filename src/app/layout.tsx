@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
+import { CookiesProvider } from "next-client-cookies/server";
 
 import { Providers } from "./providers";
 
@@ -8,7 +9,6 @@ import ToastProvider from "@/components/ToastProvider";
 import { siteConfig } from "@/config/site";
 import Sidebar from "@/components/sidebar/sidebar";
 import Topbar from "@/components/topbar/topbar";
-import { CookiesProvider } from "next-client-cookies/server";
 import ReloadPage from "@/components/reload";
 
 export const metadata: Metadata = {

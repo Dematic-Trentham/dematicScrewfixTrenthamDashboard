@@ -56,8 +56,6 @@ export function validateSignup(data: any) {
 				{} as { [key: string]: string }
 			);
 
-			
-
 			return formErrors;
 		}
 
