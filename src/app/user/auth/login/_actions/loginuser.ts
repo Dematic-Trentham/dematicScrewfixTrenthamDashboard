@@ -38,6 +38,13 @@ export default async function loginUser(data: any) {
 		return error;
 	}
 
+	// Check if the user is disabled
+	if (user.disabled) {
+		error.error = "User is disabled - contact an admin";
+
+		return error;
+	}
+
 	//all good, make an object for the user
 	const userObjectLogin = {
 		id: user.id,
@@ -46,6 +53,7 @@ export default async function loginUser(data: any) {
 		department: user.department,
 		profilePic: user.profilePic,
 		permissions: user.permissions,
+		disabled: user.disabled,
 	};
 
 	//make jwt token
