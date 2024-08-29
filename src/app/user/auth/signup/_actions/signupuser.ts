@@ -77,7 +77,17 @@ export default async function signupUser(data: any) {
 		email: data.email,
 		password: hashedPassword,
 		department: process.env.DEFAULT_USER_DEPARTMENT,
+		permissions: "",
 	};
+
+	//is this the first user? if so, make them an admin
+	const userCount = await prisma.user.count();
+
+	if (userCount === 0) {
+		userObject.permissions = "admin";
+
+		console.log("First user, making them an admin");
+	}
 
 	// Add the user to the database
 	const creationResult = await prisma.user.create({
