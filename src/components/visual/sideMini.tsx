@@ -69,9 +69,11 @@ const SideMini: React.FC<SideMiniProps> = ({ children }) => {
 				</div>
 			</div>
 
-			<div className="h-1 flex-1 overflow-auto">{children}</div>
+			<div className="h-1 flex-1 overflow-auto border-r-1 border-r-2 border-r-black">
+				{children}
+			</div>
 
-			<div className="bottom-0 flex-col bg-gray-900 pb-2 pt-3 text-white">
+			<div className="bottom-0 flex-col border-r-1 border-r-2 border-r-black bg-gray-900 pb-2 pt-3 text-white">
 				<ThemeSwitch />
 				<div className="text-center" style={{ fontSize: 6 }}>
 					JWL 2024
