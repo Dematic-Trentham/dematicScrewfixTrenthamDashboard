@@ -14,28 +14,43 @@ type SideMiniProps = {
 const SideMini: React.FC<SideMiniProps> = ({ children }) => {
 	const cookies = useCookies();
 
+	const [isMinimizedButton, setIsMinimizedButton] = useState(true);
 	const [isMinimized, setIsMinimized] = useState(true);
 
 	useEffect(() => {
 		const sidebarIsMinimized = cookies.get("sidebarIsMinimized");
 
 		if (sidebarIsMinimized === "true") {
-			setIsMinimized(true);
+			setIsMinimizedButton(true);
 		} else {
-			setIsMinimized(false);
+			setIsMinimizedButton(false);
 		}
 	}, []);
 
 	const toggleMinimize = () => {
-		setIsMinimized(!isMinimized);
+		setIsMinimizedButton(!isMinimizedButton);
 
 		//make a string of the boolean "true" or "false"
-		cookies.set("sidebarIsMinimized", isMinimized ? "false" : "true");
+		cookies.set("sidebarIsMinimized", isMinimizedButton ? "false" : "true");
+	};
+
+	const mouseEnter = () => {
+		if (isMinimizedButton) {
+			setIsMinimized(false);
+		}
+	};
+
+	const mouseLeave = () => {
+		if (isMinimizedButton) {
+			setIsMinimized(true);
+		}
 	};
 
 	return (
 		<div
 			className={`hidden h-full ${isMinimized ? "w-10" : "w-64"} duration-5000 flex-col bg-gray-800 transition-width md:flex`}
+			onMouseEnter={() => mouseEnter()}
+			onMouseLeave={() => mouseLeave()}
 		>
 			<div
 				className="flex h-16 items-center justify-center bg-gray-900"

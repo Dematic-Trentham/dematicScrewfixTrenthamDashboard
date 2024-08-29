@@ -1,10 +1,11 @@
 import React from "react";
-import { FaBell, FaHome, FaScrewdriver } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 
 import SideMini from "../visual/sideMini";
 
-import Sidebarparentcomponent from "./sidebarparentcomponent";
-import Sidebaradmin from "./admin/sidebaradmin";
+import SidebarParentComponent from "./sidebarParentComponent";
+import SidebarAdmin from "./admin/sidebarAdmin";
+import SidebarShuttles from "./shuttles/sidebarShuttles";
 
 const Sidebar = () => {
 	return (
@@ -12,24 +13,16 @@ const Sidebar = () => {
 			<div>
 				{/* sidebar */}
 
-				<div className="flex h-max flex-1 flex-col overflow-y-auto overflow-x-hidden">
+				<div className="flex h-fit flex-1 flex-col overflow-y-auto overflow-x-hidden">
 					<nav className="flex-1 bg-gray-800">
-						<Sidebarparentcomponent
+						<SidebarParentComponent
 							icon={<FaHome />}
 							link="/"
 							text="Dashboard"
 						/>
-						<Sidebarparentcomponent
-							icon={<FaBell />}
-							link="/about"
-							text="About"
-						/>
-						<Sidebarparentcomponent
-							icon={<FaScrewdriver />}
-							link="/blog"
-							text="blog"
-						/>
-						<Sidebaradmin />
+
+						<SidebarShuttles />
+						<SidebarAdmin />
 					</nav>
 				</div>
 			</div>

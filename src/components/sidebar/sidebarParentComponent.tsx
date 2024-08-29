@@ -2,11 +2,13 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
+import clsx from "clsx";
 interface SidebarparentcomponentProps {
 	text: string;
 	icon?: JSX.Element;
 	children?: React.ReactNode;
 	link?: string;
+	classname?: string;
 }
 
 const Sidebarparentcomponent = (props: SidebarparentcomponentProps) => {
@@ -30,7 +32,10 @@ const Sidebarparentcomponent = (props: SidebarparentcomponentProps) => {
 
 	const content = (
 		<div
-			className={`flex h-10 items-center px-0 py-0 text-gray-100 hover:bg-gray-600 ${highlighted ? "rounded-r-full bg-gray-500" : ""}`}
+			className={clsx(
+				`flex h-10 items-center px-0 py-0 text-gray-100 hover:bg-gray-600 ${highlighted ? "bg-gray-500" : "bg-gray-800"}`,
+				props.classname
+			)}
 			title={props.text}
 		>
 			<button className="w-10 justify-start px-3 py-0">{props.icon}</button>
