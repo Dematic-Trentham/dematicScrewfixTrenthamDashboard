@@ -102,7 +102,7 @@ const Signup = () => {
 		setIsVisibleConfirmPassword(!isVisibleConfirmPassword);
 
 	return (
-		<PanelMiddle>
+		<PanelMiddle title="Signup User">
 			<form onSubmit={onSubmit}>
 				<div className="flex-col gap-4 space-y-2">
 					<div className="flex w-full flex-col md:flex-nowrap">
