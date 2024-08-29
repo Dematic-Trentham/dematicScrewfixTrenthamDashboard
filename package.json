@@ -9,6 +9,7 @@
 		"start": "next start",
 		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix",
 		"prisma-merge": "npx prismix && prisma format && prisma generate && echo 'complete!'",
+		"prisma-gen": "prisma generate",
 		"prisma-pull": "npx prisma db pull",
 		"prisma-push": "npx prisma db push",
 		"make-permissions": "node ./tools/makePermissions.js",
