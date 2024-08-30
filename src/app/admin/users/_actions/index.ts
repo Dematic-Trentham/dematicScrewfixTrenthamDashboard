@@ -35,8 +35,6 @@ export default async function getAllUsers(): Promise<typeUserVisible[]> {
 			disabled: user.disabled,
 		};
 
-		console.log(userVisible);
-
 		usersVisible.push(userVisible);
 	});
 

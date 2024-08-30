@@ -86,6 +86,7 @@ export default async function signupUser(data: any) {
 	if (userCount === 0) {
 		userObject.permissions = "admin";
 
+		// eslint-disable-next-line no-console
 		console.log("First user, making them an admin");
 	}
 
