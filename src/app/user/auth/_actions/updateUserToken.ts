@@ -15,7 +15,7 @@ export default async function updateUserToken(): Promise<{
 	const user = await getUser();
 
 	//get the user data from the server
-	const userFromDb = await prisma.user.findUnique({
+	const userFromDb = await prisma.dashboardUsers.findUnique({
 		where: {
 			id: user.id,
 		},

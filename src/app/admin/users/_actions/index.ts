@@ -11,7 +11,7 @@ export default async function getAllUsers(): Promise<typeUserVisible[]> {
 		return [];
 	}
 
-	const users = await prisma.user.findMany({
+	const users = await prisma.dashboardUsers.findMany({
 		orderBy: {
 			createdAt: "asc",
 		},
@@ -23,7 +23,7 @@ export default async function getAllUsers(): Promise<typeUserVisible[]> {
 
 	let usersVisible: typeUserVisible[] = [];
 
-	users.forEach((user:typeUserVisible) => {
+	users.forEach((user: typeUserVisible) => {
 		//change the type of user to typeUserVisible
 		const userVisible: typeUserVisible = {
 			id: user.id,
@@ -47,7 +47,7 @@ export async function getAUser(id: string): Promise<typeUserVisible | null> {
 	if (!(await hasPermission("admin"))) {
 		return null;
 	}
-	const user = await prisma.user.findUnique({
+	const user = await prisma.dashboardUsers.findUnique({
 		where: {
 			id: id,
 		},
@@ -78,7 +78,7 @@ export async function updateUser(
 	if (!(await hasPermission("admin"))) {
 		return null;
 	}
-	const user = await prisma.user.update({
+	const user = await prisma.dashboardUsers.update({
 		where: {
 			id: id,
 		},
@@ -108,7 +108,7 @@ export async function deleteUser(id: string): Promise<typeUserVisible | null> {
 		return null;
 	}
 
-	const user = await prisma.user.delete({
+	const user = await prisma.dashboardUsers.delete({
 		where: {
 			id: id,
 		},

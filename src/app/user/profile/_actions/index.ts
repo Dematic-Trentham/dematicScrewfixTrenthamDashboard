@@ -23,7 +23,7 @@ export async function getUser(): Promise<typeUserVisible | { error: string }> {
 		return { error: "Invalid id" };
 	}
 
-	const userResult = await prisma.user.findUnique({
+	const userResult = await prisma.dashboardUsers.findUnique({
 		where: {
 			id: idFromCookie,
 		},
@@ -77,7 +77,7 @@ export async function modifyUser(
 	}
 
 	//update the user
-	const result = await prisma.user.update({
+	const result = await prisma.dashboardUsers.update({
 		where: {
 			id: idFromCookie,
 		},
@@ -121,7 +121,7 @@ export async function uploadProfilePic(
 		return { error: "File path is undefined" };
 	}
 
-	const result = await prisma.user.update({
+	const result = await prisma.dashboardUsers.update({
 		where: {
 			id: idFromCookie,
 		},
@@ -149,7 +149,7 @@ export async function getAllPermissions(): Promise<
 	{ id: string; name: string; description: string | null }[] | { error: string }
 > {
 	//get all permissions from the server
-	const permissions = await prisma.userPermissions.findMany();
+	const permissions = await prisma.dashboardUsersPermissions.findMany();
 
 	//if there are no permissions, return an error
 	if (!permissions) {

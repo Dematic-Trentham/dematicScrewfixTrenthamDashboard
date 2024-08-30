@@ -21,7 +21,7 @@ export async function getUser(
 		return { error: "Invalid id" };
 	}
 
-	const userResult = await prisma.user.findUnique({
+	const userResult = await prisma.dashboardUsers.findUnique({
 		where: {
 			id: id,
 		},
@@ -61,7 +61,7 @@ export async function deleteUser(
 	}
 
 	//delete the user
-	const result = await prisma.user.delete({
+	const result = await prisma.dashboardUsers.delete({
 		where: {
 			id: id,
 		},
@@ -93,7 +93,7 @@ export async function modifyUser(
 	}
 
 	//update the user
-	const result = await prisma.user.update({
+	const result = await prisma.dashboardUsers.update({
 		where: {
 			id: user.id,
 		},
@@ -126,7 +126,7 @@ export async function getAllPermissions(): Promise<
 	}
 
 	//get all permissions from the server
-	const permissions = await prisma.userPermissions.findMany();
+	const permissions = await prisma.dashboardUsersPermissions.findMany();
 
 	//if there are no permissions, return an error
 	if (!permissions) {
@@ -159,7 +159,7 @@ export async function uploadProfilePic(
 		return { error: "Invalid id" };
 	}
 
-	const result = await prisma.user.update({
+	const result = await prisma.dashboardUsers.update({
 		where: {
 			id: data.get("id") as string,
 		},

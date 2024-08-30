@@ -16,7 +16,7 @@ export default async function loginUser(data: any) {
 	};
 
 	//make sure the email is not already in use
-	const user = await prisma.user.findUnique({
+	const user = await prisma.dashboardUsers.findUnique({
 		where: {
 			email: data.email,
 		},

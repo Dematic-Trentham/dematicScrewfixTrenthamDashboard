@@ -30,7 +30,7 @@ export default async function signupUser(data: any) {
 	};
 
 	//make sure the email is not already in use
-	const user = await prisma.user.findUnique({
+	const user = await prisma.dashboardUsers.findUnique({
 		where: {
 			email: data.email,
 		},
@@ -81,7 +81,7 @@ export default async function signupUser(data: any) {
 	};
 
 	//is this the first user? if so, make them an admin
-	const userCount = await prisma.user.count();
+	const userCount = await prisma.dashboardUsers.count();
 
 	if (userCount === 0) {
 		userObject.permissions = "admin";
@@ -90,7 +90,7 @@ export default async function signupUser(data: any) {
 	}
 
 	// Add the user to the database
-	const creationResult = await prisma.user.create({
+	const creationResult = await prisma.dashboardUsers.create({
 		data: userObject,
 	});
 
