@@ -8,16 +8,9 @@ import SidebarParentComponentGroup from "../sidebarParentComponentGroup";
 
 import shuttleIcon from "./shuttle.png";
 
-import { hasPermission } from "@/utils/getUser";
 import HorizontalBar from "@/components/visual/horizontalBar";
 
 const SidebarAdmin = async () => {
-	const userHasPermission = await hasPermission("admin");
-
-	if (!userHasPermission) {
-		return <> </>;
-	}
-
 	return (
 		<>
 			<HorizontalBar />
