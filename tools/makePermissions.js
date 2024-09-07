@@ -46,7 +46,7 @@ function checkFile(filePath) {
 }
 
 async function checkUsersAndDelete() {
-	const allUsers = await prisma.user.findMany();
+	const allUsers = await prisma.dashboardUsers.findMany();
 
 	allUsers.forEach(async (user) => {
 		const usersPermissions = user.permissions.split(",");
@@ -74,11 +74,11 @@ async function main() {
 	await readFilesRecursively(srcDir);
 
 	//check if any permissions need to be deleted
-	const allPermissions = await prisma.userPermissions.findMany();
+	const allPermissions = await prisma.dashboardUsersPermissions.findMany();
 
 	allPermissions.forEach(async (permission) => {
 		if (!permissions.includes(permission.name)) {
-			const result = await prisma.userPermissions.delete({
+			const result = await prisma.dashboardUsersPermissions.delete({
 				where: {
 					id: permission.id,
 				},
@@ -90,16 +90,18 @@ async function main() {
 
 	permissions.forEach(async (permission) => {
 		//does permission already exist?
-		const existingPermission = await prisma.userPermissions.findFirst({
-			where: {
-				name: permission,
-			},
-		});
+		const existingPermission = await prisma.dashboardUsersPermissions.findFirst(
+			{
+				where: {
+					name: permission,
+				},
+			}
+		);
 
 		if (existingPermission) {
 			return;
 		}
-		const result = await prisma.userPermissions.create({
+		const result = await prisma.dashboardUsersPermissions.create({
 			data: {
 				name: permission,
 			},
