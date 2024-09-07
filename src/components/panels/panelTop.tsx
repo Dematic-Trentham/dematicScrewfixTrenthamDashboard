@@ -14,7 +14,7 @@ const PanelTop: React.FC<PanelProps> = (props) => {
 		<div className="flex items-start justify-center">
 			<div
 				className={cn(
-					`h-3/6 w-3/6 rounded-2xl bg-white dark:bg-slate-400 dark:text-slate-900`,
+					`h-3/6 h-fit w-3/6 rounded-2xl bg-white dark:bg-slate-400 dark:text-slate-900`,
 					props.className
 				)}
 			>
