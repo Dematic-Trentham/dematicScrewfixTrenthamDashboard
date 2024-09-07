@@ -9,7 +9,7 @@ interface VerticalBarProps {
 
 const VerticalBar: React.FC<VerticalBarProps> = ({ height, styles }) => {
 	if (!height) {
-		height = "90%";
+		height = "90% ";
 	}
 
 	return (
