@@ -90,7 +90,9 @@ function checkRouting(
 	let explain = "";
 
 	if (messageType === "ROUTING") {
-		const cell = traceLine.split("Cell=")[1].split(" ")[0];
+		const cell = traceLine.includes("Cell=")
+			? traceLine.split("Cell=")[1].split(" ")[0]
+			: "0";
 
 		if (traceLine.includes("DSCHUTEREQ")) {
 			explain = `The sorter has requested a chute for the parcel on cell ${cell}`;
