@@ -10,14 +10,14 @@
 		"lint": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix",
 		"make-permissions": "node ./tools/makePermissions.js",
 		"update-all": "npm run prisma-merge && npm run prisma-push && npm run make-permissions",
+		"prisma-merge": "prisma format --schema=./node_modules/masterPrismaSchema/prisma/schema/ && npm run prisma-gen && echo 'complete!'",
 		"prisma-gen": "prisma generate --schema=./node_modules/masterPrismaSchema/prisma/schema",
 		"prisma-pull": "npx prisma db pull --schema=./node_modules/masterPrismaSchema/prisma/schema",
-		"prisma-push": "npx prisma db push --schema=./node_modules/masterPrismaSchema/prisma/schema"
+		"prisma-push": "npx prisma db push --schema=./node_modules/masterPrismaSchema/prisma/schema",
+		"packageJsonStripper": "node tools/packageJsonStripper.js",
+		"build-docker": "npm run prisma-merge && npm run packageJsonStripper && docker build -t screwfix-trentham-dashboard ."
 	},
 	"dependencies": {
-		"@auth/prisma-adapter": "^2.4.2",
-		"@emotion/react": "^11.13.3",
-		"@emotion/styled": "^11.13.0",
 		"@material-ui/core": "^4.12.4",
 		"@mui/material": "^5.16.7",
 		"@nextui-org/button": "^2.0.37",
@@ -47,6 +47,10 @@
 		"zod": "^3.23.8"
 	},
 	"devDependencies": {
+		"@emotion/react": "^11.13.3",
+		"@emotion/styled": "^11.13.0",
+		"@react-aria/ssr": "^3.9.5",
+		"@react-aria/visually-hidden": "^3.8.15",
 		"@types/bcrypt": "^5.0.2",
 		"@types/jsonwebtoken": "^9.0.6",
 		"@types/node": "^20.16.5",
@@ -66,11 +70,14 @@
 		"eslint-plugin-react-hooks": "^4.6.2",
 		"eslint-plugin-unused-imports": "^3.2.0",
 		"local-ssl-proxy": "^2.0.5",
-		"masterPrismaSchema": "git+https://jdematic@github.com/jameswlyons/dematicDashboardScrewfixTrenthamMasterPrismaSchema.git",
+		"masterPrismaSchema": "git+https://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:x-oauth-basic@github.com/jameswlyons/dematicDashboardScrewfixTrenthamMasterPrismaSchema.git",
 		"postcss": "8.4.38",
 		"prettier": "^3.3.3",
 		"prettier-plugin-tailwindcss": "^0.6.6",
 		"prisma": "^5.19.1",
+		"sharp": "^0.33.5",
+		"tailwind-merge": "^2.5.2",
+		"tailwind-variants": "^0.2.1",
 		"tailwindcss": "^3.4.10",
 		"ts-node": "^10.9.2",
 		"typescript": "^5.5.4"
