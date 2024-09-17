@@ -7,6 +7,7 @@ import SidebarParentComponent from "./sidebarParentComponent";
 import SidebarAdmin from "./admin/sidebarAdmin";
 import SidebarShuttles from "./shuttles/sidebarShuttles";
 import SidebarSorter from "./sorter/sidebarSorter";
+import SidebarOrderStart from "./orderStart/sidebarOrderStart";
 
 const Sidebar = () => {
 	return (
@@ -23,6 +24,7 @@ const Sidebar = () => {
 						/>
 
 						<SidebarShuttles />
+						<SidebarOrderStart />
 						<SidebarSorter />
 						<SidebarAdmin />
 					</nav>

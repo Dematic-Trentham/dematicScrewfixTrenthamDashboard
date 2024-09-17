@@ -14,8 +14,8 @@ type SideMiniProps = {
 const SideMini: React.FC<SideMiniProps> = ({ children }) => {
 	const cookies = useCookies();
 
-	const [isMinimizedButton, setIsMinimizedButton] = useState(true);
-	const [isMinimized, setIsMinimized] = useState(true);
+	const [isMinimizedButton, setIsMinimizedButton] = useState(false);
+	const [isMinimized, setIsMinimized] = useState(false);
 
 	useEffect(() => {
 		const sidebarIsMinimized = cookies.get("sidebarIsMinimized");
