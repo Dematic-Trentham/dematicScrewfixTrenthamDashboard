@@ -15,3 +15,17 @@ export async function getJourney(uuid: string) {
 
 	return result;
 }
+
+export async function deleteAJourney(uuid: string) {
+	const result = await db.sorterJourneyRequests.delete({
+		where: {
+			id: uuid,
+		},
+	});
+
+	if (!result) {
+		throw new Error("Failed to delete journey");
+	}
+
+	return result;
+}

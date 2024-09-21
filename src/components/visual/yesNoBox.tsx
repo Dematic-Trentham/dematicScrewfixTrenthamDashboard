@@ -12,7 +12,7 @@ type YesNoBoxProps = {
 const YesNoBox: React.FC<YesNoBoxProps> = ({ question, onYes, onNo }) => {
 	return (
 		<PanelMiddle
-			className="absolute left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 transform"
+			className="absolute left-1/2 top-1/2 z-50 w-auto -translate-x-1/2 -translate-y-1/2 transform border-1 border-slate-900 bg-white shadow-lg dark:bg-slate-400 dark:text-slate-900"
 			title={question}
 		>
 			<div className="flex justify-evenly">

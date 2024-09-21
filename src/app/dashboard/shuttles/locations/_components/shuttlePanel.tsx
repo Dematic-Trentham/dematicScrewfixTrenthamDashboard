@@ -1,17 +1,59 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { shuttleLocation } from "../../_types/shuttle";
 
 import HoverPopup from "@/components/visual/hoverPopupFloat";
 
+export enum colorByTypeType {
+	aisle,
+	shuttle,
+}
+
 interface ShuttlePanelProps {
 	locations: shuttleLocation;
+	passedFaults: {
+		sortedResultsAisle: any;
+		sortedResultsShuttleID: any;
+		worstShuttleByAisle: number;
+		worstShuttleByShuttle: number;
+	} | null;
+
+	colorByType: colorByTypeType;
 }
 
 const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
-	// Implement your component logic here]
+	const [shuttleFaults, setShuttleFaults] = useState<any>(null);
+
+	const shuttleFaultsByShuttle =
+		props.passedFaults?.sortedResultsShuttleID?.[props.locations?.shuttleID];
+
+	console.log("shuttleFaultsByShuttle: ", shuttleFaultsByShuttle);
+
+	useEffect(() => {
+		const fetchShuttleFaults = async () => {
+			console.log(
+				"fetchShuttleFaults for shuttleID: ",
+				props.locations.shuttleID
+			);
+			console.log("props.passedFaults: ", props.passedFaults);
+
+			const localShuttleFaults =
+				props.passedFaults?.sortedResultsShuttleID?.[
+					props.locations?.shuttleID
+				];
+
+			if (localShuttleFaults == null) {
+				//console.log("localShuttleFaults is null");
+
+				return;
+			}
+			console.log("localShuttleFaults: ", localShuttleFaults);
+		};
+
+		//fetchShuttleFaults();
+	}, []);
 
 	const displayLabel = props.locations.shuttleID || "Unknown";
 

@@ -23,8 +23,14 @@ const JourneyLine: React.FC<JourneyLineProps> = (props) => {
 		return <div className="hover:bg-yellow-300">{props.line}</div>;
 	}
 
+	let bg = "";
+
+	if (decodeTraceLine(props.line).explained) {
+		bg = "bg-green-200";
+	}
+
 	return (
-		<div className="hover:bg-yellow-300">
+		<div className={`hover:bg-yellow-300 ${bg}`}>
 			{decodeTraceLine(props.line).decodedLine}
 		</div>
 	);
@@ -34,6 +40,8 @@ export default JourneyLine;
 
 const decodeTraceLine = (traceLine: string) => {
 	let decodedLine = "";
+
+	console.log(traceLine);
 
 	//(hh:mm:ss:ms)xxxxx
 	const time = traceLine.slice(1, 13);
@@ -58,11 +66,21 @@ const decodeTraceLine = (traceLine: string) => {
 
 	decodedLine += explain;
 
+	let explained = true;
+
 	if (explain === "") {
+		explained = false;
 		decodedLine = traceLine;
 	}
 
-	return { decodedLine, time, messageNumber, messageType, messageTypeStation };
+	return {
+		decodedLine,
+		time,
+		messageNumber,
+		messageType,
+		messageTypeStation,
+		explained,
+	};
 };
 
 function checkLoadMGN(
@@ -142,6 +160,30 @@ function checkOFFMGN(
 			const cell = traceLine.split("cell=")[1].split(" ")[0];
 
 			explain = `The offload verification station ${messageTypeStation} has detected that the parcel on cell ${cell} is not on the cell as expected`;
+		}
+	}
+
+	console.log(messageType);
+
+	if (messageType === "OFFLMGM:<check_cons_cells>") {
+		console.log(traceLine);
+		if (
+			traceLine.includes("<check_cons_cells>") &&
+			traceLine.includes("blocked by")
+		) {
+			const previousCell = traceLine.split("Cell=")[1].split(" ")[0];
+			const chute = traceLine.split("Chute=")[1].split(" ")[0];
+
+			explain = `The offloading has been canceled for this lap as the previous cell ${previousCell} has just offloaded to chute ${chute}`;
+		}
+
+		if (
+			traceLine.includes("<check_cons_cells>") &&
+			traceLine.includes("last_off=")
+		) {
+			const chute = traceLine.split("last_off=")[1].split(" ")[0];
+
+			explain = `The offloading has been canceled for this lap as the previous cell has just offloaded to chute ${chute}`;
 		}
 	}
 
