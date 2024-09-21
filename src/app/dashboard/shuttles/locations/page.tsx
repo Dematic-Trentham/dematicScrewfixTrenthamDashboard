@@ -1,10 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 
-import { shuttleLocation } from "../_types/shuttle";
+import { shuttleLocation, shuttleFault } from "../_types/shuttle";
 
-import { getLocations } from "./_actions";
+import { getLocations, getShuttleFaults } from "./_actions";
 import ShuttlePanel from "./_components/shuttlePanel";
+import { colorByTypeType } from "./_components/shuttlePanel";
 
 import PanelTop from "@/components/panels/panelTop";
 import VerticalBar from "@/components/visual/verticalBar";
@@ -17,6 +18,16 @@ export default function Home() {
 	const [aisleCount, setAisleCount] = useState<number>(0);
 	const [levelCount, setLevelCount] = useState<number>(0);
 	const [error, setError] = useState<string | null>(null);
+	const [faults, setFaults] = useState<{
+		sortedResultsAisle: any;
+		sortedResultsShuttleID: any;
+		worstShuttleByAisle: number;
+		worstShuttleByShuttle: number;
+	} | null>(null);
+
+	const [colorByType, setColorByType] = useState<colorByTypeType>(
+		colorByTypeType.shuttle
+	);
 
 	useEffect(() => {
 		const fetchLocations = async () => {
@@ -38,9 +49,9 @@ export default function Home() {
 
 				setLevelCount(maxLevel);
 
-				console.log(aisles);
-				console.log(maintenanceBay);
-
+				//	console.log(aisles);
+				//	console.log(maintenanceBay);
+				//
 				setLocations(aisles);
 				setMaintenanceBay(maintenanceBay);
 
@@ -102,8 +113,8 @@ export default function Home() {
 			//the first aisle is the maintenance bay, this should be removed from the aisles array and added to its own array
 			const maintenanceBay = aisles.shift();
 
-			console.log(maintenanceBay);
-			console.log(aisles);
+			//console.log(maintenanceBay);
+			//console.log(aisles);
 
 			return { aisles, maintenanceBay };
 		};
@@ -111,6 +122,73 @@ export default function Home() {
 		setInterval(() => {
 			fetchLocations();
 		}, 10000);
+
+		const fetchFaults = async () => {
+			const result = await getShuttleFaults(1);
+
+			const sortedResults = await sortShuttleFaults(result);
+
+			setFaults(sortedResults);
+
+			console.log(result);
+		};
+
+		const sortShuttleFaults = async (faults: shuttleFault[]) => {
+			//group the faults by aisle and level
+			let sortedResultsAisle: any = {};
+
+			faults.forEach((fault) => {
+				if (!sortedResultsAisle[fault.aisle]) {
+					sortedResultsAisle[fault.aisle] = [];
+				}
+
+				if (!sortedResultsAisle[fault.aisle][fault.level]) {
+					sortedResultsAisle[fault.aisle][fault.level] = [];
+				}
+
+				sortedResultsAisle[fault.aisle][fault.level].push(fault);
+			});
+
+			//group the faults by shuttleID
+			let sortedResultsShuttleID: any = {};
+
+			faults.forEach((fault) => {
+				if (!sortedResultsShuttleID[fault.shuttleID]) {
+					sortedResultsShuttleID[fault.shuttleID] = [];
+				}
+
+				sortedResultsShuttleID[fault.shuttleID].push(fault);
+			});
+
+			let worstShuttleByAisle = 0;
+			let worstShuttleByShuttle = 0;
+
+			//loop through the sortedResultsShuttleID and find the shuttle with the most faults
+
+			for (let shuttleID in sortedResultsShuttleID) {
+				if (sortedResultsShuttleID[shuttleID].length > worstShuttleByShuttle) {
+					worstShuttleByShuttle = sortedResultsShuttleID[shuttleID].length;
+				}
+			}
+
+			//loop through the sortedResultsAisle and find the aisle with the most faults
+			for (let aisle in sortedResultsAisle) {
+				for (let level in sortedResultsAisle[aisle]) {
+					if (sortedResultsAisle[aisle][level].length > worstShuttleByAisle) {
+						worstShuttleByAisle = sortedResultsAisle[aisle][level].length;
+					}
+				}
+			}
+
+			return {
+				sortedResultsAisle,
+				sortedResultsShuttleID,
+				worstShuttleByAisle,
+				worstShuttleByShuttle,
+			};
+		};
+
+		fetchFaults();
 
 		fetchLocations();
 	}, []);
@@ -160,7 +238,11 @@ export default function Home() {
 
 							{aisle.map((location, index) => (
 								<div key={index}>
-									<ShuttlePanel locations={location} />
+									<ShuttlePanel
+										colorByType={colorByType}
+										locations={location}
+										passedFaults={faults}
+									/>
 								</div>
 							))}
 						</div>
@@ -177,7 +259,11 @@ export default function Home() {
 			<div className="flex w-full flex-wrap content-center justify-center">
 				{maintenanceBay.map((location, index) => (
 					<div key={index} className="flex flex-row space-x-2 self-center">
-						<ShuttlePanel locations={location} />
+						<ShuttlePanel
+							colorByType={colorByType}
+							locations={location}
+							passedFaults={faults}
+						/>
 					</div>
 				))}
 			</div>

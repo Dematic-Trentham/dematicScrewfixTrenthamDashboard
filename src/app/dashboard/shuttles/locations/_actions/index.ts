@@ -6,3 +6,15 @@ export const getLocations = async () => {
 
 	return locations;
 };
+
+export const getShuttleFaults = async (days: number) => {
+	let faults = await db.dmsShuttleFaultLogs.findMany({
+		where: {
+			timestamp: {
+				gte: new Date(new Date().getTime() - days * 24 * 60 * 60 * 1000),
+			},
+		},
+	});
+
+	return faults;
+};
