@@ -38,5 +38,5 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: Push to Docker Hub
         run: |
-          docker tag dematicscrewfixtrenthamdashboard:testing jwlyons/dematicscrewfixtrenthamdashboard:testing
-          docker push jwlyons/dematicscrewfixtrenthamdashboard
+          docker tag dematicscrewfixtrenthamdashboard:latest jwlyons/dematicscrewfixtrenthamdashboard:testing
+          docker push jwlyons/dematicscrewfixtrenthamdashboard:testing
