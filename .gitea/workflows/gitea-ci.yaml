@@ -16,7 +16,7 @@ jobs:
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           RUNNER_TOOL_CACHE: /toolcache
-  publish:
+  publish-main:
     runs-on: ubuntu-latest
     needs: build
     if: gitea.ref == 'refs/heads/main'
@@ -28,7 +28,7 @@ jobs:
         run: |
           docker tag dematicscrewfixtrenthamdashboard:latest jwlyons/dematicscrewfixtrenthamdashboard:latest
           docker push jwlyons/dematicscrewfixtrenthamdashboard
-  publish:
+  publish-test:
     runs-on: ubuntu-latest
     needs: build
     if: gitea.ref == 'refs/heads/testing'
