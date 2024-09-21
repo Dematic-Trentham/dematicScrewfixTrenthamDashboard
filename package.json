@@ -15,7 +15,7 @@
 		"prisma-pull": "npx prisma db pull --schema=./node_modules/masterPrismaSchema/prisma/schema",
 		"prisma-push": "npx prisma db push --schema=./node_modules/masterPrismaSchema/prisma/schema",
 		"packageJsonStripper": "node tools/packageJsonStripper.js",
-		"build-docker": "npm run prisma-merge && npm run packageJsonStripper && docker build -t screwfix-trentham-dashboard ."
+		"build-docker": "npm run prisma-merge && npm run packageJsonStripper && docker build -t dematicscrewfixtrenthamdashboard ."
 	},
 	"dependencies": {
 		"@material-ui/core": "^4.12.4",
