@@ -53,8 +53,11 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 	if (isLoading) {
 		return (
 			<div>
-				<button onClick={() => router.back()}>Back</button>
-				<PanelTop className="w-full" title={"UL Details"}>
+				<PanelTop
+					className="w-full"
+					title={"UL Details"}
+					topRight={<button onClick={() => router.back()}>Back</button>}
+				>
 					<div>is loading....</div>
 				</PanelTop>
 			</div>
@@ -64,8 +67,11 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 	if (error) {
 		return (
 			<div>
-				<button onClick={() => router.back()}>Back</button>
-				<PanelTop className="w-full" title={"UL Details"}>
+				<PanelTop
+					className="w-full"
+					title={"UL Details"}
+					topRight={<button onClick={() => router.back()}>Back</button>}
+				>
 					<div>{error}</div>
 				</PanelTop>
 			</div>
@@ -74,8 +80,11 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 	if (!ULData) {
 		return (
 			<div>
-				<button onClick={() => router.back()}>Back</button>
-				<PanelTop className="w-full" title={"UL Details"}>
+				<PanelTop
+					className="w-full"
+					title={"UL Details"}
+					topRight={<button onClick={() => router.back()}>Back</button>}
+				>
 					<div>No UL data found</div>
 				</PanelTop>
 			</div>
@@ -85,8 +94,11 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 	if (ULData?.status !== "COMPLETED") {
 		return (
 			<div>
-				<button onClick={() => router.back()}>Back</button>
-				<PanelTop className="w-full" title={"UL Details"}>
+				<PanelTop
+					className="w-full"
+					title={"UL Details"}
+					topRight={<button onClick={() => router.back()}>Back</button>}
+				>
 					<div>
 						<div>Requested UL: {ULData.requestedUL}</div>
 						<div>
@@ -103,8 +115,11 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 	if (ULData.journey === "") {
 		return (
 			<div>
-				<button onClick={() => router.back()}>Back</button>
-				<PanelTop className="w-full" title={"UL Details"}>
+				<PanelTop
+					className="w-full"
+					title={"UL Details"}
+					topRight={<button onClick={() => router.back()}>Back</button>}
+				>
 					{" "}
 					<div>No journey data found</div>
 				</PanelTop>
@@ -114,8 +129,11 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 
 	return (
 		<div>
-			<button onClick={() => router.back()}>Back</button>
-			<PanelTop className="w-full" title={"UL Details"}>
+			<PanelTop
+				className="w-full"
+				title={"UL Details"}
+				topRight={<button onClick={() => router.back()}>Back</button>}
+			>
 				<div>
 					<div>Requested UL: {ULData.requestedUL}</div>
 					<div>Last updated: {changeDateToReadable(ULData.updatedDate)}</div>
