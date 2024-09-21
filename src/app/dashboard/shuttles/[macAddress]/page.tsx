@@ -49,8 +49,11 @@ export default function ShuttlePage({
 	if (isLoading) {
 		return (
 			<div>
-				<button onClick={() => router.back()}>Back</button>
-				<PanelTop className="w-full" title={"Shuttle Details "}>
+				<PanelTop
+					className="w-full"
+					title={"Shuttle Details "}
+					topRight={<button onClick={() => router.back()}>Back</button>}
+				>
 					<div className="justify-left flex flex-col">
 						<div className="text-xl">Mac Address: {macAddress}</div>
 					</div>
@@ -63,8 +66,11 @@ export default function ShuttlePage({
 	if (error) {
 		return (
 			<div>
-				<button onClick={() => router.back()}>Back</button>
-				<PanelTop className="w-full" title={"Shuttle Details "}>
+				<PanelTop
+					className="w-full"
+					title={"Shuttle Details "}
+					topRight={<button onClick={() => router.back()}>Back</button>}
+				>
 					<div className="justify-left flex flex-col">
 						<div className="text-xl">Mac Address: {macAddress}</div>
 					</div>
@@ -77,7 +83,11 @@ export default function ShuttlePage({
 	return (
 		<div>
 			<button onClick={() => router.back()}>Back</button>
-			<PanelTop className="w-full" title={"Shuttle Details - " + shuttleID}>
+			<PanelTop
+				className="w-full"
+				title={"Shuttle Details - " + shuttleID}
+				topRight={<button onClick={() => router.back()}>Back</button>}
+			>
 				<div className="justify-left flex flex-col">
 					<div className="text-xl">Mac Address: {macAddress}</div>
 				</div>
