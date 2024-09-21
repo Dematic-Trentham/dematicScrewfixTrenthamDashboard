@@ -11,6 +11,7 @@ jobs:
         uses: https://github.com/actions/setup-node@v3
         with:
           node-version: "18.17"
+      - run: npm run install
       - run: npm run build-docker
         env:
           NODE_OPTIONS: --max_old_space_size=4096
