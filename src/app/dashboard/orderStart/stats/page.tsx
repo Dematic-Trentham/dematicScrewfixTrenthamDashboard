@@ -34,7 +34,7 @@ export default function OrderStartStats() {
 		fetchOrderStartStats();
 
 		setInterval(() => fetchOrderStartStats(), 5000);
-	}, [results]);
+	}, []);
 
 	if (isLoading) {
 		return <div>Loading...</div>;
