@@ -1,4 +1,6 @@
 "use server";
+
+import { GoBook } from "react-icons/go";
 import React from "react";
 import { FaCogs, FaUserShield } from "react-icons/fa";
 import { FaUsersGear } from "react-icons/fa6";
@@ -33,6 +35,11 @@ const Sidebaradmin = async () => {
 					icon={<FaUsersGear />}
 					link="/admin/users"
 					text="Users"
+				/>
+				<Sidebarparentcomponent
+					icon={<GoBook />}
+					link="/admin/links"
+					text="Links"
 				/>
 			</SidebarparentcomponentGroup>
 		</>
