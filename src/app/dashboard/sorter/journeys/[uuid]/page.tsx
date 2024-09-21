@@ -100,6 +100,18 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 		);
 	}
 
+	if (ULData.journey === "") {
+		return (
+			<div>
+				<button onClick={() => router.back()}>Back</button>
+				<PanelTop className="w-full" title={"UL Details"}>
+					{" "}
+					<div>No journey data found</div>
+				</PanelTop>
+			</div>
+		);
+	}
+
 	return (
 		<div>
 			<button onClick={() => router.back()}>Back</button>
