@@ -41,7 +41,7 @@ export default JourneyLine;
 const decodeTraceLine = (traceLine: string) => {
 	let decodedLine = "";
 
-	console.log(traceLine);
+	
 
 	//(hh:mm:ss:ms)xxxxx
 	const time = traceLine.slice(1, 13);
@@ -163,10 +163,10 @@ function checkOFFMGN(
 		}
 	}
 
-	console.log(messageType);
+	//console.log(messageType);
 
 	if (messageType === "OFFLMGM:<check_cons_cells>") {
-		console.log(traceLine);
+		//console.log(traceLine);
 		if (
 			traceLine.includes("<check_cons_cells>") &&
 			traceLine.includes("blocked by")

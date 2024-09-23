@@ -9,7 +9,7 @@ import { getJourney } from "./_actions/getJourney";
 
 import { changeDateToReadable } from "@/utils/changeDateToReadable";
 
-import Journey from "./_components/journey";
+import Journey from "./_components/journey"; 
 
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
@@ -30,6 +30,7 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 		error: string | null;
 		journey: string;
 		currentStatusStep: string | null;
+		tabColor?: string | null;
 	} | null>(null);
 
 	useEffect(() => {
@@ -43,7 +44,25 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 				return;
 			}
 
+			//make sure the a copy of the result / to add a tab color
+			const newJourney = JSON.parse(result.journey).map(
+				(journeyObject: any) => {
+					return {
+						...journeyObject,
+						tabColor:
+							journeyObject.rejectReason === "0x0"
+								? "bg-green-400"
+								: journeyObject.rejectReason === "0x800"
+									? "bg-yellow-400"
+									: "bg-red-400",
+					};
+				}
+			);
+
+			result.journey = JSON.stringify(newJourney);
+
 			setULData(result);
+
 			setIsLoading(false);
 		};
 
@@ -51,8 +70,7 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 
 		setInterval(() => {
 			fetchULData();
-		}
-		, 5000);
+		}, 5000);
 	}, []);
 
 	if (isLoading) {
@@ -144,16 +162,23 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 					<div>Last updated: {changeDateToReadable(ULData.updatedDate)}</div>
 					<br />
 					<Tabs>
-						<TabList>
-							{JSON.parse(ULData.journey).map(
-								(journeyObject: any, index: number) => (
-									<Tab key={index}>
-										{journeyObject.offloadTime}
-									</Tab>
-								)
-							)}
-						</TabList>
-
+						<center>
+							<TabList>
+								{JSON.parse(ULData.journey).map(
+									(journeyObject: any, index: number) => (
+										<Tab key={index}>
+											<div
+												className={
+													"rounded-full px-2 " + journeyObject.tabColor
+												}
+											>
+												{journeyObject.offloadTime}
+											</div>
+										</Tab>
+									)
+								)}
+							</TabList>
+						</center>
 						{JSON.parse(ULData.journey).map(
 							(journeyObject: any, index: number) => (
 								<TabPanel key={index}>
