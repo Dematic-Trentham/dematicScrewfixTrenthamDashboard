@@ -28,11 +28,14 @@ jobs:
         run: |
           docker tag dematicscrewfixtrenthamdashboard:latest jwlyons/dematicscrewfixtrenthamdashboard:latest
           docker push jwlyons/dematicscrewfixtrenthamdashboard
+      - name: Update Container
+        run: |
           curl -H "Authorization: Bearer tokentokentokenlikeme" 192.168.1.100:8081/v1/update
+
   publish-test:
     runs-on: ubuntu-latest
     needs: build
-    if: gitea.ref != 'refs/heads/main'
+    if: gitea.ref == 'refs/heads/testing'
     steps:
       - uses: https://github.com/actions/checkout@v4
       - name: Log in to Docker Hub
@@ -41,4 +44,6 @@ jobs:
         run: |
           docker tag dematicscrewfixtrenthamdashboard:latest jwlyons/dematicscrewfixtrenthamdashboard:testing
           docker push jwlyons/dematicscrewfixtrenthamdashboard:testing
+      - name: Update Container
+        run: |
           curl -H "Authorization: Bearer tokentokentokenlikeme" 192.168.1.100:8081/v1/update
