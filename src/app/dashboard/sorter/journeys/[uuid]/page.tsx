@@ -48,6 +48,11 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 		};
 
 		fetchULData();
+
+		setInterval(() => {
+			fetchULData();
+		}
+		, 5000);
 	}, []);
 
 	if (isLoading) {
@@ -143,13 +148,7 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 							{JSON.parse(ULData.journey).map(
 								(journeyObject: any, index: number) => (
 									<Tab key={index}>
-										{ULData.createdDate.getDay() +
-											"/" +
-											ULData.createdDate.getMonth() +
-											"/" +
-											ULData.createdDate.getFullYear() +
-											" " +
-											journeyObject.offloadTime}
+										{journeyObject.offloadTime}
 									</Tab>
 								)
 							)}
