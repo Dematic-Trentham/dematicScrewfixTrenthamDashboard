@@ -10,7 +10,7 @@ export async function getJourney(uuid: string) {
 	});
 
 	if (!result) {
-		throw new Error("No requests found");
+		return null;
 	}
 
 	return result;

@@ -11,7 +11,7 @@ import Link from "next/link";
 
 import { changeDateToReadable } from "../../../../utils/changeDateToReadable";
 
-import { getAllJourneys } from "./_actions/journeys";
+import { getAllJourneys, getMasterJourney } from "./_actions/journeys";
 import RequestNewJourney from "./_components/requestNewJourney";
 import { deleteAJourney } from "./[uuid]/_actions/getJourney";
 
@@ -22,10 +22,12 @@ export default function Home() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [journeys, setJourneys] = useState<any[]>([]);
+	const [masterJourney, setMasterJourney] = useState<any | null>(null);
 
 	useEffect(() => {
 		const getJourneys = async () => {
 			const journeyResult = await getAllJourneys();
+			const masterJourneyResult = await getMasterJourney();
 
 			if (!journeyResult) {
 				setError("No requests found");
@@ -34,7 +36,15 @@ export default function Home() {
 				return;
 			}
 
+			if (!masterJourneyResult) {
+				setError("No requests found");
+				setIsLoading(false);
+
+				return;
+			}
+
 			await setJourneys(journeyResult);
+			await setMasterJourney(masterJourneyResult);
 			setIsLoading(false);
 		};
 
@@ -115,6 +125,11 @@ export default function Home() {
 			)}
 			<PanelTop className="h-fit w-full" title="Sorter journey's">
 				<RequestNewJourney />
+				<div className="pt-4">
+					<h2 className="text-lg dark:text-slate-700 text-slate-900">
+						Master Journey Status: {masterJourney.status}
+					</h2>
+				</div>
 				<div className="pt-2">
 					<TableContainer className="rounded-2xl border">
 						<Table size="small" sx={{ minWidth: 650 }}>
