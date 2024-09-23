@@ -15,6 +15,7 @@ const uploadImage = async (
 
 		//throw an error if the upload directory is not set
 		if (!uploadDir) {
+			console.error("Image upload directory is not set");
 			throw new Error("Image upload directory is not set");
 		}
 		const username = data.get("username");
@@ -67,10 +68,15 @@ const uploadImage = async (
 
 			return;
 		}
+
+		console.log("uploadDir", uploadDir);
+
 		const realFolderPath = "./public" + uploadDir;
 
+		console.log("realFolderPath", realFolderPath);
 		//if the directory does not exist, create it
 		if (!fs.existsSync(realFolderPath)) {
+			console.log("Creating directory", realFolderPath);
 			fs.mkdirSync(realFolderPath, { recursive: true });
 		}
 
