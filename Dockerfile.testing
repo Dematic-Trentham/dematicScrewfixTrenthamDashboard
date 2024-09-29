@@ -21,4 +21,4 @@ RUN mkdir -p /app/public
 COPY . .
 
 # test the app
-RUN npm run test
+CMD ["npm", "test"]
