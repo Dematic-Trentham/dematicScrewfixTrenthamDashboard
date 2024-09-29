@@ -10,6 +10,7 @@ jobs:
       - name: Use Node.js
         uses: https://github.com/actions/setup-node@v3
       - run: docker build -t dematicscrewfixtrenthamdashboard_testing -f Dockerfile.testing . --progress=plain --no-cache
+      - run: docker run dematicscrewfixtrenthamdashboard_testing
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           RUNNER_TOOL_CACHE: /toolcache
