@@ -223,7 +223,8 @@ export default function Home() {
 			className="h-fit w-full"
 			title="Shuttle Locations"
 			topRight={
-				<div className="text-white">
+				<div className="text-white flex ">
+					<div>Options</div>
 					<select
 						className="ml-2 rounded border p-1"
 						defaultValue={colorByTypeType.aisle}
@@ -287,6 +288,7 @@ export default function Home() {
 									<ShuttlePanel
 										colorByType={colorByType}
 										currentLocation={location.currentLocation}
+										inMaintenanceBay={false}
 										locations={location}
 										passedFaults={faults}
 									/>
@@ -309,6 +311,7 @@ export default function Home() {
 						<ShuttlePanel
 							colorByType={colorByType}
 							currentLocation=""
+							inMaintenanceBay={true}
 							locations={location}
 							passedFaults={faults}
 						/>
