@@ -5,8 +5,8 @@ import { cn } from "@/utils/cn";
 type PanelProps = {
 	children: ReactNode;
 	title?: string;
-
 	className?: string;
+	topRight?: ReactNode;
 };
 
 const PanelMiddle: React.FC<PanelProps> = (props) => {
@@ -22,6 +22,11 @@ const PanelMiddle: React.FC<PanelProps> = (props) => {
 					className={`rounded-t-2xl bg-orange-400 text-lg font-bold ${props.title === undefined ? "p-0" : "p-4"}`}
 				>
 					{props.title}
+					{props.topRight ? (
+						<div className="float-right">{props.topRight}</div>
+					) : (
+						""
+					)}
 				</div>
 
 				<div className="h-full p-4">{props.children}</div>
