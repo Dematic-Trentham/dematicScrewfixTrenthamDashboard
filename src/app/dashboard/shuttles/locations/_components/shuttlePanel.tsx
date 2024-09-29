@@ -20,42 +20,118 @@ interface ShuttlePanelProps {
 		worstShuttleByShuttle: number;
 	} | null;
 
+	currentLocation: string;
+
 	colorByType: colorByTypeType;
 }
 
 const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
-	const [shuttleFaults, setShuttleFaults] = useState<any>(null);
+	const [shuttleColor, setShuttleColor] = useState<string>("bg-gray-200");
 
-	const shuttleFaultsByShuttle =
-		props.passedFaults?.sortedResultsShuttleID?.[props.locations?.shuttleID];
+	const [shuttleFaultsCount, setShuttleFaultsCount] = useState<number>(0);
+	const [aisleFaultsCount, setAisleFaultsCount] = useState<number>(0);
 
-	console.log("shuttleFaultsByShuttle: ", shuttleFaultsByShuttle);
+	//console.log("shuttleFaultsByShuttle: ", shuttleFaultsByShuttle);
 
 	useEffect(() => {
 		const fetchShuttleFaults = async () => {
-			console.log(
-				"fetchShuttleFaults for shuttleID: ",
-				props.locations.shuttleID
-			);
-			console.log("props.passedFaults: ", props.passedFaults);
-
 			const localShuttleFaults =
 				props.passedFaults?.sortedResultsShuttleID?.[
 					props.locations?.shuttleID
 				];
 
-			if (localShuttleFaults == null) {
-				//console.log("localShuttleFaults is null");
+			//my faults
+			let shuttleFaultsCount = 0;
+			let aisleFaultsCount = 0;
 
-				return;
+			if (localShuttleFaults) {
+				shuttleFaultsCount = localShuttleFaults.length;
 			}
-			console.log("localShuttleFaults: ", localShuttleFaults);
+
+			//convert currentLocation to aisle	and level
+			const aisle = parseInt(props.locations.currentLocation.substring(4, 6));
+			const level = parseInt(props.locations.currentLocation.substring(8, 10));
+
+			//if passedFaults by aisle
+			let localAisleFaults = null;
+
+			if (props.passedFaults?.sortedResultsAisle) {
+				if (props.passedFaults.sortedResultsAisle[aisle]) {
+					if (props.passedFaults.sortedResultsAisle[aisle][level]) {
+						localAisleFaults =
+							props.passedFaults.sortedResultsAisle[aisle][level];
+					}
+				}
+			}
+
+			aisleFaultsCount = localAisleFaults ? localAisleFaults.length : 0;
+
+			if (props.colorByType === colorByTypeType.shuttle) {
+				setShuttleColor(
+					makeColor(
+						shuttleFaultsCount,
+						props.passedFaults?.worstShuttleByShuttle
+					)
+				);
+				//setShuttleFaults(localShuttleFaults);
+			} else {
+				setShuttleColor(
+					makeColor(aisleFaultsCount, props.passedFaults?.worstShuttleByAisle)
+				);
+				//setShuttleFaults(localAisleFaults);
+			}
+
+			setShuttleFaultsCount(shuttleFaultsCount);
+			setAisleFaultsCount(aisleFaultsCount);
 		};
 
-		//fetchShuttleFaults();
-	}, []);
+		fetchShuttleFaults();
+	}, [props]);
 
-	const displayLabel = props.locations.shuttleID || "Unknown";
+	const makeColor = (myFaults: number, worstFaults: number | undefined) => {
+		if (!worstFaults) {
+			worstFaults = 1;
+		}
+		const faultPercentage = myFaults / worstFaults;
+
+		if (faultPercentage < 0.1) {
+			return "bg-green-500";
+		} else if (faultPercentage < 0.2) {
+			return "bg-green-400";
+		} else if (faultPercentage < 0.3) {
+			return "bg-yellow-300";
+		} else if (faultPercentage < 0.4) {
+			return "bg-yellow-400";
+		} else if (faultPercentage < 0.5) {
+			return "bg-yellow-500";
+		} else if (faultPercentage < 0.6) {
+			return "bg-orange-400";
+		} else if (faultPercentage < 0.7) {
+			return "bg-orange-500";
+		} else if (faultPercentage < 0.8) {
+			return "bg-red-400";
+		} else if (faultPercentage < 0.9) {
+			return "bg-red-500";
+		} else {
+			return "bg-red-600";
+		}
+	};
+
+	let displayLabel = <></>;
+
+	if (props.colorByType === colorByTypeType.shuttle) {
+		displayLabel = (
+			<div className={`rounded-xl ${shuttleColor}`}>
+				{props.locations.shuttleID || "Unknown"}
+			</div>
+		);
+	} else {
+		displayLabel = (
+			<div className={`rounded-xl ${shuttleColor}`}>
+				{props.locations.currentLocation || "Unknown"}
+			</div>
+		);
+	}
 
 	const hover = (
 		<div className="rounded-md bg-slate-500 p-2 text-white">
@@ -68,6 +144,10 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 				{props.locations.locationLastUpdated.toLocaleString("en-UK")}
 			</div>
 			<div>Last firmware check: {props.locations.lastFirmwareUpdate}</div>
+
+			<div> </div>
+			<div>Faults with Shuttle: {shuttleFaultsCount}</div>
+			<div>Faults with Aisle: {aisleFaultsCount}</div>
 		</div>
 	);
 
