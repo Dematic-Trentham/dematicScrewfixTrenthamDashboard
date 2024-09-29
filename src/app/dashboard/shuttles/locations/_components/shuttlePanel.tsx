@@ -23,6 +23,7 @@ interface ShuttlePanelProps {
 	currentLocation: string;
 
 	colorByType: colorByTypeType;
+	inMaintenanceBay: boolean;
 }
 
 const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
@@ -119,7 +120,7 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 
 	let displayLabel = <></>;
 
-	if (props.colorByType === colorByTypeType.shuttle) {
+	if (props.colorByType === colorByTypeType.shuttle || props.inMaintenanceBay) {
 		displayLabel = (
 			<div className={`rounded-xl ${shuttleColor}`}>
 				{props.locations.shuttleID || "Unknown"}
