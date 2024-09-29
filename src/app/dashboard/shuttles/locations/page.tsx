@@ -14,7 +14,7 @@ export default function Home() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [locations, setLocations] = useState<shuttleLocation[][]>([]);
 	const [maintenanceBay, setMaintenanceBay] = useState<shuttleLocation[]>([]);
-	const [maintenanceBayCount, setMaintenanceBayCount] = useState<number>(0);
+	//const [maintenanceBayCount, setMaintenanceBayCount] = useState<number>(0);
 	const [aisleCount, setAisleCount] = useState<number>(0);
 	const [levelCount, setLevelCount] = useState<number>(0);
 	const [error, setError] = useState<string | null>(null);
@@ -26,8 +26,9 @@ export default function Home() {
 	} | null>(null);
 
 	const [colorByType, setColorByType] = useState<colorByTypeType>(
-		colorByTypeType.shuttle
+		colorByTypeType.aisle
 	);
+	const [timeToSearch, setTimeToSearch] = useState<number>(7);
 
 	useEffect(() => {
 		const fetchLocations = async () => {
@@ -56,7 +57,7 @@ export default function Home() {
 				setMaintenanceBay(maintenanceBay);
 
 				//set the maintenance bay count
-				setMaintenanceBayCount(maintenanceBay.length);
+				//setMaintenanceBayCount(maintenanceBay.length);
 
 				setIsLoading(false);
 				setError(null);
@@ -119,18 +120,16 @@ export default function Home() {
 			return { aisles, maintenanceBay };
 		};
 
-		setInterval(() => {
-			fetchLocations();
-		}, 10000);
-
 		const fetchFaults = async () => {
-			const result = await getShuttleFaults(1);
+			const result = await getShuttleFaults(timeToSearch);
+
+			//console.log(timeToSearch);
 
 			const sortedResults = await sortShuttleFaults(result);
 
 			setFaults(sortedResults);
 
-			console.log(result);
+			//console.log(result);
 		};
 
 		const sortShuttleFaults = async (faults: shuttleFault[]) => {
@@ -188,10 +187,16 @@ export default function Home() {
 			};
 		};
 
-		fetchFaults();
+		const intervalId = setInterval(() => {
+			fetchLocations();
+			fetchFaults();
+		}, 5000);
 
+		fetchFaults();
 		fetchLocations();
-	}, []);
+
+		return () => clearInterval(intervalId);
+	}, [timeToSearch]);
 
 	if (isLoading) {
 		return (
@@ -214,11 +219,49 @@ export default function Home() {
 	}
 
 	return (
-		<PanelTop className="h-fit w-full" title="Shuttle Locations">
+		<PanelTop
+			className="h-fit w-full"
+			title="Shuttle Locations"
+			topRight={
+				<div className="text-white">
+					<select
+						className="ml-2 rounded border p-1"
+						defaultValue={colorByTypeType.aisle}
+						onChange={(e) => {
+							setColorByType(parseInt(e.target.value));
+						}}
+					>
+						<option value={colorByTypeType.aisle}>Aisle</option>
+						<option value={colorByTypeType.shuttle}>Shuttle</option>
+					</select>
+					<select
+						className="ml-2 rounded border p-1"
+						defaultValue={7}
+						onChange={(e) => {
+							setTimeToSearch(Number(e.target.value));
+							//console.log(Number(e.target.value));
+						}}
+					>
+						<option value={1}>1 day</option>
+						<option value={2}>2 days</option>
+						<option value={4}>4 days</option>
+						<option value={7}>1 week</option>
+						<option value={10}>10 days</option>
+						<option value={14}>2 weeks</option>
+						<option value={30}>1 month</option>
+						<option value={60}>2 months</option>
+						<option value={90}>3 months</option>
+						<option value={120}>4 months</option>
+						<option value={150}>5 months</option>
+						<option value={180}>6 months</option>
+					</select>
+				</div>
+			}
+		>
 			<p className="text-center text-medium font-bold">In Aisle</p>
 
 			<div className="flex w-full flex-wrap content-center justify-center">
-				<div className="hidden min-w-56 flex-col self-center lg:flex">
+				<div className="hidden min-w-56 flex-col space-x-1 space-y-1 self-center lg:flex">
 					<p className="text-center text-medium">Aisle</p>
 
 					{Array.from({ length: levelCount }, (_, index) => (
@@ -233,13 +276,17 @@ export default function Home() {
 
 				{locations.map((aisle, index) => (
 					<>
-						<div key={index} className="flex min-w-56 flex-col self-center">
+						<div
+							key={index}
+							className="flex min-w-56 flex-col space-x-1 space-y-1 self-center"
+						>
 							<div className="text-center text-medium">Aisle {index + 1}</div>
 
 							{aisle.map((location, index) => (
 								<div key={index}>
 									<ShuttlePanel
 										colorByType={colorByType}
+										currentLocation={location.currentLocation}
 										locations={location}
 										passedFaults={faults}
 									/>
@@ -256,11 +303,12 @@ export default function Home() {
 			</div>
 			<br />
 			<p className="text-medium font-bold">Maintenance Bay</p>
-			<div className="flex w-full flex-wrap content-center justify-center">
+			<div className="flex w-full flex-wrap content-center justify-center space-x-1 space-y-1">
 				{maintenanceBay.map((location, index) => (
 					<div key={index} className="flex flex-row space-x-2 self-center">
 						<ShuttlePanel
 							colorByType={colorByType}
+							currentLocation=""
 							locations={location}
 							passedFaults={faults}
 						/>
