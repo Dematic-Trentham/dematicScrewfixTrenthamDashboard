@@ -11,6 +11,8 @@ RUN apk add --no-cache git
 # Copy package.json and package-lock.json
 COPY package.json ./
 
+RUN npm set cache /opt/hostedtoolcache
+
 # Install dependencies
 RUN npm install --legacy-peer-deps
 
