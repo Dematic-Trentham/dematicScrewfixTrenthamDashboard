@@ -21,8 +21,9 @@ interface ShuttlePanelProps {
 	} | null;
 
 	currentLocation: string;
-
+	currentSearchTime: number;
 	colorByType: colorByTypeType;
+	inMaintenanceBay: boolean;
 }
 
 const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
@@ -119,7 +120,7 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 
 	let displayLabel = <></>;
 
-	if (props.colorByType === colorByTypeType.shuttle) {
+	if (props.colorByType === colorByTypeType.shuttle || props.inMaintenanceBay) {
 		displayLabel = (
 			<div className={`rounded-xl ${shuttleColor}`}>
 				{props.locations.shuttleID || "Unknown"}
@@ -155,7 +156,10 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 		<Link
 			className="min-w-36 text-center"
 			href={
-				"/dashboard/shuttles/" + props.locations.macAddress.replaceAll(" ", "")
+				"/dashboard/shuttles/locations/" +
+					props.locations.macAddress.replaceAll(" ", "") +
+					"?currentSearchTime=" +
+					props.currentSearchTime || "1"
 			}
 		>
 			<HoverPopup itemToHover={displayLabel} itemToPopUp={hover} />

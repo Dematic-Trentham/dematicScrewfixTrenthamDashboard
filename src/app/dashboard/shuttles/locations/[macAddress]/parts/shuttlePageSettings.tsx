@@ -78,8 +78,21 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 	if (isLoading) {
 		return <div>is loading....</div>;
 	}
+
+	if (error) {
+		return <div className="text-red-600">{error}</div>;
+	}
+
 	if (!permission) {
-		return <div>Permission denied</div>;
+		return (
+			<div>
+				<div className="text-xl font-bold">Permission Denied</div>
+				<div>
+					You require the &quot;shuttleEdit&quot;. permission Please ask admin
+					to grant access.
+				</div>
+			</div>
+		);
 	}
 
 	if (error) {
