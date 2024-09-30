@@ -123,12 +123,8 @@ const ShuttlePageFaultsFromThisShuttleGrouped: React.FC<
 			<table className="w-full">
 				<thead className="border border-black bg-orange-400">
 					<tr>
-						<th style={{ width: "150px" }}>Timestamp</th>
-						<th style={{ width: "150px" }}>Resolve Time</th>
-						<th style={{ width: "100px" }}>Time in Fault</th>
-						<th style={{ width: "100px" }}>Location</th>
-						<th style={{ width: "200px" }}>Fault Description</th>
-						<th style={{ width: "50px" }}>Details</th>
+					<th style={{ width: "200px" }}>Fault Description</th>
+						<th style={{ width: "50px" }}>Count</th>
 					</tr>
 				</thead>
 
