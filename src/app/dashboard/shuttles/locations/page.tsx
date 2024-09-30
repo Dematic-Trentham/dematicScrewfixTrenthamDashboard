@@ -277,11 +277,8 @@ export default function Home() {
 				</div>
 
 				{locations.map((aisle, index) => (
-					<>
-						<div
-							key={index}
-							className="flex min-w-56 flex-col space-x-1 space-y-1 self-center"
-						>
+					<React.Fragment key={index}>
+						<div className="flex min-w-56 flex-col space-x-1 space-y-1 self-center">
 							<div className="text-center text-medium">Aisle {index + 1}</div>
 
 							{aisle.map((location, index) => (
@@ -302,7 +299,7 @@ export default function Home() {
 								<VerticalBar styles="align-middle" />
 							</div>
 						)}
-					</>
+					</React.Fragment>
 				))}
 			</div>
 			<br />
