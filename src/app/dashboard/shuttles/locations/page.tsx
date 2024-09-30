@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import React from "react";
 
 import { shuttleLocation, shuttleFault } from "../_types/shuttle";
 
@@ -223,7 +224,7 @@ export default function Home() {
 			className="h-fit w-full"
 			title="Shuttle Locations"
 			topRight={
-				<div className="text-white flex ">
+				<div className="flex text-white">
 					<div>Options</div>
 					<select
 						className="ml-2 rounded border p-1"
@@ -288,6 +289,7 @@ export default function Home() {
 									<ShuttlePanel
 										colorByType={colorByType}
 										currentLocation={location.currentLocation}
+										currentSearchTime={timeToSearch}
 										inMaintenanceBay={false}
 										locations={location}
 										passedFaults={faults}
@@ -311,6 +313,7 @@ export default function Home() {
 						<ShuttlePanel
 							colorByType={colorByType}
 							currentLocation=""
+							currentSearchTime={timeToSearch}
 							inMaintenanceBay={true}
 							locations={location}
 							passedFaults={faults}
