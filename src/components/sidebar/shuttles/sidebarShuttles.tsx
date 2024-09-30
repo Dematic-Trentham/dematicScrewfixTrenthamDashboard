@@ -15,7 +15,15 @@ const SidebarAdmin = async () => {
 		<>
 			<HorizontalBar />
 			<SidebarParentComponentGroup
-				icon={<Image alt="Shuttle" height={20} src={shuttleIcon} width={20} />}
+				icon={
+					<Image
+						alt="Shuttle"
+						height={20}
+						src={shuttleIcon}
+						style={{ width: "auto", height: "auto" }}
+						width={20}
+					/>
+				}
 				link="/dashboard/shuttles"
 				text="DMS"
 			>
