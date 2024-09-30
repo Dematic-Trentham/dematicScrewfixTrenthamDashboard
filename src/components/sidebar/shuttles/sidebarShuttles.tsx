@@ -20,7 +20,7 @@ const SidebarAdmin = async () => {
 						alt="Shuttle"
 						height={20}
 						src={shuttleIcon}
-						style={{ width: "auto", height: "auto" }}
+						style={{ width: "20", height: "20" }}
 						width={20}
 					/>
 				}
