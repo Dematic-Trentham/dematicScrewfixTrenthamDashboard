@@ -2,6 +2,8 @@ import React from "react";
 import { FaHome } from "react-icons/fa";
 
 import SideMini from "../visual/sideMini";
+import SideMobile from "../visual/sideMobile";
+import { ThemeSwitch } from "../theme-switch";
 
 import SidebarParentComponent from "./sidebarParentComponent";
 import SidebarAdmin from "./admin/sidebarAdmin";
@@ -10,27 +12,43 @@ import SidebarSorter from "./sorter/sidebarSorter";
 import SidebarOrderStart from "./orderStart/sidebarOrderStart";
 
 const Sidebar = () => {
-	return (
-		<SideMini>
+	const sideBar = (
+		<div className="flex h-full flex-col bg-gray-800">
 			<div>
 				{/* sidebar */}
-
 				<div className="flex h-fit flex-1 flex-col overflow-y-auto overflow-x-hidden">
-					<nav className="flex-1 bg-gray-800">
+					<nav className="">
 						<SidebarParentComponent
 							icon={<FaHome />}
 							link="/"
 							text="Dashboard"
 						/>
-
 						<SidebarShuttles />
 						<SidebarOrderStart />
 						<SidebarSorter />
 						<SidebarAdmin />
 					</nav>
 				</div>
+				<div className="flex-grow" />
+				<div className="p-1">
+					<ThemeSwitch />
+					<div className="text-center" style={{ fontSize: 6 }}>
+						JWL 2024
+					</div>
+				</div>
 			</div>
-		</SideMini>
+		</div>
+	);
+
+	return (
+		<div>
+			<div className="hidden md:flex">
+				<SideMini>{sideBar}</SideMini>
+			</div>
+			<div className="md:hidden">
+				<SideMobile>{sideBar}</SideMobile>
+			</div>
+		</div>
 	);
 };
 
