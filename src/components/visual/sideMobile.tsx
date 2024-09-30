@@ -2,8 +2,8 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 "use client";
 import { useEffect, useState } from "react";
-import { FaBars } from "react-icons/fa";
 import { useCookies } from "next-client-cookies";
+import { FaBars } from "react-icons/fa";
 
 type SideMiniProps = {
 	children: React.ReactNode;
@@ -32,44 +32,37 @@ const SideMini: React.FC<SideMiniProps> = ({ children }) => {
 		cookies.set("sidebarIsMinimized", isMinimizedButton ? "false" : "true");
 	};
 
-	const mouseEnter = () => {
-		if (isMinimizedButton) {
-			setIsMinimized(false);
-		}
-	};
-
-	const mouseLeave = () => {
-		if (isMinimizedButton) {
-			setIsMinimized(true);
-		}
-	};
-
 	return (
-		<div
-			className={`hidden h-screen ${isMinimized ? "w-10" : "w-64"} duration-5000 flex-col bg-gray-800 transition-width md:flex`}
-			onMouseEnter={() => mouseEnter()}
-			onMouseLeave={() => mouseLeave()}
-		>
+		<div>
 			<div
-				className="flex h-16 items-center justify-center bg-gray-900"
-				role="button"
-				onClick={toggleMinimize}
+				style={{
+					position: "fixed",
+					top: 0,
+					left: 0,
+
+					color: "#fff",
+					transition: "width 0.3s",
+					overflow: "hidden",
+				}}
 			>
-				<button className="justify-start px-3 py-5">
+				<div
+					className="justify-start px-3 py-6"
+					role="button"
+					tabIndex={0}
+					onClick={toggleMinimize}
+				>
 					<FaBars
 						className={`size-4 ${isMinimized ? "text-gray-300" : "text-white"}`}
 					/>
-				</button>
-				<div
-					className={`duration-5000 flex flex-1 justify-center transition-opacity ${isMinimized ? "hidden" : "block"}`}
-				>
-					<span className="font-bold uppercase text-white">Sidebar</span>
 				</div>
 			</div>
 
-			<div className="h-1 flex-1 overflow-auto border-r-2 border-r-black">
-				{children}
-			</div>
+			<div />
+			{!isMinimizedButton && (
+				<div className="flex h-screen w-screen flex-col bg-gray-800 py-16">
+					<div>{children}</div>
+				</div>
+			)}
 		</div>
 	);
 };

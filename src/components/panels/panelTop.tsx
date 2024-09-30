@@ -19,11 +19,11 @@ const PanelTop: React.FC<PanelProps> = (props) => {
 				)}
 			>
 				<div
-					className={`rounded-t-2xl bg-orange-400 text-lg font-bold ${props.title === undefined ? "p-0" : "p-4"} `}
+					className={`grid rounded-t-2xl bg-orange-400 text-lg font-bold ${props.title === undefined ? "p-0" : "p-4"} `}
 				>
 					{props.title}
 					{props.topRight ? (
-						<div className="float-right">{props.topRight}</div>
+						<div className="justify-self-end">{props.topRight}</div>
 					) : (
 						""
 					)}

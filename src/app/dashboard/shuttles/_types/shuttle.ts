@@ -23,3 +23,13 @@ export type shuttleFault = {
 	xCoordinate: number;
 	rawInfo: string;
 };
+
+export type shuttleFaultGroup = {
+	faultCode: string;
+	count: number;
+};
+
+export type shuttleFaultCodeLookup = {
+	ID: string;
+	faultMessage: string;
+};
