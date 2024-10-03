@@ -49,9 +49,9 @@ export default function Home() {
 		};
 
 		setInterval(() => {
-			getJourneys();
+			//getJourneys();
 		}, 5000);
-		getJourneys();
+	//	getJourneys();
 	}, []);
 
 	const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
