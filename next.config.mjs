@@ -7,6 +7,7 @@ const nextConfig = {
 			allowedOrigins: ["*"],
 		},
 	},
+	reactStrictMode: false,
 };
 
 export default nextConfig;
