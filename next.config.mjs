@@ -8,7 +8,7 @@ const nextConfig = {
 		},
 	},
 	reactStrictMode: false,
-	
+	compress: false,
 
 	  // ...
   /**
