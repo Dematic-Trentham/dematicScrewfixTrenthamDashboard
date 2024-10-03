@@ -9,7 +9,7 @@ const nextConfig = {
 	},
 	reactStrictMode: false,
 	compress: false,
-
+	productionBrowserSourceMaps: true,
 	  // ...
   /**
    * @param {import('webpack').Configuration} webpackConfig
