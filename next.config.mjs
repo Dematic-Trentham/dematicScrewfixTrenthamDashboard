@@ -8,6 +8,20 @@ const nextConfig = {
 		},
 	},
 	reactStrictMode: false,
-};
+	
+
+	  // ...
+  /**
+   * @param {import('webpack').Configuration} webpackConfig
+   * @returns {import('webpack').Configuration}
+   */
+  webpack(webpackConfig) {
+    return {
+      ...webpackConfig,
+      optimization: {
+        minimize: false,
+      },
+    };
+  },}
 
 export default nextConfig;
