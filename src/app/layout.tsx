@@ -10,6 +10,8 @@ import { siteConfig } from "@/config/site";
 import Sidebar from "@/components/sidebar/sidebar";
 import Topbar from "@/components/topbar/topbar";
 import ReloadPage from "@/components/reload";
+import { Suspense } from "react";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 export const metadata: Metadata = {
 	title: {
@@ -39,6 +41,8 @@ export default function RootLayout({
 			<head />
 
 			<body className="antialiased">
+		
+			<Suspense>
 				<CookiesProvider>
 					<Providers
 						themeProps={{ attribute: "class", defaultTheme: "dark", children }}
@@ -59,6 +63,8 @@ export default function RootLayout({
 						</ToastContextProvider>
 					</Providers>
 				</CookiesProvider>
+				</Suspense>
+				
 			</body>
 		</html>
 	);

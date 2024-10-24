@@ -13,7 +13,7 @@
 	],
 	"plugins": [
 		"react",
-		"unused-imports",
+		//"unused-imports",
 		"import",
 		"@typescript-eslint",
 		"jsx-a11y",
@@ -42,8 +42,8 @@
 		"jsx-a11y/interactive-supports-focus": "warn",
 		"prettier/prettier": "warn",
 		"no-unused-vars": "off",
-		"unused-imports/no-unused-vars": "off",
-		"unused-imports/no-unused-imports": "warn",
+		//"unused-imports/no-unused-vars": "off",
+		//"unused-imports/no-unused-imports": "warn",
 		"@typescript-eslint/no-unused-vars": [
 			"warn",
 			{

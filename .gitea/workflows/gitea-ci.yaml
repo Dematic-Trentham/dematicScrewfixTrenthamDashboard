@@ -40,6 +40,10 @@ jobs:
       - name: Update Container
         run: |
           curl -H "Authorization: Bearer tokentokentokenlikeme" 192.168.1.100:8081/v1/update
+      - name: Clean up Docker images
+        run: |
+          docker system prune -f
+
 
   publish-test:
     runs-on: ubuntu-latest
@@ -56,3 +60,7 @@ jobs:
       - name: Update Container
         run: |
           curl -H "Authorization: Bearer tokentokentokenlikeme" 192.168.1.100:8081/v1/update
+      - name: Clean up Docker images
+        run: |
+          docker system prune -f
+
