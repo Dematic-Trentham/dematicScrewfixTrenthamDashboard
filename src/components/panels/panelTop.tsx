@@ -29,7 +29,7 @@ const PanelTop: React.FC<PanelProps> = (props) => {
 					)}
 				</div>
 
-				<div className="h-full rounded-b-2xl bg-white px-4 pb-4 pt-2">
+				<div className="h-fit rounded-b-2xl bg-white px-4 pb-4 pt-2">
 					{props.children}
 				</div>
 			</div>
