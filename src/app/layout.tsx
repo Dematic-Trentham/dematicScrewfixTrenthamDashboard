@@ -41,7 +41,7 @@ export default function RootLayout({
 			<head />
 
 			<body className="antialiased">
-			<ErrorBoundary>
+		
 			<Suspense>
 				<CookiesProvider>
 					<Providers
@@ -64,7 +64,7 @@ export default function RootLayout({
 					</Providers>
 				</CookiesProvider>
 				</Suspense>
-				</ErrorBoundary>
+				
 			</body>
 		</html>
 	);
