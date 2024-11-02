@@ -1,5 +1,6 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter,useSearchParams  } from "next/navigation";
+
 import "react-tabs/style/react-tabs.css";
 import { useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
@@ -28,7 +29,12 @@ export default function ShuttlePage({
 		useState<string>("Maintenance Bay");
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [timeToSearch, setTimeToSearch] = useState<number>(7);
+
+	const searchParams = useSearchParams()
+	const initialTimeToSearch = searchParams.get("currentSearchTime")
+		? Number(searchParams.get("currentSearchTime"))
+		: 7;
+	const [timeToSearch, setTimeToSearch] = useState<number>(initialTimeToSearch);
 
 	useEffect(() => {
 		const fetchShuttle = async () => {
@@ -93,10 +99,13 @@ export default function ShuttlePage({
 					<div className="space-x-2">
 						<select
 							className="ml-2 rounded border p-1 text-white"
-							defaultValue={7}
+							defaultValue={timeToSearch}
 							onChange={(e) => {
 								setTimeToSearch(Number(e.target.value));
 								//console.log(Number(e.target.value));
+
+								//update the search time in the url
+								router.replace(`?currentSearchTime=${e.target.value}`);
 							}}
 						>
 							<option value={1}>1 day</option>
