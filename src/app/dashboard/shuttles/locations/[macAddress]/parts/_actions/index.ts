@@ -1,4 +1,4 @@
-"use server";
+"use server"
 
 import db from "@/db/db";
 
@@ -73,6 +73,52 @@ export const getLocationFaults = async (
 	});
 
 	return faults;
+};
+
+export const getShuttleMovementLogsByMac = async (
+	macAddress: string,
+	days: number
+) => {
+	let logs = await db.dmsShuttleSwapLogs.findMany({
+		where: {
+			AND: [
+				{
+					OR: [{ oldMacAddress: macAddress }, { newMacAddress: macAddress }],
+				},
+				{
+					timestamp: {
+						gte: new Date(new Date().getTime() - days * 24 * 60 * 60 * 1000),
+					},
+				},
+			],
+		},
+		orderBy: {
+			timestamp: "desc",
+		},
+	});
+
+	return logs;
+};
+
+export const getShuttleMovementLogsByLocation = async (
+	aisle: number,
+	level: number,
+	days: number
+) => {
+	let logs = await db.dmsShuttleSwapLogs.findMany({
+		where: {
+			aisle: aisle,
+			level: level,
+			timestamp: {
+				gte: new Date(new Date().getTime() - days * 24 * 60 * 60 * 1000),
+			},
+		},
+		orderBy: {
+			timestamp: "desc",
+		},
+	});
+
+	return logs;
 };
 
 export const getFaultCodeLookup = async () => {

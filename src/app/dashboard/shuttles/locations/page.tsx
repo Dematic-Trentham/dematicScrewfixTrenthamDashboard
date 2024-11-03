@@ -27,7 +27,7 @@ export default function Home() {
 	} | null>(null);
 
 	const [colorByType, setColorByType] = useState<colorByTypeType>(
-		colorByTypeType.aisle
+		colorByTypeType.shuttle
 	);
 	const [timeToSearch, setTimeToSearch] = useState<number>(7);
 
@@ -233,8 +233,8 @@ export default function Home() {
 							setColorByType(parseInt(e.target.value));
 						}}
 					>
-						<option value={colorByTypeType.aisle}>Aisle</option>
 						<option value={colorByTypeType.shuttle}>Shuttle</option>
+						<option value={colorByTypeType.aisle}>Aisle</option>
 					</select>
 					<select
 						className="ml-2 rounded border p-1"
