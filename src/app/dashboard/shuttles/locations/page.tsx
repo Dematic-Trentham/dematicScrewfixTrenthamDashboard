@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { shuttleLocation, shuttleFault } from "../_types/shuttle";
 
@@ -10,8 +11,12 @@ import { colorByTypeType } from "./_components/shuttlePanel";
 
 import PanelTop from "@/components/panels/panelTop";
 import VerticalBar from "@/components/visual/verticalBar";
+import { updateUrlParams } from "@/utils/url/params";
 
 export default function Home() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+
 	const [isLoading, setIsLoading] = useState(true);
 	const [locations, setLocations] = useState<shuttleLocation[][]>([]);
 	const [maintenanceBay, setMaintenanceBay] = useState<shuttleLocation[]>([]);
@@ -26,12 +31,20 @@ export default function Home() {
 		worstShuttleByShuttle: number;
 	} | null>(null);
 
-	const [totalFaults, setTotalFaults] = useState<number>(0); 
+	const [totalFaults, setTotalFaults] = useState<number>(0);
 
-	const [colorByType, setColorByType] = useState<colorByTypeType>(
-		colorByTypeType.shuttle
-	);
-	const [timeToSearch, setTimeToSearch] = useState<number>(7);
+	const initalColorByType = searchParams.get("colorByType")
+		? Number(searchParams.get("colorByType"))
+		: colorByTypeType.shuttle;
+
+	const [colorByType, setColorByType] =
+		useState<colorByTypeType>(initalColorByType);
+
+	const initialTimeToSearch = searchParams.get("currentSearchTime")
+		? Number(searchParams.get("currentSearchTime"))
+		: 7;
+
+	const [timeToSearch, setTimeToSearch] = useState<number>(initialTimeToSearch);
 
 	useEffect(() => {
 		const fetchLocations = async () => {
@@ -239,9 +252,17 @@ export default function Home() {
 					<div>Options</div>
 					<select
 						className="ml-2 rounded border p-1"
-						defaultValue={colorByTypeType.aisle}
+						defaultValue={colorByType}
 						onChange={(e) => {
 							setColorByType(parseInt(e.target.value));
+
+							//update the color by type in the url
+							updateUrlParams(
+								searchParams,
+								router,
+								"colorByType",
+								e.target.value
+							);
 						}}
 					>
 						<option value={colorByTypeType.shuttle}>Shuttle</option>
@@ -249,9 +270,18 @@ export default function Home() {
 					</select>
 					<select
 						className="ml-2 rounded border p-1"
-						defaultValue={7}
+						defaultValue={timeToSearch}
 						onChange={(e) => {
 							setTimeToSearch(Number(e.target.value));
+
+							//update the search time in the url
+							updateUrlParams(
+								searchParams,
+								router,
+								"currentSearchTime",
+								e.target.value
+							);
+
 							//console.log(Number(e.target.value));
 						}}
 					>
