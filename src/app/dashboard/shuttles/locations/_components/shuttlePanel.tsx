@@ -95,7 +95,7 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 		}
 		const faultPercentage = myFaults / worstFaults;
 
-		if (faultPercentage < 0.1) {
+		if (faultPercentage < 0.01) {
 			return "bg-green-500";
 		} else if (faultPercentage < 0.2) {
 			return "bg-green-400";
