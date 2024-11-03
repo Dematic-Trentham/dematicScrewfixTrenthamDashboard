@@ -28,7 +28,7 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 		const fetchShuttle = async () => {
 			//split location string into aisle(char 5 and 6) and level(char 7 and 8)
 			const aisle = parseInt(props.location.slice(5, 7));
-			const level = parseInt(props.location.slice(9, 10));
+			const level = parseInt(props.location.slice(8, 10));
 
 			const shuttle = await getLocationFaults(aisle, level, props.daysToSearch);
 			const faultCodeLookup = await getFaultCodeLookup();
@@ -83,8 +83,6 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 			shuttle.sort((a, b) => {
 				return b.timestamp.getTime() - a.timestamp.getTime();
 			});
-
-			console.log(shuttle);
 
 			setIsLoading(false);
 			setFaults(shuttle);
@@ -207,7 +205,6 @@ function makeFaultRow(
 	fault: shuttleFault,
 	faultCodeLookup: shuttleFaultCodeLookup[]
 ) {
-	console.log(fault);
 
 	if (fault.faultCode === "-1") {
 		//This is a shuttle movement log
