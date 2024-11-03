@@ -129,10 +129,10 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 							fault.resolvedTimestamp?.toLocaleString() || "Not Resolved",
 							fault.resolvedTimestamp
 								? (
-										(fault.resolvedTimestamp.getTime() -
+									Math.round((fault.resolvedTimestamp.getTime() -
 											fault.timestamp.getTime()) /
 										1000
-									).toString()
+									)).toString()
 								: "Not Resolved",
 							faultCodeLookup.find(
 								(faultCode) => faultCode.ID === fault.faultCode
@@ -207,7 +207,6 @@ function makeFaultRow(
 	fault: shuttleFault,
 	faultCodeLookup: shuttleFaultCodeLookup[]
 ) {
-
 	console.log(fault);
 
 	if (fault.faultCode === "-1") {
@@ -222,7 +221,7 @@ function makeFaultRow(
 		return (
 			<tr
 				key={log.ID}
-				className="border border-black text-center hover:bg-blue-400 bg-blue-200"
+				className="border border-black bg-blue-200 text-center hover:bg-blue-400"
 			>
 				<td>{log.timestamp.toLocaleString()}</td>
 				<td>Shuttle Swapped </td>
@@ -231,7 +230,6 @@ function makeFaultRow(
 				<td colSpan={2} />
 			</tr>
 		);
-
 	} else {
 		return (
 			<tr
@@ -242,8 +240,11 @@ function makeFaultRow(
 				<td>{fault.resolvedTimestamp?.toLocaleString() || "Not Resolved"}</td>
 				<td>
 					{fault.resolvedTimestamp
-						? (fault.resolvedTimestamp.getTime() - fault.timestamp.getTime()) /
-							1000
+						? Math.round(
+								(fault.resolvedTimestamp.getTime() -
+									fault.timestamp.getTime()) /
+									1000
+							)
 						: "Not Resolved"}
 				</td>
 				<td>{fault.shuttleID}</td>
