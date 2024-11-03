@@ -42,13 +42,13 @@ export default function ShuttlePage({
 	const [timeToSearch, setTimeToSearch] = useState<number>(initialTimeToSearch);
 	const [currentTab, setCurrentTab] = useState<number>(initialTab);
 
-	useEffect(() => {
-		const params = new URLSearchParams(searchParams.toString());
+	// useEffect(() => {
+	// 	const params = new URLSearchParams(searchParams.toString());
 
-		params.set("currentSearchTime", timeToSearch.toString());
-		params.set("currentTab", currentTab.toString());
-		window.history.pushState(null, "", `?${params.toString()}`);
-	}, [timeToSearch, currentTab]);
+	// 	params.set("currentSearchTime", timeToSearch.toString());
+	// 	params.set("currentTab", currentTab.toString());
+	// 	window.history.pushState(null, "", `?${params.toString()}`);
+	// }, [timeToSearch, currentTab]);
 
 	useEffect(() => {
 		const fetchShuttle = async () => {
