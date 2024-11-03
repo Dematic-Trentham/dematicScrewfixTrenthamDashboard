@@ -26,6 +26,8 @@ export default function Home() {
 		worstShuttleByShuttle: number;
 	} | null>(null);
 
+	const [totalFaults, setTotalFaults] = useState<number>(0); 
+
 	const [colorByType, setColorByType] = useState<colorByTypeType>(
 		colorByTypeType.shuttle
 	);
@@ -129,6 +131,15 @@ export default function Home() {
 			const sortedResults = await sortShuttleFaults(result);
 
 			setFaults(sortedResults);
+
+			//total faults
+			let totalFaults = 0;
+
+			for (let shuttleID in sortedResults.sortedResultsShuttleID) {
+				totalFaults += sortedResults.sortedResultsShuttleID[shuttleID].length;
+			}
+
+			setTotalFaults(totalFaults);
 
 			//console.log(result);
 		};
@@ -244,6 +255,7 @@ export default function Home() {
 							//console.log(Number(e.target.value));
 						}}
 					>
+						<option value={0.5}>12 hours</option>
 						<option value={1}>1 day</option>
 						<option value={2}>2 days</option>
 						<option value={4}>4 days</option>
@@ -260,6 +272,9 @@ export default function Home() {
 				</div>
 			}
 		>
+			<div>
+				<p>{`Total Faults ${totalFaults}`}</p>
+			</div>
 			<p className="text-center text-medium font-bold">In Aisle</p>
 
 			<div className="flex w-full flex-wrap content-center justify-center">
