@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { getFaultCodeLookup, getShuttleFaults } from "./_actions";
+import {
+	getFaultCodeLookup,
+	getShuttleFaults,
+	getShuttleMovementLogsByMac,
+} from "./_actions";
 
 import {
 	shuttleFault,
@@ -23,6 +27,8 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 		shuttleFaultCodeLookup[]
 	>([]);
 
+
+
 	useEffect(() => {
 		const fetchShuttle = async () => {
 			const shuttle = await getShuttleFaults(
@@ -30,6 +36,10 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 				props.daysToSearch
 			);
 			const faultCodeLookup = await getFaultCodeLookup();
+			const ShuttleMovementLogsByLocation = await getShuttleMovementLogsByMac(
+				props.macAddress,
+				props.daysToSearch
+			);
 
 			if (!shuttle) {
 				setIsLoading(false);
@@ -46,6 +56,34 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 
 				return;
 			}
+
+			//insert the shuttle movement logs into the shuttle faults (As a fault with a fault code of -1)
+			ShuttleMovementLogsByLocation.forEach((log) => {
+
+						//Make log into a json object
+						const logString = JSON.stringify(log);
+
+				//Make log into a json object
+				const logAsFault: shuttleFault = {
+					ID: log.ID,
+					aisle: log.aisle,
+					level: log.level,
+					timestamp: log.timestamp,
+					macAddress: "N/A",
+					faultCode: "-1",
+					WLocation: 0,
+					ZLocation: 0,
+					shuttleID: "N/A",
+					xLocation: 0,
+					xCoordinate: 0,
+					faultMessage: -1,
+					resolvedReason: "N/A",
+					resolvedTimestamp: null,
+					rawInfo: logString,
+				};
+
+				shuttle.push(logAsFault);
+			});
 
 			setIsLoading(false);
 			setFaults(shuttle);
