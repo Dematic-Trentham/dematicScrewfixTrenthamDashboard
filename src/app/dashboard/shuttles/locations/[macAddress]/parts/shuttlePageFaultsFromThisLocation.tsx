@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { getFaultCodeLookup, getLocationFaults } from "./_actions";
+import { getShuttleMovementLogsByLocation } from "./_actions/index";
 
 import {
 	shuttleFault,
@@ -31,6 +32,12 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 
 			const shuttle = await getLocationFaults(aisle, level, props.daysToSearch);
 			const faultCodeLookup = await getFaultCodeLookup();
+			const ShuttleMovementLogsByLocation =
+				await getShuttleMovementLogsByLocation(
+					aisle,
+					level,
+					props.daysToSearch
+				);
 
 			if (!shuttle) {
 				setIsLoading(false);
@@ -47,6 +54,37 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 
 				return;
 			}
+
+			//insert the shuttle movement logs into the shuttle faults (As a fault with a fault code of -1)
+			ShuttleMovementLogsByLocation.forEach((log) => {
+				//Make log into a json object
+				const logString = JSON.stringify(log);
+
+				shuttle.push({
+					ID: log.ID,
+					aisle: log.aisle,
+					level: log.level,
+					timestamp: log.timestamp,
+					macAddress: "N/A",
+					faultCode: "-1",
+					WLocation: 0,
+					ZLocation: 0,
+					shuttleID: "N/A",
+					xLocation: 0,
+					xCoordinate: 0,
+					faultMessage: -1,
+					resolvedReason: "N/A",
+					resolvedTimestamp: null,
+					rawInfo: logString,
+				});
+			});
+
+			//sort the shuttle faults by timestamp
+			shuttle.sort((a, b) => {
+				return b.timestamp.getTime() - a.timestamp.getTime();
+			});
+
+			console.log(shuttle);
 
 			setIsLoading(false);
 			setFaults(shuttle);
@@ -154,49 +192,7 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 						</tr>
 					) : (
 						faults.map((fault) => {
-							return (
-								<tr
-									key={fault.ID}
-									className="border border-black text-center hover:bg-yellow-200"
-								>
-									<td>{fault.timestamp.toLocaleString()}</td>
-									<td>
-										{fault.resolvedTimestamp?.toLocaleString() ||
-											"Not Resolved"}
-									</td>
-									<td>
-										{fault.resolvedTimestamp
-											? (fault.resolvedTimestamp.getTime() -
-													fault.timestamp.getTime()) /
-												1000
-											: "Not Resolved"}
-									</td>
-									<td>{fault.shuttleID}</td>
-									<td>
-										{faultCodeLookup.find(
-											(faultCode) => faultCode.ID === fault.faultCode
-										)?.faultMessage || "Unknown"}
-									</td>
-
-									<td>
-										<HoverPopup
-											itemToHover={<button>Details</button>}
-											itemToPopUp={
-												<div className="w-52 rounded-lg bg-yellow-400 p-1">
-													<div>W Location: {fault.WLocation}</div>
-													<div>Z Location: {fault.ZLocation}</div>
-													<div>Aisle: {fault.aisle}</div>
-													<div>Level: {fault.level}</div>
-													<div>Shuttle ID: {fault.shuttleID}</div>
-													<div>X Location: {fault.xLocation}</div>
-													<div>X Coordinate: {fault.xCoordinate}</div>
-												</div>
-											}
-											xOffset={-208}
-										/>
-									</td>
-								</tr>
-							);
+							return makeFaultRow(fault, faultCodeLookup);
 						})
 					)}
 				</tbody>
@@ -206,3 +202,74 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 };
 
 export default ShuttlePageFaultsFromThisLocation;
+
+function makeFaultRow(
+	fault: shuttleFault,
+	faultCodeLookup: shuttleFaultCodeLookup[]
+) {
+
+	console.log(fault);
+
+	if (fault.faultCode === "-1") {
+		//This is a shuttle movement log
+
+		const log = JSON.parse(fault.rawInfo);
+
+		//make date object
+		log.timestamp = new Date(log.timestamp);
+
+		//return a row with the shuttle movement log details in it make it blue
+		return (
+			<tr
+				key={log.ID}
+				className="border border-black text-center hover:bg-blue-400 bg-blue-200"
+			>
+				<td>{log.timestamp.toLocaleString()}</td>
+				<td>Shuttle Swapped </td>
+				<td>{`From ${log.oldShuttleID}`}</td>
+				<td>{`To ${log.newShuttleID}`}</td>
+				<td colSpan={2} />
+			</tr>
+		);
+
+	} else {
+		return (
+			<tr
+				key={fault.ID}
+				className="border border-black text-center hover:bg-yellow-200"
+			>
+				<td>{fault.timestamp.toLocaleString()}</td>
+				<td>{fault.resolvedTimestamp?.toLocaleString() || "Not Resolved"}</td>
+				<td>
+					{fault.resolvedTimestamp
+						? (fault.resolvedTimestamp.getTime() - fault.timestamp.getTime()) /
+							1000
+						: "Not Resolved"}
+				</td>
+				<td>{fault.shuttleID}</td>
+				<td>
+					{faultCodeLookup.find((faultCode) => faultCode.ID === fault.faultCode)
+						?.faultMessage || "Unknown"}
+				</td>
+
+				<td>
+					<HoverPopup
+						itemToHover={<button>Details</button>}
+						itemToPopUp={
+							<div className="w-52 rounded-lg bg-yellow-400 p-1">
+								<div>W Location: {fault.WLocation}</div>
+								<div>Z Location: {fault.ZLocation}</div>
+								<div>Aisle: {fault.aisle}</div>
+								<div>Level: {fault.level}</div>
+								<div>Shuttle ID: {fault.shuttleID}</div>
+								<div>X Location: {fault.xLocation}</div>
+								<div>X Coordinate: {fault.xCoordinate}</div>
+							</div>
+						}
+						xOffset={-208}
+					/>
+				</td>
+			</tr>
+		);
+	}
+}
