@@ -28,7 +28,7 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 		const fetchShuttle = async () => {
 			//split location string into aisle(char 5 and 6) and level(char 7 and 8)
 			const aisle = parseInt(props.location.slice(5, 7));
-			const level = parseInt(props.location.slice(9, 10));
+			const level = parseInt(props.location.slice(8, 10));
 
 			const shuttle = await getLocationFaults(aisle, level, props.daysToSearch);
 			const faultCodeLookup = await getFaultCodeLookup();
@@ -84,8 +84,6 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 				return b.timestamp.getTime() - a.timestamp.getTime();
 			});
 
-			console.log(shuttle);
-
 			setIsLoading(false);
 			setFaults(shuttle);
 			setFaultCodeLookup(faultCodeLookup);
@@ -129,10 +127,10 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 							fault.resolvedTimestamp?.toLocaleString() || "Not Resolved",
 							fault.resolvedTimestamp
 								? (
-										(fault.resolvedTimestamp.getTime() -
+									Math.round((fault.resolvedTimestamp.getTime() -
 											fault.timestamp.getTime()) /
 										1000
-									).toString()
+									)).toString()
 								: "Not Resolved",
 							faultCodeLookup.find(
 								(faultCode) => faultCode.ID === fault.faultCode
@@ -208,8 +206,6 @@ function makeFaultRow(
 	faultCodeLookup: shuttleFaultCodeLookup[]
 ) {
 
-	console.log(fault);
-
 	if (fault.faultCode === "-1") {
 		//This is a shuttle movement log
 
@@ -222,7 +218,7 @@ function makeFaultRow(
 		return (
 			<tr
 				key={log.ID}
-				className="border border-black text-center hover:bg-blue-400 bg-blue-200"
+				className="border border-black bg-blue-200 text-center hover:bg-blue-400"
 			>
 				<td>{log.timestamp.toLocaleString()}</td>
 				<td>Shuttle Swapped </td>
@@ -231,7 +227,6 @@ function makeFaultRow(
 				<td colSpan={2} />
 			</tr>
 		);
-
 	} else {
 		return (
 			<tr
@@ -242,8 +237,11 @@ function makeFaultRow(
 				<td>{fault.resolvedTimestamp?.toLocaleString() || "Not Resolved"}</td>
 				<td>
 					{fault.resolvedTimestamp
-						? (fault.resolvedTimestamp.getTime() - fault.timestamp.getTime()) /
-							1000
+						? Math.round(
+								(fault.resolvedTimestamp.getTime() -
+									fault.timestamp.getTime()) /
+									1000
+							)
 						: "Not Resolved"}
 				</td>
 				<td>{fault.shuttleID}</td>

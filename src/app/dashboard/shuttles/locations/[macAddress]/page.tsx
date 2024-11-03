@@ -1,9 +1,9 @@
 "use client";
-import { useRouter,useSearchParams  } from "next/navigation";
 
 import "react-tabs/style/react-tabs.css";
 import { useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { getShuttleFromMac } from "./parts/_actions";
 import ShuttlePageSettings from "./parts/shuttlePageSettings";
@@ -20,6 +20,7 @@ export default function ShuttlePage({
 	params: { macAddress: string };
 }) {
 	const router = useRouter();
+	const searchParams = useSearchParams();
 
 	//add space between the mac address ever 2 characters
 	const macAddress = addSpace(params.macAddress);
@@ -30,11 +31,24 @@ export default function ShuttlePage({
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const searchParams = useSearchParams()
 	const initialTimeToSearch = searchParams.get("currentSearchTime")
 		? Number(searchParams.get("currentSearchTime"))
 		: 7;
+
+	const initialTab = searchParams.get("currentTab")
+		? Number(searchParams.get("currentTab"))
+		: 0;
+
 	const [timeToSearch, setTimeToSearch] = useState<number>(initialTimeToSearch);
+	const [currentTab, setCurrentTab] = useState<number>(initialTab);
+
+	// useEffect(() => {
+	// 	const params = new URLSearchParams(searchParams.toString());
+
+	// 	params.set("currentSearchTime", timeToSearch.toString());
+	// 	params.set("currentTab", currentTab.toString());
+	// 	window.history.pushState(null, "", `?${params.toString()}`);
+	// }, [timeToSearch, currentTab]);
 
 	useEffect(() => {
 		const fetchShuttle = async () => {
@@ -105,7 +119,6 @@ export default function ShuttlePage({
 								//console.log(Number(e.target.value));
 
 								//update the search time in the url
-								router.replace(`?currentSearchTime=${e.target.value}`);
 							}}
 						>
 							<option value={1}>1 day</option>
@@ -131,7 +144,15 @@ export default function ShuttlePage({
 					<div className="text-xl">Current Location: {currentLocation}</div>
 				</div>
 				<div className="h-2" />
-				<Tabs>
+				<Tabs
+					selectedIndex={currentTab}
+					onSelect={(index) => {
+						console.log(`Selected tab: ${index}`);
+
+						//update the current tab in the url
+						setCurrentTab(index);
+					}}
+				>
 					<TabList>
 						<Tab>Faults Grouped From This Shuttle</Tab>
 						{currentLocation !== "Maintenance Bay" && (
