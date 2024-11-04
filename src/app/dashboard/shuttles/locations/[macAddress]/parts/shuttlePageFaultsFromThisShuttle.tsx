@@ -27,8 +27,6 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 		shuttleFaultCodeLookup[]
 	>([]);
 
-
-
 	useEffect(() => {
 		const fetchShuttle = async () => {
 			const shuttle = await getShuttleFaults(
@@ -59,12 +57,10 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 
 			//insert the shuttle movement logs into the shuttle faults (As a fault with a fault code of -1)
 			ShuttleMovementLogsByLocation.forEach((log) => {
-
-						//Make log into a json object
-						const logString = JSON.stringify(log);
-
 				//Make log into a json object
-				const logAsFault: shuttleFault = {
+				const logString = JSON.stringify(log);
+
+				shuttle.push({
 					ID: log.ID,
 					aisle: log.aisle,
 					level: log.level,
@@ -80,9 +76,12 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 					resolvedReason: "N/A",
 					resolvedTimestamp: null,
 					rawInfo: logString,
-				};
+				});
+			});
 
-				shuttle.push(logAsFault);
+			//sort the shuttle faults by timestamp
+			shuttle.sort((a, b) => {
+				return b.timestamp.getTime() - a.timestamp.getTime();
 			});
 
 			setIsLoading(false);
@@ -191,51 +190,7 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 						</tr>
 					) : (
 						faults.map((fault) => {
-							return (
-								<tr
-									key={fault.ID}
-									className="border border-black text-center hover:bg-yellow-200"
-								>
-									<td>{fault.timestamp.toLocaleString()}</td>
-									<td>
-										{fault.resolvedTimestamp?.toLocaleString() ||
-											"Not Resolved"}
-									</td>
-									<td>
-										{fault.resolvedTimestamp
-											? (fault.resolvedTimestamp.getTime() -
-													fault.timestamp.getTime()) /
-												1000
-											: "Not Resolved"}
-									</td>
-									<td>
-										{fault.aisle}, {fault.level}
-									</td>
-									<td>
-										{faultCodeLookup.find(
-											(faultCode) => faultCode.ID === fault.faultCode
-										)?.faultMessage || "Unknown"}
-									</td>
-
-									<td>
-										<HoverPopup
-											itemToHover={<button>Details</button>}
-											itemToPopUp={
-												<div className="w-52 rounded-lg bg-yellow-400 p-1">
-													<div>W Location: {fault.WLocation}</div>
-													<div>Z Location: {fault.ZLocation}</div>
-													<div>Aisle: {fault.aisle}</div>
-													<div>Level: {fault.level}</div>
-													<div>Shuttle ID: {fault.shuttleID}</div>
-													<div>X Location: {fault.xLocation}</div>
-													<div>X Coordinate: {fault.xCoordinate}</div>
-												</div>
-											}
-											xOffset={-208}
-										/>
-									</td>
-								</tr>
-							);
+							return makeFaultRow(fault, faultCodeLookup);
 						})
 					)}
 				</tbody>
@@ -243,5 +198,74 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 		</div>
 	);
 };
+
+function makeFaultRow(
+	fault: shuttleFault,
+	faultCodeLookup: shuttleFaultCodeLookup[]
+) {
+	if (fault.faultCode === "-1") {
+		//This is a shuttle movement log
+
+		const log = JSON.parse(fault.rawInfo);
+
+		//make date object
+		log.timestamp = new Date(log.timestamp);
+
+		//return a row with the shuttle movement log details in it make it blue
+		return (
+			<tr
+				key={log.ID}
+				className="border border-black bg-blue-200 text-center hover:bg-blue-400"
+			>
+				<td>{log.timestamp.toLocaleString()}</td>
+				<td>Shuttle Swapped </td>
+				<td>{`At aisle  ${log.aisle}`}</td>
+				<td>{`At level  ${log.level}`}</td>
+				<td colSpan={2} />
+			</tr>
+		);
+	} else {
+		return (
+			<tr
+				key={fault.ID}
+				className="border border-black text-center hover:bg-yellow-200"
+			>
+				<td>{fault.timestamp.toLocaleString()}</td>
+				<td>{fault.resolvedTimestamp?.toLocaleString() || "Not Resolved"}</td>
+				<td>
+					{fault.resolvedTimestamp
+						? (fault.resolvedTimestamp.getTime() - fault.timestamp.getTime()) /
+							1000
+						: "Not Resolved"}
+				</td>
+				<td>
+					{fault.aisle}, {fault.level}
+				</td>
+				<td>
+					{faultCodeLookup.find((faultCode) => faultCode.ID === fault.faultCode)
+						?.faultMessage || "Unknown"}
+				</td>
+
+				<td>
+					<HoverPopup
+						itemToHover={<button>Details</button>}
+						itemToPopUp={
+							<div className="w-52 rounded-lg bg-yellow-400 p-1">
+								<div>W Location: {fault.WLocation}</div>
+								<div>Z Location: {fault.ZLocation}</div>
+								<div>Aisle: {fault.aisle}</div>
+								<div>Level: {fault.level}</div>
+								<div>Shuttle ID: {fault.shuttleID}</div>
+								<div>X Location: {fault.xLocation}</div>
+								<div>X Coordinate: {fault.xCoordinate}</div>
+							</div>
+						}
+						xOffset={-208}
+					/>
+				</td>
+			</tr>
+		);
+	}
+}
 
 export default ShuttlePageFaultsFromThisShuttle;
