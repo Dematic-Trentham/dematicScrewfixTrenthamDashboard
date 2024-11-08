@@ -14,6 +14,7 @@ import ShuttlePageFaultsFromThisShuttleGrouped from "./parts/shuttlePageFaultsFr
 
 import PanelTop from "@/components/panels/panelTop";
 import { updateUrlParams } from "@/utils/url/params";
+import ShuttlePageCounts from "./parts/shuttlePageCounts";
 
 export default function ShuttlePage({
 	params,
@@ -45,6 +46,19 @@ export default function ShuttlePage({
 
 	const [humanReadableLoaction, setHumanReadableLocation] =
 		useState<string>("");
+
+		const [allCounts, setAllCounts] = 
+		useState<	{
+			ID: string;
+			timeStamp: Date;
+			timeRange: string;
+			aisle: number;
+			level: number;
+			shuttleID: string;
+			totalPicks: number;
+			totalDrops: number;
+			totalIATs: number;
+		}[]>([])
 
 	useEffect(() => {
 		const fetchShuttle = async () => {
@@ -185,7 +199,7 @@ export default function ShuttlePage({
 						{currentLocation !== "Maintenance Bay" && (
 							<Tab>Faults From This Location</Tab>
 						)}
-
+<Tab>Counts</Tab>
 						<Tab>Settings</Tab>
 					</TabList>
 
@@ -219,6 +233,12 @@ export default function ShuttlePage({
 							/>
 						</TabPanel>
 					)}
+					<TabPanel>
+						<ShuttlePageCounts 
+							daysToSearch={timeToSearch}
+							location={currentLocation}
+						/>
+					</TabPanel>
 
 					<TabPanel>
 						<ShuttlePageSettings macAddress={macAddress} />

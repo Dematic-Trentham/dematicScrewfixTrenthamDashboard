@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import db from "@/db/db";
 
@@ -125,4 +125,47 @@ export const getFaultCodeLookup = async () => {
 	let faultCodes = await db.dmsShuttleFaultCodeLookup.findMany();
 
 	return faultCodes;
+};
+
+export const getAllCounts = async (days: number) => {
+	let counts = await db.dmsShuttleMissions.findMany({
+		where: {
+			timeStamp: {
+				gte: new Date(new Date().getTime() - days * 24 * 60 * 60 * 1000),
+			},
+		},
+	});
+
+	return counts;
+};
+
+export const getShuttleCountsByID = async (ID: string, days: number) => {
+	let counts = await db.dmsShuttleMissions.findMany({
+		where: {
+			shuttleID: ID,
+			timeStamp: {
+				gte: new Date(new Date().getTime() - days * 24 * 60 * 60 * 1000),
+			},
+		},
+	});
+
+	return counts;
+};
+
+export const getShuttleCountsByLocation = async (
+	aisle: number,
+	level: number,
+	days: number
+) => {
+	let counts = await db.dmsShuttleMissions.findMany({
+		where: {
+			aisle: aisle,
+			level: level,
+			timeStamp: {
+				gte: new Date(new Date().getTime() - days * 24 * 60 * 60 * 1000),
+			},
+		},
+	});
+
+	return counts;
 };

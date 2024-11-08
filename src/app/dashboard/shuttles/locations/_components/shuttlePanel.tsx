@@ -3,12 +3,15 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
 import { shuttleLocation } from "../../_types/shuttle";
+import { getShuttleCountsByLocation } from "../[macAddress]/parts/_actions";
 
 import HoverPopup from "@/components/visual/hoverPopupFloat";
 
 export enum colorByTypeType {
 	aisle,
 	shuttle,
+	counts,
+	missionsPerFault,
 }
 
 interface ShuttlePanelProps {
@@ -19,11 +22,12 @@ interface ShuttlePanelProps {
 		worstShuttleByAisle: number;
 		worstShuttleByShuttle: number;
 	} | null;
-
 	currentLocation: string;
 	currentSearchTime: number;
 	colorByType: colorByTypeType;
 	inMaintenanceBay: boolean;
+	mostCount: number;
+	worstMissionPerFault: number;
 }
 
 const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
@@ -75,11 +79,29 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 					)
 				);
 				//setShuttleFaults(localShuttleFaults);
-			} else {
+			} else if (props.colorByType === colorByTypeType.aisle) {
 				setShuttleColor(
 					makeColor(aisleFaultsCount, props.passedFaults?.worstShuttleByAisle)
 				);
 				//setShuttleFaults(localAisleFaults);
+			} else if (props.colorByType === colorByTypeType.counts) {
+				//if in maintenance bay, set to green
+				if (props.inMaintenanceBay) {
+					setShuttleColor("bg-green-500");
+				} else {
+					const totalCountsResult = await getShuttleCountsByLocation(
+						aisle,
+						level,
+						props.currentSearchTime
+					);
+
+					const totalCounts =
+						totalCountsResult[0].totalPicks +
+						totalCountsResult[0].totalDrops +
+						totalCountsResult[0].totalIATs;
+
+					setShuttleColor(makeColor(totalCounts, props.mostCount));
+				}
 			}
 
 			setShuttleFaultsCount(shuttleFaultsCount);
@@ -149,6 +171,7 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 			<div> </div>
 			<div>Faults with Shuttle: {shuttleFaultsCount}</div>
 			<div>Faults with Aisle: {aisleFaultsCount}</div>
+			<div>Total Counts: {</div>
 		</div>
 	);
 

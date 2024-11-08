@@ -8,6 +8,7 @@ import { shuttleLocation, shuttleFault } from "../_types/shuttle";
 import { getLocations, getShuttleFaults } from "./_actions";
 import ShuttlePanel from "./_components/shuttlePanel";
 import { colorByTypeType } from "./_components/shuttlePanel";
+import { getAllCounts } from "./[macAddress]/parts/_actions";
 
 import PanelTop from "@/components/panels/panelTop";
 import VerticalBar from "@/components/visual/verticalBar";
@@ -46,9 +47,16 @@ export default function Home() {
 
 	const [timeToSearch, setTimeToSearch] = useState<number>(initialTimeToSearch);
 
+	const [mostCount, setMostCount] = useState<number>(0);
+	const [worstMissionPerFault, setWorstMissionPerFault] =
+		useState<number>(99999999);
+
 	useEffect(() => {
 		const fetchLocations = async () => {
 			const localLocations = await getLocations();
+			const counts = await getAllCounts(timeToSearch);
+
+			console.log(counts);
 
 			if (localLocations) {
 				const { aisles, maintenanceBay } = await sortLocations(localLocations);
@@ -71,6 +79,52 @@ export default function Home() {
 				//
 				setLocations(aisles);
 				setMaintenanceBay(maintenanceBay);
+
+				//most count
+				let mostCount = 0;
+
+				for (let count of counts) {
+					if (
+						count.totalPicks + count.totalDrops + count.totalIATs >
+						mostCount
+					) {
+						mostCount = count.totalPicks + count.totalDrops + count.totalIATs;
+					}
+				}
+
+				setMostCount(mostCount);
+
+				//worst mission per fault ( totalPicks + totalDrops + totalIATs ) / totalFaults for a shuttle
+				let worstMissionPerFault = 99999999;
+
+				//each count
+				for (let count of counts) {
+					if (faults === null) continue;
+
+					//get the faults for the shuttle
+					const shuttleFaults = faults.sortedResultsShuttleID[count.shuttleID];
+
+					if (shuttleFaults === null) continue;
+
+					//get the total faults for the shuttle
+					const totalFaults = shuttleFaults.length;
+
+					if (totalFaults === 0) continue;
+
+					//get the total missions for the shuttle
+					const totalMissions =
+						count.totalPicks + count.totalDrops + count.totalIATs;
+
+					//get the missions per fault rounded to 2 decimal places
+					const missionsPerFault =
+						Math.round((totalMissions / totalFaults) * 100) / 100;
+
+					if (missionsPerFault < worstMissionPerFault) {
+						worstMissionPerFault = missionsPerFault;
+					}
+				}
+
+				setWorstMissionPerFault(worstMissionPerFault);
 
 				//set the maintenance bay count
 				//setMaintenanceBayCount(maintenanceBay.length);
@@ -267,6 +321,10 @@ export default function Home() {
 					>
 						<option value={colorByTypeType.shuttle}>Shuttle</option>
 						<option value={colorByTypeType.aisle}>Aisle</option>
+						<option value={colorByTypeType.counts}>Counts</option>
+						<option value={colorByTypeType.missionsPerFault}>
+							Missions Per Fault
+						</option>
 					</select>
 					<select
 						className="ml-2 rounded border p-1"
@@ -334,7 +392,10 @@ export default function Home() {
 										currentSearchTime={timeToSearch}
 										inMaintenanceBay={false}
 										locations={location}
+										mostCount={mostCount}
 										passedFaults={faults}
+										worstMissionPerFault={worstMissionPerFault}
+								
 									/>
 								</div>
 							))}
@@ -358,7 +419,10 @@ export default function Home() {
 							currentSearchTime={timeToSearch}
 							inMaintenanceBay={true}
 							locations={location}
+							mostCount={mostCount}
 							passedFaults={faults}
+							worstMissionPerFault={worstMissionPerFault}
+							
 						/>
 					</div>
 				))}
