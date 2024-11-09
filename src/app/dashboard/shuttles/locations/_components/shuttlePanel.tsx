@@ -171,7 +171,6 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 			<div> </div>
 			<div>Faults with Shuttle: {shuttleFaultsCount}</div>
 			<div>Faults with Aisle: {aisleFaultsCount}</div>
-			<div>Total Counts: {</div>
 		</div>
 	);
 
