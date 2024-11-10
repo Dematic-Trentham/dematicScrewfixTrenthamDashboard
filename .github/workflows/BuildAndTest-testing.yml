@@ -13,8 +13,8 @@ jobs:
   test:
     runs-on: self-hosted
     steps:
-      - run: docker build -t dematicscrewfixtrenthamdashboard_testing -f Dockerfile.testing . --progress=plain --no-cache
-      - run: docker run dematicscrewfixtrenthamdashboard_testing
+      - run: docker build -t dematicscrewfixtrenthamdashboard -f Dockerfile.testing . --progress=plain --no-cache
+      - run: docker run dematicscrewfixtrenthamdashboard
         env:
           NODE_OPTIONS: --max_old_space_size=4096
           RUNNER_TOOL_CACHE: /toolcache
