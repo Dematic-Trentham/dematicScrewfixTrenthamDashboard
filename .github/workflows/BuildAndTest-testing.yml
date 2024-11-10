@@ -12,6 +12,7 @@ jobs:
 
   test:
     runs-on: self-hosted
+    needs: Tests
     steps:
       - run: docker build -t dematicscrewfixtrenthamdashboard:testing -f Dockerfile.testing . --progress=plain --no-cache
       - run: docker run dematicscrewfixtrenthamdashboard:testing
