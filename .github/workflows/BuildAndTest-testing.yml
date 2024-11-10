@@ -5,14 +5,8 @@ on:
     branches:
       - 'testing'
 jobs:
-  Welcome:
-    runs-on: self-hosted
-    steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-
   test:
     runs-on: self-hosted
-    needs: Welcome
     steps:
       - run: docker build -t dematicscrewfixtrenthamdashboard:testing -f Dockerfile.testing . --progress=plain --no-cache
       - run: docker run dematicscrewfixtrenthamdashboard:testing
@@ -36,7 +30,12 @@ jobs:
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
       - name: Push to Docker Hub
         run: |
-          docker push tag dematicscrewfixtrenthamdashboard:testing jwlyons/dematicscrewfixtrenthamdashboard:testing 
+          docker tag dematicscrewfixtrenthamdashboard:testing jwlyons/dematicscrewfixtrenthamdashboard:testing
+          docker push jwlyons/dematicscrewfixtrenthamdashboard:testing
+      - name: Clean up tags
+        run: |
+          docker rmi dematicscrewfixtrenthamdashboard:testing
+          docker rmi jwlyons/dematicscrewfixtrenthamdashboard:testing
 
   update-container:
     runs-on: self-hosted
