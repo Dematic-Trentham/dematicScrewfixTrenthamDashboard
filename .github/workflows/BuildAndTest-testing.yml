@@ -37,3 +37,12 @@ jobs:
         run: |
           docker tag dematicscrewfixtrenthamdashboard:latest jwlyons/dematicscrewfixtrenthamdashboard:testing
           docker push jwlyons/dematicscrewfixtrenthamdashboard:testing
+
+  update-container:
+    runs-on: self-hosted
+    needs: publish-test
+    name: Update Container
+    steps:
+      - name: Update container in via watchtower
+        run: |
+          curl -H "Authorization: Bearer tokentokentokenlikeme" 192.168.1.100:8080/v1/update
