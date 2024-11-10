@@ -5,13 +5,14 @@ on:
     branches:
       - 'main'
 jobs:
-  Explore-GitHub-Actions:
+  Welcome:
     runs-on: self-hosted
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
 
   test:
     runs-on: self-hosted
+    needs: Welcome
     steps:
       - run: docker build -t dematicscrewfixtrenthamdashboard_testing -f Dockerfile.testing . --progress=plain --no-cache
       - run: docker run dematicscrewfixtrenthamdashboard_testing
