@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import React from "react";
+import Tippy from "@tippyjs/react";
+import "tippy.js/dist/tippy.css";
 
 import {
 	getFaultCodeLookup,
@@ -10,7 +13,6 @@ import {
 	shuttleFault,
 	shuttleFaultCodeLookup,
 } from "@/app/dashboard/shuttles/_types/shuttle";
-import HoverPopup from "@/components/visual/hoverPopupFloat";
 
 interface ShuttlePageFaultsFromThisShuttleProps {
 	macAddress: string;
@@ -167,7 +169,7 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 	);
 
 	return (
-		<div>
+		<>
 			{exportButton}
 			<table className="w-full">
 				<thead className="border border-black bg-orange-400">
@@ -178,6 +180,7 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 						<th style={{ width: "100px" }}>Location</th>
 						<th style={{ width: "200px" }}>Fault Description</th>
 						<th style={{ width: "50px" }}>Details</th>
+						<th style={{ width: "50px" }}>Extra</th>
 					</tr>
 				</thead>
 
@@ -190,12 +193,12 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 						</tr>
 					) : (
 						faults.map((fault) => {
-							return makeFaultRow(fault, faultCodeLookup);
+							return makeFaultRow(fault, faultCodeLookup || []);
 						})
 					)}
 				</tbody>
 			</table>
-		</div>
+		</>
 	);
 };
 
@@ -221,10 +224,12 @@ function makeFaultRow(
 				<td>Shuttle Swapped </td>
 				<td>{`At aisle  ${log.aisle}`}</td>
 				<td>{`At level  ${log.level}`}</td>
-				<td colSpan={2} />
+				<td colSpan={3} />
 			</tr>
 		);
 	} else {
+		const rawInfo = JSON.parse(fault.rawInfo);
+
 		return (
 			<tr
 				key={fault.ID}
@@ -247,10 +252,9 @@ function makeFaultRow(
 				</td>
 
 				<td>
-					<HoverPopup
-						itemToHover={<button>Details</button>}
-						itemToPopUp={
-							<div className="w-52 rounded-lg bg-yellow-400 p-1">
+					<Tippy
+						content={
+							<>
 								<div>W Location: {fault.WLocation}</div>
 								<div>Z Location: {fault.ZLocation}</div>
 								<div>Aisle: {fault.aisle}</div>
@@ -258,10 +262,103 @@ function makeFaultRow(
 								<div>Shuttle ID: {fault.shuttleID}</div>
 								<div>X Location: {fault.xLocation}</div>
 								<div>X Coordinate: {fault.xCoordinate}</div>
-							</div>
+							</>
 						}
-						xOffset={-208}
-					/>
+					>
+						<button>Details</button>
+					</Tippy>
+				</td>
+				<td>
+					<Tippy
+						content={
+							<>
+								<table className="border-separate border-spacing-y-0">
+									<tbody>
+										<tr>
+											<td>Shuttle Status:</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Configured:</td>
+											<td>{rawInfo.shuttleStatus.configured}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Homed:</td>
+											<td>{rawInfo.shuttleStatus.homed}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Taught:</td>
+											<td>{rawInfo.shuttleStatus.taught}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Maintenance Mode:</td>
+											<td>{rawInfo.shuttleStatus.maintMode}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Mode</td>
+											<td>{rawInfo.mode}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Order Step:</td>
+											<td>{rawInfo.orderStep}</td>
+										</tr>
+										<tr>
+											<td>Load Status</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Loaded:</td>
+											<td>{rawInfo.loadStatus.loaded}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Sensor 1 Blocked:</td>
+											<td>{rawInfo.loadStatus.sensor1Blocked}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Sensor 2 Blocked:</td>
+											<td>{rawInfo.loadStatus.sensor2Blocked}</td>
+										</tr>
+
+										<tr>
+											<td>Finger Status:</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Finger Pair 1:</td>
+											<td>
+												Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair1},
+												Down:&nbsp;
+												{rawInfo.fingerStatus.fingerDownStatus.pair1}
+											</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Finger Pair 2:</td>
+											<td>
+												Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair2},
+												Down:&nbsp;
+												{rawInfo.fingerStatus.fingerDownStatus.pair2}
+											</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Finger Pair 3:</td>
+											<td>
+												Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair3},
+												Down:&nbsp;
+												{rawInfo.fingerStatus.fingerDownStatus.pair3}
+											</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Finger Pair 4:</td>
+											<td>
+												Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair4},
+												Down:&nbsp;
+												{rawInfo.fingerStatus.fingerDownStatus.pair4}
+											</td>
+										</tr>
+									</tbody>
+								</table>
+							</>
+						}
+					>
+						<button>Extras</button>
+					</Tippy>
 				</td>
 			</tr>
 		);

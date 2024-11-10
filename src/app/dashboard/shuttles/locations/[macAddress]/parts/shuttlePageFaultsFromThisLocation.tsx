@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
+import React from "react";
+import Tippy from "@tippyjs/react";
 
 import { getFaultCodeLookup, getLocationFaults } from "./_actions";
 import { getShuttleMovementLogsByLocation } from "./_actions/index";
+
+import "tippy.js/dist/tippy.css";
 
 import {
 	shuttleFault,
 	shuttleFaultCodeLookup,
 } from "@/app/dashboard/shuttles/_types/shuttle";
-import HoverPopup from "@/components/visual/hoverPopupFloat";
 
 interface ShuttlePageFaultsFromThisLocationProps {
 	location: string;
@@ -126,11 +129,11 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 							fault.timestamp.toLocaleString(),
 							fault.resolvedTimestamp?.toLocaleString() || "Not Resolved",
 							fault.resolvedTimestamp
-								? (
-									Math.round((fault.resolvedTimestamp.getTime() -
+								? Math.round(
+										(fault.resolvedTimestamp.getTime() -
 											fault.timestamp.getTime()) /
-										1000
-									)).toString()
+											1000
+									).toString()
 								: "Not Resolved",
 							faultCodeLookup.find(
 								(faultCode) => faultCode.ID === fault.faultCode
@@ -178,6 +181,7 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 						<th style={{ width: "100px" }}>Shuttle ID</th>
 						<th style={{ width: "200px" }}>Fault Description</th>
 						<th style={{ width: "50px" }}>Details</th>
+						<th style={{ width: "50px" }}>Extras</th>
 					</tr>
 				</thead>
 
@@ -205,7 +209,6 @@ function makeFaultRow(
 	fault: shuttleFault,
 	faultCodeLookup: shuttleFaultCodeLookup[]
 ) {
-
 	if (fault.faultCode === "-1") {
 		//This is a shuttle movement log
 
@@ -228,6 +231,8 @@ function makeFaultRow(
 			</tr>
 		);
 	} else {
+		const rawInfo = JSON.parse(fault.rawInfo);
+
 		return (
 			<tr
 				key={fault.ID}
@@ -251,10 +256,9 @@ function makeFaultRow(
 				</td>
 
 				<td>
-					<HoverPopup
-						itemToHover={<button>Details</button>}
-						itemToPopUp={
-							<div className="w-52 rounded-lg bg-yellow-400 p-1">
+					<Tippy
+						content={
+							<>
 								<div>W Location: {fault.WLocation}</div>
 								<div>Z Location: {fault.ZLocation}</div>
 								<div>Aisle: {fault.aisle}</div>
@@ -262,10 +266,107 @@ function makeFaultRow(
 								<div>Shuttle ID: {fault.shuttleID}</div>
 								<div>X Location: {fault.xLocation}</div>
 								<div>X Coordinate: {fault.xCoordinate}</div>
+							</>
+						}
+					>
+						<button>Details</button>
+					</Tippy>
+				</td>
+				<td>
+					<Tippy
+						content={
+							<div className="flex flex-row">
+								<table className="border-separate border-spacing-y-0">
+									<tbody>
+										<tr>
+											<td>Shuttle Status:</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Configured:</td>
+											<td>{rawInfo.shuttleStatus.configured}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Homed:</td>
+											<td>{rawInfo.shuttleStatus.homed}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Taught:</td>
+											<td>{rawInfo.shuttleStatus.taught}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Maintenance Mode:</td>
+											<td>{rawInfo.shuttleStatus.maintMode}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Mode</td>
+											<td>{rawInfo.mode}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Order Step:</td>
+											<td>{rawInfo.orderStep}</td>
+										</tr>
+										<tr>
+											<td>Load Status</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Loaded:</td>
+											<td>{rawInfo.loadStatus.loaded}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Sensor 1 Blocked:</td>
+											<td>{rawInfo.loadStatus.sensor1Blocked}</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Sensor 2 Blocked:</td>
+											<td>{rawInfo.loadStatus.sensor2Blocked}</td>
+										</tr>
+									</tbody>
+								</table>
+
+								<table className="border-separate border-spacing-y-0">
+									<tbody>
+										<tr>
+											<td>Finger Status:</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Finger Pair 1:</td>
+											<td>
+												Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair1},
+												Down:&nbsp;
+												{rawInfo.fingerStatus.fingerDownStatus.pair1}
+											</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Finger Pair 2:</td>
+											<td>
+												Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair2},
+												Down:&nbsp;
+												{rawInfo.fingerStatus.fingerDownStatus.pair2}
+											</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Finger Pair 3:</td>
+											<td>
+												Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair3},
+												Down:&nbsp;
+												{rawInfo.fingerStatus.fingerDownStatus.pair3}
+											</td>
+										</tr>
+										<tr>
+											<td>&emsp;&emsp;Finger Pair 4:</td>
+											<td>
+												Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair4},
+												Down:&nbsp;
+												{rawInfo.fingerStatus.fingerDownStatus.pair4}
+											</td>
+										</tr>
+									</tbody>
+								</table>
 							</div>
 						}
-						xOffset={-208}
-					/>
+					>
+						<button>Extras</button>
+					</Tippy>
 				</td>
 			</tr>
 		);
