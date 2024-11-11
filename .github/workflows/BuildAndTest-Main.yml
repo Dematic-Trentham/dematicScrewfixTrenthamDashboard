@@ -47,22 +47,12 @@ jobs:
       run : |
         docker build -t dematicscrewfixtrenthamdashboard:latest -f Dockerfile . --progress=plain --no-cache
 
-  Push_Image:
-    runs-on: self-hosted
-    needs: Build_Image
-
-    steps:
     - name: Push Image
       run: |
         docker tag dematicscrewfixtrenthamdashboard:latest jwlyons/dematicscrewfixtrenthamdashboard:${{ steps.metadata.outputs.version }}
         docker push jwlyons/dematicscrewfixtrenthamdashboard:latest
         docker push jwlyons/dematicscrewfixtrenthamdashboard:${{ steps.metadata.outputs.version }}
 
-  Runner_Cleanup:
-    runs-on: self-hosted
-    needs: Push_Image
-
-    steps:
     - name: Remove Docker Images
       run: |
         docker rmi dematicscrewfixtrenthamdashboard:latest
