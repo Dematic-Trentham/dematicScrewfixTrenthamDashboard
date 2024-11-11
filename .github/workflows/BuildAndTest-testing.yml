@@ -6,7 +6,7 @@ on:
       - testing
 
 jobs:
-  build:
+  testing:
     runs-on: self-hosted
 
     steps:
@@ -22,6 +22,10 @@ jobs:
     - name: Run Tests
       run: docker run --rm dematicscrewfixtrenthamdashboard:testing npm run test
 
+  build:
+    runs-on: self-hosted
+
+    steps:
     - name: Docker metadata
       id: metadata
       uses: docker/metadata-action@v3
@@ -44,9 +48,9 @@ jobs:
 
     - name: Push Image
       run: |
-        docker tag dematicscrewfixtrenthamdashboard:testing dematicscrewfixtrenthamdashboard:latest
-        docker tag dematicscrewfixtrenthamdashboard:testing dematicscrewfixtrenthamdashboard:${{ steps.metadata.outputs.version }}
-        docker push dematicscrewfixtrenthamdashboard:latest
-        docker push dematicscrewfixtrenthamdashboard:${{ steps.metadata.outputs.version }}
+        docker tag dematicscrewfixtrenthamdashboard:testing jwlyons/dematicscrewfixtrenthamdashboard:latest
+        docker tag dematicscrewfixtrenthamdashboard:testing jwlyons/dematicscrewfixtrenthamdashboard:${{ steps.metadata.outputs.version }}
+        docker push jwlyons/dematicscrewfixtrenthamdashboard:latest
+        docker push jwlyons/dematicscrewfixtrenthamdashboard:${{ steps.metadata.outputs.version }}
 
       
