@@ -25,6 +25,8 @@ jobs:
   build:
     runs-on: self-hosted
 
+    needs: testing
+
     steps:
     - name: Docker metadata
       id: metadata
