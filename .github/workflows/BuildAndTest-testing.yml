@@ -1,35 +1,30 @@
-name: Test and Build Docker Image and Push to Docker Hub under testing tag
-run-name: ${{ github.actor }} is  ${{ github.event_name }} on ${{ github.repository }}
-on: 
+name: Build and Test
+
+on:
   push:
     branches:
-      - 'testing'
+      - main
+
 jobs:
   build:
     runs-on: self-hosted
 
     steps:
-      - run: docker build -t dematicscrewfixtrenthamdashboard .
-        env:
-          NODE_OPTIONS: --max_old_space_size=4096
-          RUNNER_TOOL_CACHE: /toolcache
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-  publish-test:
-    runs-on: self-hosted
-    needs: build
-    steps:
-      - name: Log in to Docker Hub
-        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
-      - name: Push to Docker Hub
-        run: |
-          docker tag dematicscrewfixtrenthamdashboard jwlyons/dematicscrewfixtrenthamdashboard:testing
-          docker push jwlyons/dematicscrewfixtrenthamdashboard:testing
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
 
-  update-container:
-    runs-on: self-hosted
-    needs: publish-test
-    name: Update Container
-    steps:
-      - name: Update container in via watchtower
-        run: |
-          curl -H "Authorization: Bearer tokentokentokenlikeme" 192.168.1.100:8080/v1/update
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      with:
+        context: .
+        push: true
+        tags: ${{ secrets.DOCKER_USERNAME }}/dematicscrewfixtrenthamdashboard:latest
