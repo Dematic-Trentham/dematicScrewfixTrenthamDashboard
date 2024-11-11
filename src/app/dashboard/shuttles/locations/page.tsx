@@ -1,17 +1,23 @@
 "use client";
 import { useEffect, useState } from "react";
 import React from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { shuttleLocation, shuttleFault } from "../_types/shuttle";
 
 import { getLocations, getShuttleFaults } from "./_actions";
 import ShuttlePanel from "./_components/shuttlePanel";
 import { colorByTypeType } from "./_components/shuttlePanel";
+import { getAllCounts } from "./[macAddress]/parts/_actions";
 
 import PanelTop from "@/components/panels/panelTop";
 import VerticalBar from "@/components/visual/verticalBar";
+import { updateUrlParams } from "@/utils/url/params";
 
 export default function Home() {
+	const router = useRouter();
+	const searchParams = useSearchParams();
+
 	const [isLoading, setIsLoading] = useState(true);
 	const [locations, setLocations] = useState<shuttleLocation[][]>([]);
 	const [maintenanceBay, setMaintenanceBay] = useState<shuttleLocation[]>([]);
@@ -26,14 +32,31 @@ export default function Home() {
 		worstShuttleByShuttle: number;
 	} | null>(null);
 
-	const [colorByType, setColorByType] = useState<colorByTypeType>(
-		colorByTypeType.shuttle
-	);
-	const [timeToSearch, setTimeToSearch] = useState<number>(7);
+	const [totalFaults, setTotalFaults] = useState<number>(0);
+
+	const initalColorByType = searchParams.get("colorByType")
+		? Number(searchParams.get("colorByType"))
+		: colorByTypeType.shuttle;
+
+	const [colorByType, setColorByType] =
+		useState<colorByTypeType>(initalColorByType);
+
+	const initialTimeToSearch = searchParams.get("currentSearchTime")
+		? Number(searchParams.get("currentSearchTime"))
+		: 7;
+
+	const [timeToSearch, setTimeToSearch] = useState<number>(initialTimeToSearch);
+
+	const [mostCount, setMostCount] = useState<number>(0);
+	const [worstMissionPerFault, setWorstMissionPerFault] =
+		useState<number>(99999999);
 
 	useEffect(() => {
 		const fetchLocations = async () => {
 			const localLocations = await getLocations();
+			const counts = await getAllCounts(timeToSearch);
+
+			console.log(counts);
 
 			if (localLocations) {
 				const { aisles, maintenanceBay } = await sortLocations(localLocations);
@@ -56,6 +79,52 @@ export default function Home() {
 				//
 				setLocations(aisles);
 				setMaintenanceBay(maintenanceBay);
+
+				//most count
+				let mostCount = 0;
+
+				for (let count of counts) {
+					if (
+						count.totalPicks + count.totalDrops + count.totalIATs >
+						mostCount
+					) {
+						mostCount = count.totalPicks + count.totalDrops + count.totalIATs;
+					}
+				}
+
+				setMostCount(mostCount);
+
+				//worst mission per fault ( totalPicks + totalDrops + totalIATs ) / totalFaults for a shuttle
+				let worstMissionPerFault = 99999999;
+
+				//each count
+				for (let count of counts) {
+					if (faults === null) continue;
+
+					//get the faults for the shuttle
+					const shuttleFaults = faults.sortedResultsShuttleID[count.shuttleID];
+
+					if (shuttleFaults === null) continue;
+
+					//get the total faults for the shuttle
+					const totalFaults = shuttleFaults.length;
+
+					if (totalFaults === 0) continue;
+
+					//get the total missions for the shuttle
+					const totalMissions =
+						count.totalPicks + count.totalDrops + count.totalIATs;
+
+					//get the missions per fault rounded to 2 decimal places
+					const missionsPerFault =
+						Math.round((totalMissions / totalFaults) * 100) / 100;
+
+					if (missionsPerFault < worstMissionPerFault) {
+						worstMissionPerFault = missionsPerFault;
+					}
+				}
+
+				setWorstMissionPerFault(worstMissionPerFault);
 
 				//set the maintenance bay count
 				//setMaintenanceBayCount(maintenanceBay.length);
@@ -129,6 +198,15 @@ export default function Home() {
 			const sortedResults = await sortShuttleFaults(result);
 
 			setFaults(sortedResults);
+
+			//total faults
+			let totalFaults = 0;
+
+			for (let shuttleID in sortedResults.sortedResultsShuttleID) {
+				totalFaults += sortedResults.sortedResultsShuttleID[shuttleID].length;
+			}
+
+			setTotalFaults(totalFaults);
 
 			//console.log(result);
 		};
@@ -228,22 +306,44 @@ export default function Home() {
 					<div>Options</div>
 					<select
 						className="ml-2 rounded border p-1"
-						defaultValue={colorByTypeType.aisle}
+						defaultValue={colorByType}
 						onChange={(e) => {
 							setColorByType(parseInt(e.target.value));
+
+							//update the color by type in the url
+							updateUrlParams(
+								searchParams,
+								router,
+								"colorByType",
+								e.target.value
+							);
 						}}
 					>
 						<option value={colorByTypeType.shuttle}>Shuttle</option>
 						<option value={colorByTypeType.aisle}>Aisle</option>
+						<option value={colorByTypeType.counts}>Counts</option>
+						<option value={colorByTypeType.missionsPerFault}>
+							Missions Per Fault
+						</option>
 					</select>
 					<select
 						className="ml-2 rounded border p-1"
-						defaultValue={7}
+						defaultValue={timeToSearch}
 						onChange={(e) => {
 							setTimeToSearch(Number(e.target.value));
+
+							//update the search time in the url
+							updateUrlParams(
+								searchParams,
+								router,
+								"currentSearchTime",
+								e.target.value
+							);
+
 							//console.log(Number(e.target.value));
 						}}
 					>
+						<option value={0.5}>12 hours</option>
 						<option value={1}>1 day</option>
 						<option value={2}>2 days</option>
 						<option value={4}>4 days</option>
@@ -260,6 +360,9 @@ export default function Home() {
 				</div>
 			}
 		>
+			<div>
+				<p>{`Total Faults ${totalFaults}`}</p>
+			</div>
 			<p className="text-center text-medium font-bold">In Aisle</p>
 
 			<div className="flex w-full flex-wrap content-center justify-center">
@@ -289,7 +392,10 @@ export default function Home() {
 										currentSearchTime={timeToSearch}
 										inMaintenanceBay={false}
 										locations={location}
+										mostCount={mostCount}
 										passedFaults={faults}
+										worstMissionPerFault={worstMissionPerFault}
+								
 									/>
 								</div>
 							))}
@@ -313,7 +419,10 @@ export default function Home() {
 							currentSearchTime={timeToSearch}
 							inMaintenanceBay={true}
 							locations={location}
+							mostCount={mostCount}
 							passedFaults={faults}
+							worstMissionPerFault={worstMissionPerFault}
+							
 						/>
 					</div>
 				))}

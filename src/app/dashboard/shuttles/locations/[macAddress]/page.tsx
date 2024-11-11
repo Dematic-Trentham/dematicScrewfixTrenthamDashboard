@@ -13,6 +13,8 @@ import ShuttlePageFaultsFromThisLocationGrouped from "./parts/shuttlePageFaultsF
 import ShuttlePageFaultsFromThisShuttleGrouped from "./parts/shuttlePageFaultsFromThisShuttleGrouped";
 
 import PanelTop from "@/components/panels/panelTop";
+import { updateUrlParams } from "@/utils/url/params";
+import ShuttlePageCounts from "./parts/shuttlePageCounts";
 
 export default function ShuttlePage({
 	params,
@@ -42,13 +44,21 @@ export default function ShuttlePage({
 	const [timeToSearch, setTimeToSearch] = useState<number>(initialTimeToSearch);
 	const [currentTab, setCurrentTab] = useState<number>(initialTab);
 
-	// useEffect(() => {
-	// 	const params = new URLSearchParams(searchParams.toString());
+	const [humanReadableLoaction, setHumanReadableLocation] =
+		useState<string>("");
 
-	// 	params.set("currentSearchTime", timeToSearch.toString());
-	// 	params.set("currentTab", currentTab.toString());
-	// 	window.history.pushState(null, "", `?${params.toString()}`);
-	// }, [timeToSearch, currentTab]);
+		const [allCounts, setAllCounts] = 
+		useState<	{
+			ID: string;
+			timeStamp: Date;
+			timeRange: string;
+			aisle: number;
+			level: number;
+			shuttleID: string;
+			totalPicks: number;
+			totalDrops: number;
+			totalIATs: number;
+		}[]>([])
 
 	useEffect(() => {
 		const fetchShuttle = async () => {
@@ -62,6 +72,17 @@ export default function ShuttlePage({
 			}
 
 			setCurrentLocation(shuttle.currentLocation || "Maintenance Bay");
+
+			//set the human readable location
+			if (shuttle.currentLocation === "Maintenance Bay") {
+				setHumanReadableLocation("Maintenance Bay");
+			} else {
+				const aisle = shuttle.currentLocation.substring(4, 6); //get the aisle number
+				const level = shuttle.currentLocation.substring(8, 10); //get the level number
+
+				setHumanReadableLocation(`Aisle ${aisle}, Level ${level}`);
+			}
+
 			setShuttleID(shuttle.shuttleID || "Unknown");
 			setIsLoading(false);
 			setError(null);
@@ -119,6 +140,12 @@ export default function ShuttlePage({
 								//console.log(Number(e.target.value));
 
 								//update the search time in the url
+								updateUrlParams(
+									searchParams,
+									router,
+									"currentSearchTime",
+									e.target.value
+								);
 							}}
 						>
 							<option value={1}>1 day</option>
@@ -134,14 +161,18 @@ export default function ShuttlePage({
 							<option value={150}>5 months</option>
 							<option value={180}>6 months</option>
 						</select>
-						<button onClick={() => router.back()}>Back</button>
+						<button
+							onClick={() => router.replace("/dashboard/shuttles/locations?")}
+						>
+							Back
+						</button>
 					</div>
 				}
 			>
 				<div className="justify-left flex flex-col">
 					<div className="text-xl">Mac Address: {macAddress}</div>
 					<div className="text-xl">Shuttle ID: {shuttleID}</div>
-					<div className="text-xl">Current Location: {currentLocation}</div>
+					<div className="text-xl">Current Location: {humanReadableLoaction} </div>
 				</div>
 				<div className="h-2" />
 				<Tabs
@@ -151,6 +182,12 @@ export default function ShuttlePage({
 
 						//update the current tab in the url
 						setCurrentTab(index);
+						updateUrlParams(
+							searchParams,
+							router,
+							"currentTab",
+							index.toString()
+						);
 					}}
 				>
 					<TabList>
@@ -162,7 +199,7 @@ export default function ShuttlePage({
 						{currentLocation !== "Maintenance Bay" && (
 							<Tab>Faults From This Location</Tab>
 						)}
-
+<Tab>Counts</Tab>
 						<Tab>Settings</Tab>
 					</TabList>
 
@@ -196,6 +233,12 @@ export default function ShuttlePage({
 							/>
 						</TabPanel>
 					)}
+					<TabPanel>
+						<ShuttlePageCounts 
+							daysToSearch={timeToSearch}
+							location={currentLocation}
+						/>
+					</TabPanel>
 
 					<TabPanel>
 						<ShuttlePageSettings macAddress={macAddress} />
