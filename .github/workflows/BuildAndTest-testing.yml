@@ -6,7 +6,7 @@ on:
       - testing
 
 jobs:
-  testing:
+  Build_Test_and_Run:
     runs-on: self-hosted
 
     steps:
@@ -22,10 +22,9 @@ jobs:
     - name: Run Tests
       run: docker run --rm dematicscrewfixtrenthamdashboard:testing npm run test
 
-  build:
+  Build_Image:
     runs-on: self-hosted
-
-    needs: testing
+    needs: Build_Test_and_Run
 
     steps:
     - name: Docker metadata
@@ -48,11 +47,23 @@ jobs:
       run : |
         docker build -t dematicscrewfixtrenthamdashboard:testing -f Dockerfile . --progress=plain --no-cache
 
+  Push_Image:
+    runs-on: self-hosted
+    needs: Build_Image
+
+    steps:
     - name: Push Image
       run: |
-        docker tag dematicscrewfixtrenthamdashboard:testing jwlyons/dematicscrewfixtrenthamdashboard:latest
         docker tag dematicscrewfixtrenthamdashboard:testing jwlyons/dematicscrewfixtrenthamdashboard:${{ steps.metadata.outputs.version }}
-        docker push jwlyons/dematicscrewfixtrenthamdashboard:latest
+        docker push jwlyons/dematicscrewfixtrenthamdashboard:testing
         docker push jwlyons/dematicscrewfixtrenthamdashboard:${{ steps.metadata.outputs.version }}
 
-      
+  Runner_Cleanup:
+    runs-on: self-hosted
+    needs: Push_Image
+
+    steps:
+    - name: Remove Docker Images
+      run: |
+        docker rmi dematicscrewfixtrenthamdashboard:testing
+        docker rmi jwlyons/dematicscrewfixtrenthamdashboard:${{ steps.metadata.outputs.version }}
