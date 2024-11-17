@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
 import Journey from "./_components/journey";
@@ -10,13 +10,14 @@ import PanelTop from "@/components/panels/panelTop";
 import "react-tabs/style/react-tabs.css";
 import { changeDateToReadable } from "@/utils/changeDateToReadable";
 
-export default function SorterUL({ params }: { params: { uuid: string } }) {
-	const router = useRouter();
+export default function SorterUL(props: { params: Promise<{ uuid: string }> }) {
+    const params = use(props.params);
+    const router = useRouter();
 
-	const [isLoading, setIsLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-	const [ULData, setULData] = useState<{
+    const [ULData, setULData] = useState<{
 		id: string;
 		requestedUL: string;
 		createdDate: Date;
@@ -30,7 +31,7 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 		tabColor?: string | null;
 	} | null>(null);
 
-	useEffect(() => {
+    useEffect(() => {
 		const fetchULData = async () => {
 			const result = await getJourney(params.uuid);
 
@@ -70,7 +71,7 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 		}, 5000);
 	}, []);
 
-	if (isLoading) {
+    if (isLoading) {
 		return (
 			<div>
 				<PanelTop
@@ -84,7 +85,7 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 		);
 	}
 
-	if (error) {
+    if (error) {
 		return (
 			<div>
 				<PanelTop
@@ -97,7 +98,7 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 			</div>
 		);
 	}
-	if (!ULData) {
+    if (!ULData) {
 		return (
 			<div>
 				<PanelTop
@@ -111,7 +112,7 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 		);
 	}
 
-	if (ULData?.status !== "COMPLETED") {
+    if (ULData?.status !== "COMPLETED") {
 		return (
 			<div>
 				<PanelTop
@@ -132,7 +133,7 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 		);
 	}
 
-	if (ULData.journey === "") {
+    if (ULData.journey === "") {
 		return (
 			<div>
 				<PanelTop
@@ -147,7 +148,7 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 		);
 	}
 
-	return (
+    return (
 		<div>
 			<PanelTop
 				className="w-full"
@@ -189,5 +190,5 @@ export default function SorterUL({ params }: { params: { uuid: string } }) {
 		</div>
 	);
 
-	// const macAddress = addSpace(params.macAddress);
+    // const macAddress = addSpace(params.macAddress);
 }

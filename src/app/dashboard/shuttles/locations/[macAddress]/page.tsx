@@ -1,7 +1,7 @@
 "use client";
 
 import "react-tabs/style/react-tabs.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -16,52 +16,53 @@ import ShuttlePageCounts from "./parts/shuttlePageCounts";
 import PanelTop from "@/components/panels/panelTop";
 import { updateUrlParams } from "@/utils/url/params";
 
-export default function ShuttlePage({
-	params,
-}: {
-	params: { macAddress: string };
-}) {
-	const router = useRouter();
-	const searchParams = useSearchParams();
+export default function ShuttlePage(
+    props: {
+        params: Promise<{ macAddress: string }>;
+    }
+) {
+    const params = use(props.params);
+    const router = useRouter();
+    const searchParams = useSearchParams();
 
-	//add space between the mac address ever 2 characters
-	const macAddress = addSpace(params.macAddress);
+    //add space between the mac address ever 2 characters
+    const macAddress = addSpace(params.macAddress);
 
-	const [shuttleID, setShuttleID] = useState<string | null>(null);
-	const [currentLocation, setCurrentLocation] =
+    const [shuttleID, setShuttleID] = useState<string | null>(null);
+    const [currentLocation, setCurrentLocation] =
 		useState<string>("Maintenance Bay");
-	const [isLoading, setIsLoading] = useState(true);
-	const [error, setError] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
 
-	const initialTimeToSearch = searchParams.get("currentSearchTime")
+    const initialTimeToSearch = searchParams.get("currentSearchTime")
 		? Number(searchParams.get("currentSearchTime"))
 		: 7;
 
-	const initialTab = searchParams.get("currentTab")
+    const initialTab = searchParams.get("currentTab")
 		? Number(searchParams.get("currentTab"))
 		: 0;
 
-	const [timeToSearch, setTimeToSearch] = useState<number>(initialTimeToSearch);
-	const [currentTab, setCurrentTab] = useState<number>(initialTab);
+    const [timeToSearch, setTimeToSearch] = useState<number>(initialTimeToSearch);
+    const [currentTab, setCurrentTab] = useState<number>(initialTab);
 
-	const [humanReadableLoaction, setHumanReadableLocation] =
+    const [humanReadableLoaction, setHumanReadableLocation] =
 		useState<string>("");
 
-	// const [allCounts, setAllCounts] = useState<
-	// 	{
-	// 		ID: string;
-	// 		timeStamp: Date;
-	// 		timeRange: string;
-	// 		aisle: number;
-	// 		level: number;
-	// 		shuttleID: string;
-	// 		totalPicks: number;
-	// 		totalDrops: number;
-	// 		totalIATs: number;
-	// 	}[]
-	//>([]);
+    // const [allCounts, setAllCounts] = useState<
+    // 	{
+    // 		ID: string;
+    // 		timeStamp: Date;
+    // 		timeRange: string;
+    // 		aisle: number;
+    // 		level: number;
+    // 		shuttleID: string;
+    // 		totalPicks: number;
+    // 		totalDrops: number;
+    // 		totalIATs: number;
+    // 	}[]
+    //>([]);
 
-	useEffect(() => {
+    useEffect(() => {
 		const fetchShuttle = async () => {
 			const shuttle = await getShuttleFromMac(macAddress);
 
@@ -92,7 +93,7 @@ export default function ShuttlePage({
 		fetchShuttle();
 	}, []);
 
-	function returnToPreviousPage() {
+    function returnToPreviousPage() {
 		//go back to the previous page if the back button is clicked - add the search params
 
 		// /dashboard/shuttles/locations?currentSearchTime=7&currentTab=0
@@ -101,7 +102,7 @@ export default function ShuttlePage({
 		);
 	}
 
-	if (isLoading) {
+    if (isLoading) {
 		return (
 			<div>
 				<PanelTop
@@ -120,7 +121,7 @@ export default function ShuttlePage({
 		);
 	}
 
-	if (error) {
+    if (error) {
 		return (
 			<div>
 				<PanelTop
@@ -139,7 +140,7 @@ export default function ShuttlePage({
 		);
 	}
 
-	return (
+    return (
 		<div>
 			<PanelTop
 				className="w-full"
