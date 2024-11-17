@@ -49,8 +49,8 @@ jobs:
 
       - name: Push Image
         run: |
-          docker tag dematicscrewfixtrenthamdashboard:testing jwlyons/dematicscrewfixtrenthamdashboard:${{ steps.metadata.outputs.version }}
           docker push jwlyons/dematicscrewfixtrenthamdashboard:testing
+          docker tag dematicscrewfixtrenthamdashboard:testing jwlyons/dematicscrewfixtrenthamdashboard:${{ steps.metadata.outputs.version }}
           docker push jwlyons/dematicscrewfixtrenthamdashboard:${{ steps.metadata.outputs.version }}
 
       - name: Remove Docker Images
