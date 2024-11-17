@@ -16,7 +16,8 @@
     "prisma-push": "npx prisma db push --schema=./node_modules/masterPrismaSchema/prisma/schema",
     "packageJsonStripper": "node tools/packageJsonStripper.js",
     "build-docker": "npm run prisma-merge && npm run packageJsonStripper && docker build -t dematicscrewfixtrenthamdashboard .",
-    "test": "jest"
+    "test": "jest",
+    "npm-check": "npm-check"
   },
   "dependencies": {
     "@mui/material": "^5.16.7",
