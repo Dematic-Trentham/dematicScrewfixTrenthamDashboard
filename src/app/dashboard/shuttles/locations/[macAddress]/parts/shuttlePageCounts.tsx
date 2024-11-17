@@ -1,17 +1,9 @@
 import { useEffect, useState } from "react";
 
-import {
-	getFaultCodeLookup,
-	getLocationFaults,
-	getShuttleCountsByLocation,
-} from "./_actions";
-import { getShuttleMovementLogsByLocation } from "./_actions/index";
+import { getShuttleCountsByLocation } from "./_actions";
 
-import {
-	shuttleFault,
-	shuttleFaultCodeLookup,
-} from "@/app/dashboard/shuttles/_types/shuttle";
-import HoverPopup from "@/components/visual/hoverPopupFloat";
+import { shuttleFaultCodeLookup } from "@/app/dashboard/shuttles/_types/shuttle";
+//import HoverPopup from "@/components/visual/hoverPopupFloat";
 
 interface shuttlePageCountsProps {
 	location: string;
@@ -159,72 +151,72 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 
 export default ShuttlePageCounts;
 
-function makeFaultRow(
-	fault: shuttleFault,
-	faultCodeLookup: shuttleFaultCodeLookup[]
-) {
-	if (fault.faultCode === "-1") {
-		//This is a shuttle movement log
+// function makeFaultRow(
+// 	fault: shuttleFault,
+// 	faultCodeLookup: shuttleFaultCodeLookup[]
+// ) {
+// 	if (fault.faultCode === "-1") {
+// 		//This is a shuttle movement log
 
-		const log = JSON.parse(fault.rawInfo);
+// 		const log = JSON.parse(fault.rawInfo);
 
-		//make date object
-		log.timestamp = new Date(log.timestamp);
+// 		//make date object
+// 		log.timestamp = new Date(log.timestamp);
 
-		//return a row with the shuttle movement log details in it make it blue
-		return (
-			<tr
-				key={log.ID}
-				className="border border-black bg-blue-200 text-center hover:bg-blue-400"
-			>
-				<td>{log.timestamp.toLocaleString()}</td>
-				<td>Shuttle Swapped </td>
-				<td>{`From ${log.oldShuttleID}`}</td>
-				<td>{`To ${log.newShuttleID}`}</td>
-				<td colSpan={2} />
-			</tr>
-		);
-	} else {
-		return (
-			<tr
-				key={fault.ID}
-				className="border border-black text-center hover:bg-yellow-200"
-			>
-				<td>{fault.timestamp.toLocaleString()}</td>
-				<td>{fault.resolvedTimestamp?.toLocaleString() || "Not Resolved"}</td>
-				<td>
-					{fault.resolvedTimestamp
-						? Math.round(
-								(fault.resolvedTimestamp.getTime() -
-									fault.timestamp.getTime()) /
-									1000
-							)
-						: "Not Resolved"}
-				</td>
-				<td>{fault.shuttleID}</td>
-				<td>
-					{faultCodeLookup.find((faultCode) => faultCode.ID === fault.faultCode)
-						?.faultMessage || "Unknown"}
-				</td>
+// 		//return a row with the shuttle movement log details in it make it blue
+// 		return (
+// 			<tr
+// 				key={log.ID}
+// 				className="border border-black bg-blue-200 text-center hover:bg-blue-400"
+// 			>
+// 				<td>{log.timestamp.toLocaleString()}</td>
+// 				<td>Shuttle Swapped </td>
+// 				<td>{`From ${log.oldShuttleID}`}</td>
+// 				<td>{`To ${log.newShuttleID}`}</td>
+// 				<td colSpan={2} />
+// 			</tr>
+// 		);
+// 	} else {
+// 		return (
+// 			<tr
+// 				key={fault.ID}
+// 				className="border border-black text-center hover:bg-yellow-200"
+// 			>
+// 				<td>{fault.timestamp.toLocaleString()}</td>
+// 				<td>{fault.resolvedTimestamp?.toLocaleString() || "Not Resolved"}</td>
+// 				<td>
+// 					{fault.resolvedTimestamp
+// 						? Math.round(
+// 								(fault.resolvedTimestamp.getTime() -
+// 									fault.timestamp.getTime()) /
+// 									1000
+// 							)
+// 						: "Not Resolved"}
+// 				</td>
+// 				<td>{fault.shuttleID}</td>
+// 				<td>
+// 					{faultCodeLookup.find((faultCode) => faultCode.ID === fault.faultCode)
+// 						?.faultMessage || "Unknown"}
+// 				</td>
 
-				<td>
-					<HoverPopup
-						itemToHover={<button>Details</button>}
-						itemToPopUp={
-							<div className="w-52 rounded-lg bg-yellow-400 p-1">
-								<div>W Location: {fault.WLocation}</div>
-								<div>Z Location: {fault.ZLocation}</div>
-								<div>Aisle: {fault.aisle}</div>
-								<div>Level: {fault.level}</div>
-								<div>Shuttle ID: {fault.shuttleID}</div>
-								<div>X Location: {fault.xLocation}</div>
-								<div>X Coordinate: {fault.xCoordinate}</div>
-							</div>
-						}
-						xOffset={-208}
-					/>
-				</td>
-			</tr>
-		);
-	}
-}
+// 				<td>
+// 					<HoverPopup
+// 						itemToHover={<button>Details</button>}
+// 						itemToPopUp={
+// 							<div className="w-52 rounded-lg bg-yellow-400 p-1">
+// 								<div>W Location: {fault.WLocation}</div>
+// 								<div>Z Location: {fault.ZLocation}</div>
+// 								<div>Aisle: {fault.aisle}</div>
+// 								<div>Level: {fault.level}</div>
+// 								<div>Shuttle ID: {fault.shuttleID}</div>
+// 								<div>X Location: {fault.xLocation}</div>
+// 								<div>X Coordinate: {fault.xCoordinate}</div>
+// 							</div>
+// 						}
+// 						xOffset={-208}
+// 					/>
+// 				</td>
+// 			</tr>
+// 		);
+// 	}
+// }

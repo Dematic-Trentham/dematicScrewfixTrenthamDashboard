@@ -1,5 +1,6 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import * as React from "react";
+import { useState, useEffect } from "react";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
@@ -34,8 +35,6 @@ const AdminUsersContent = () => {
 		async function fetchData() {
 			//get data from server
 			const users = await getAllUsers();
-
-			console.log(users);
 
 			setUsers(users);
 			setLoading(false);

@@ -4,7 +4,7 @@ import { Button } from "@nextui-org/button";
 import { toast } from "react-toastify";
 import { setCookie } from "cookies-next";
 
-import { getShuttleFromMac, updateShuttleId } from "./_actions";
+import { getShuttleFromMac } from "./_actions";
 
 import { hasPermission } from "@/utils/getUser";
 
@@ -36,8 +36,6 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 			setShuttleID(shuttle.shuttleID || "Unknown");
 			setNewShuttleID(shuttle.shuttleID || "Unknown");
 			setIsLoading(false);
-
-			console.log(shuttle);
 			setError(null);
 		};
 		const fetchUserPemission = async () => {
@@ -64,7 +62,7 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 			return;
 		}
 
-		const error = updateShuttleId(props.macAddress, newShuttleID);
+		//const error = updateShuttleId(props.macAddress, newShuttleID);
 
 		setNewShuttleID(newShuttleID);
 		setIsDirty(false);
@@ -109,7 +107,7 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 				placeholder="Enter a Shuttle ID"
 				type="text"
 				onChange={handleShuttleIdChange}
-				onKeyDown={(event) => {
+				onKeyDown={(event: { key: string }) => {
 					if (event.key === "Enter") {
 						handleSave();
 					}

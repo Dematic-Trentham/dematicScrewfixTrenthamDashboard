@@ -47,19 +47,19 @@ export default function ShuttlePage({
 	const [humanReadableLoaction, setHumanReadableLocation] =
 		useState<string>("");
 
-	const [allCounts, setAllCounts] = useState<
-		{
-			ID: string;
-			timeStamp: Date;
-			timeRange: string;
-			aisle: number;
-			level: number;
-			shuttleID: string;
-			totalPicks: number;
-			totalDrops: number;
-			totalIATs: number;
-		}[]
-	>([]);
+	// const [allCounts, setAllCounts] = useState<
+	// 	{
+	// 		ID: string;
+	// 		timeStamp: Date;
+	// 		timeRange: string;
+	// 		aisle: number;
+	// 		level: number;
+	// 		shuttleID: string;
+	// 		totalPicks: number;
+	// 		totalDrops: number;
+	// 		totalIATs: number;
+	// 	}[]
+	//>([]);
 
 	useEffect(() => {
 		const fetchShuttle = async () => {
@@ -190,8 +190,6 @@ export default function ShuttlePage({
 				<Tabs
 					selectedIndex={currentTab}
 					onSelect={(index) => {
-						console.log(`Selected tab: ${index}`);
-
 						//update the current tab in the url
 						setCurrentTab(index);
 						updateUrlParams(

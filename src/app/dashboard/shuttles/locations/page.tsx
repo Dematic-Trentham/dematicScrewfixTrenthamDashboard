@@ -56,8 +56,6 @@ export default function Home() {
 			const localLocations = await getLocations();
 			const counts = await getAllCounts(timeToSearch);
 
-			console.log(counts);
-
 			if (localLocations) {
 				const { aisles, maintenanceBay } = await sortLocations(localLocations);
 

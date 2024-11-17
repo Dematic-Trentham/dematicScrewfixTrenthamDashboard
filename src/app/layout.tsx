@@ -11,7 +11,6 @@ import { siteConfig } from "@/config/site";
 import Sidebar from "@/components/sidebar/sidebar";
 import Topbar from "@/components/topbar/topbar";
 import ReloadPage from "@/components/reload";
-import ErrorBoundary from "@/components/ErrorBoundary";
 
 export const metadata: Metadata = {
 	title: {

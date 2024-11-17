@@ -1,17 +1,14 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-
-import PanelTop from "@/components/panels/panelTop";
-
-import "react-tabs/style/react-tabs.css";
-import { getJourney } from "./_actions/getJourney";
-
-import { changeDateToReadable } from "@/utils/changeDateToReadable";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
 import Journey from "./_components/journey";
+import { getJourney } from "./_actions/getJourney";
 
-import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
+import PanelTop from "@/components/panels/panelTop";
+import "react-tabs/style/react-tabs.css";
+import { changeDateToReadable } from "@/utils/changeDateToReadable";
 
 export default function SorterUL({ params }: { params: { uuid: string } }) {
 	const router = useRouter();
