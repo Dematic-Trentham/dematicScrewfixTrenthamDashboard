@@ -65,7 +65,7 @@ export default function OrderStartStats() {
 				</tbody>
 			</table>
 
-			<div className="border border-gray-400 p-2 mt-4 bg-white w-40 rounded-md">
+			<div className="mt-4 w-40 rounded-md border border-gray-400 bg-white p-2">
 				<p>Key:</p>
 				<p className="bg-yellow-200">0-24 mismatch</p>
 				<p className="bg-red-200">25+ mismatch</p>

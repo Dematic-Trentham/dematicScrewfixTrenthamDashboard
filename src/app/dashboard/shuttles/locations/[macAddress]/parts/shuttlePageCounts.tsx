@@ -18,9 +18,7 @@ interface shuttlePageCountsProps {
 	daysToSearch: number;
 }
 
-const ShuttlePageCounts: React.FC<
-	shuttlePageCountsProps
-> = (props) => {
+const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [counts, setCounts] = useState<
@@ -132,24 +130,27 @@ const ShuttlePageCounts: React.FC<
 						<th style={{ width: "150px" }}>Total Picks</th>
 						<th style={{ width: "100px" }}>Total Drops</th>
 						<th style={{ width: "100px" }}>Total IATs</th>
-	
 					</tr>
 				</thead>
 
 				<tbody>
-
 					{counts.map((count) => (
 						<tr
 							key={count.ID}
 							className="border border-black text-center hover:bg-yellow-200"
 						>
-							<td>{count.timeStamp.toLocaleString() + " - " + new Date(count.timeStamp.getTime() + 60 * 60 * 1000).toLocaleString()}</td>
+							<td>
+								{count.timeStamp.toLocaleString() +
+									" - " +
+									new Date(
+										count.timeStamp.getTime() + 60 * 60 * 1000
+									).toLocaleString()}
+							</td>
 							<td>{count.totalPicks}</td>
 							<td>{count.totalDrops}</td>
 							<td>{count.totalIATs}</td>
 						</tr>
 					))}
-
 				</tbody>
 			</table>
 		</div>

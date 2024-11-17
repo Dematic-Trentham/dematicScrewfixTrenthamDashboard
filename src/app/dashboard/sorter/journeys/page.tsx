@@ -126,7 +126,7 @@ export default function Home() {
 			<PanelTop className="h-fit w-full" title="Sorter journey's">
 				<RequestNewJourney />
 				<div className="pt-4">
-					<h2 className="text-lg dark:text-slate-700 text-slate-900">
+					<h2 className="text-lg text-slate-900 dark:text-slate-700">
 						Master Journey Status: {masterJourney.status}
 					</h2>
 				</div>

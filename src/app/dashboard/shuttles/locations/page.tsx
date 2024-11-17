@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import React from "react";
+import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import { shuttleLocation, shuttleFault } from "../_types/shuttle";
@@ -395,7 +395,6 @@ export default function Home() {
 										mostCount={mostCount}
 										passedFaults={faults}
 										worstMissionPerFault={worstMissionPerFault}
-								
 									/>
 								</div>
 							))}
@@ -422,7 +421,6 @@ export default function Home() {
 							mostCount={mostCount}
 							passedFaults={faults}
 							worstMissionPerFault={worstMissionPerFault}
-							
 						/>
 					</div>
 				))}

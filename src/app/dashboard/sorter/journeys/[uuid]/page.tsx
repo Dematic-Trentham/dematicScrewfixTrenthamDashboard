@@ -9,7 +9,7 @@ import { getJourney } from "./_actions/getJourney";
 
 import { changeDateToReadable } from "@/utils/changeDateToReadable";
 
-import Journey from "./_components/journey"; 
+import Journey from "./_components/journey";
 
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 

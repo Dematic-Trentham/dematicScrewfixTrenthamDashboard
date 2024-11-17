@@ -41,8 +41,6 @@ export default JourneyLine;
 const decodeTraceLine = (traceLine: string) => {
 	let decodedLine = "";
 
-	
-
 	//(hh:mm:ss:ms)xxxxx
 	const time = traceLine.slice(1, 13);
 
