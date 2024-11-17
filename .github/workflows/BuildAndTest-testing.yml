@@ -22,6 +22,18 @@ jobs:
       - name: Run Tests
         run: docker run --rm dematicscrewfixtrenthamdashboard:testing npm run test
 
+  update_permissions:
+    runs-on: self-hosted
+    needs: Build_Test_and_Run
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update Permissions
+        run: |
+          npm run update-permissions
+
   Build_Image:
     runs-on: self-hosted
     needs: Build_Test_and_Run
