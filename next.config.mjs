@@ -22,7 +22,7 @@ const nextConfig = {
 		return {
 			...webpackConfig,
 			optimization: {
-				minimize: true,
+				minimize: false,
 			},
 		};
 	},
