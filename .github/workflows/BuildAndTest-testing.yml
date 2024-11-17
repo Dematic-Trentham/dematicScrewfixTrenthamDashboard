@@ -33,11 +33,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: print out env
-        run: echo "${{ secrets.DATABASE_URL }}"
-
       - name: make env file
-        run: echo "DATABASE_URL=$DATABASE_URL" > .env
+        run: echo "DATABASE_URL=mysql://node:nodenode@10.4.5.227:3306/dematicScrewfixTrenthamDashboard" > .env
 
       - name: Generate Prisma
         run: npm run prisma-merge
