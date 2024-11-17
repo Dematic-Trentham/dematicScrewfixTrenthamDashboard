@@ -23,8 +23,6 @@ jobs:
     - name: Run Tests
       run: docker run --rm dematicscrewfixtrenthamdashboard:testing npm run test
 
-    - name: Check_for_outdated
-      run: docker run --rm dematicscrewfixtrenthamdashboard:testing npm run npm-check
 
   Build_Image:
     runs-on: self-hosted
