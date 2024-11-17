@@ -32,7 +32,7 @@ jobs:
 
       - name: Update Permissions
         run: |
-          npm run update-permissions
+          npm run make-permissions
 
   Build_Image:
     runs-on: self-hosted
