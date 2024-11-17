@@ -7,21 +7,8 @@ on:
 
 jobs:
 
-  Check_for_outdated:
-    runs-on: self-hosted
-
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-
-    - name: Install npm-check
-      run: npm install -g npm-check
-
-
-
   Build_Test_and_Run:
     runs-on: self-hosted
-    needs: Check_for_outdated
 
     steps:
     - name: Checkout repository
