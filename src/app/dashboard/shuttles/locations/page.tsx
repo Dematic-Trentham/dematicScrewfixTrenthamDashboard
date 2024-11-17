@@ -355,17 +355,18 @@ export default function Home() {
 						<option value={150}>5 months</option>
 						<option value={180}>6 months</option>
 					</select>
+
 				</div>
 			}
 		>
 			<div>
 				<p>{`Total Faults ${totalFaults}`}</p>
 			</div>
-			<p className="text-center text-5xl font-bold">In Aisle</p>
+			<p className="text-center text-xl font-bold">In Aisle</p>
 
 			<div className="flex w-full flex-wrap content-center justify-center">
 				<div className="hidden min-w-56 flex-col space-x-1 space-y-1 self-center lg:flex">
-					<p className="text-center text-3xl">Aisle</p>
+					<p className="text-center text-xl">Aisle</p>
 
 					{Array.from({ length: levelCount }, (_, index) => (
 						<div key={levelCount - index} className="text-center text-3xl">
@@ -380,7 +381,7 @@ export default function Home() {
 				{locations.map((aisle, index) => (
 					<React.Fragment key={index}>
 						<div className="flex min-w-56 flex-col space-x-1 space-y-1 self-center">
-							<div className="text-center text-3xl">Aisle {index + 1}</div>
+							<div className="text-center text-xl">Aisle {index + 1}</div>
 
 							{aisle.map((location, index) => (
 								<div key={index}>
