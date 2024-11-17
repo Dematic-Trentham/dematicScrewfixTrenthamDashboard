@@ -17,8 +17,7 @@ jobs:
     - name: Install npm-check
       run: npm install -g npm-check
 
-    - name: Check_for_outdated
-      run: npm-check
+
 
   Build_Test_and_Run:
     runs-on: self-hosted
@@ -36,6 +35,9 @@ jobs:
 
     - name: Run Tests
       run: docker run --rm dematicscrewfixtrenthamdashboard:testing npm run test
+
+    - name: Check_for_outdated
+      run: docker run --rm dematicscrewfixtrenthamdashboard:testing npm-check --update
 
   Build_Image:
     runs-on: self-hosted

@@ -78,6 +78,7 @@
     "jest-github-actions-reporter": "^1.0.0",
     "local-ssl-proxy": "^2.0.5",
     "masterPrismaSchema": "git+https://github.com/jameswlyons/dematicDashboardScrewfixTrenthamMasterPrismaSchema.git",
+    "npm-check": "^6.0.1",
     "postcss": "8.4.38",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6",
