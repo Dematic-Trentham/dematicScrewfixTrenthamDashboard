@@ -36,6 +36,9 @@ jobs:
       - name: print out env
         run: echo ${{ secrets.DATABASE_URL }}
 
+      - name: make env file
+        run: echo "DATABASE_URL=$DATABASE_URL" > .env
+
       - name: Generate Prisma
         run: npm run prisma-merge
 
