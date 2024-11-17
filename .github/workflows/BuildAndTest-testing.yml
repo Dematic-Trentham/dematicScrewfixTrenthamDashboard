@@ -34,7 +34,7 @@ jobs:
         run: npm install
 
       - name: Generate Prisma
-        run: npm prisma-merge
+        run: npm run prisma-merge
 
       - name: Update Permissions
         run: |
