@@ -6,8 +6,20 @@ on:
       - testing
 
 jobs:
+
+  Check_for_outdated:
+    runs-on: self-hosted
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Check_for_outdated
+      run: npm-check
+
   Build_Test_and_Run:
     runs-on: self-hosted
+    needs: Check_for_outdated
 
     steps:
     - name: Checkout repository
