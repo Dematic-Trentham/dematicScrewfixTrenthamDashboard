@@ -40,7 +40,7 @@ const Sidebarparentcomponent = (props: SidebarparentcomponentProps) => {
 	//add class to each child
 	React.Children.map(props.children, (child) => {
 		// @ts-ignore
-		child.props.classname = `ml-7`;
+		//child.props.classname = `ml-7`;
 	});
 
 	const content = (
