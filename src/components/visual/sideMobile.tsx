@@ -13,7 +13,7 @@ const SideMini: React.FC<SideMiniProps> = ({ children }) => {
 	const cookies = useCookies();
 
 	const [isMinimizedButton, setIsMinimizedButton] = useState(false);
-	const [isMinimized, setIsMinimized] = useState(false);
+	//const [isMinimized, setIsMinimized] = useState(false);
 
 	useEffect(() => {
 		const sidebarIsMinimized = cookies.get("sidebarIsMinimized");
@@ -52,7 +52,7 @@ const SideMini: React.FC<SideMiniProps> = ({ children }) => {
 					onClick={toggleMinimize}
 				>
 					<FaBars
-						className={`size-4 ${isMinimized ? "text-gray-300" : "text-white"}`}
+						className={`size-4 ${isMinimizedButton ? "text-gray-300" : "text-white"}`}
 					/>
 				</div>
 			</div>

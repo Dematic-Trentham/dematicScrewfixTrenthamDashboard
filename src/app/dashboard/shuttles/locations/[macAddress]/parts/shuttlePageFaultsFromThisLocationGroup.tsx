@@ -51,7 +51,7 @@ const ShuttlePageFaultsFromThisLocationGrouped: React.FC<
 
 			let shuttleGroup: shuttleFaultGroup[] = [];
 
-			shuttle.forEach((fault) => {
+			shuttle.forEach((fault: { faultCode: any; count?: number }) => {
 				const found = shuttleGroup.find(
 					(group) => group.faultCode === fault.faultCode
 				);

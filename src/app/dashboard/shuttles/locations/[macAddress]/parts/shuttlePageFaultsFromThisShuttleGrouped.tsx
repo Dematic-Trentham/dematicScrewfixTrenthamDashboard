@@ -50,7 +50,7 @@ const ShuttlePageFaultsFromThisShuttleGrouped: React.FC<
 
 			let shuttleGroup: shuttleFaultGroup[] = [];
 
-			shuttle.forEach((fault) => {
+			shuttle.forEach((fault: { faultCode: any; count?: number }) => {
 				const found = shuttleGroup.find(
 					(group) => group.faultCode === fault.faultCode
 				);
@@ -123,7 +123,7 @@ const ShuttlePageFaultsFromThisShuttleGrouped: React.FC<
 			<table className="w-full">
 				<thead className="border border-black bg-orange-400">
 					<tr>
-					<th style={{ width: "200px" }}>Fault Description</th>
+						<th style={{ width: "200px" }}>Fault Description</th>
 						<th style={{ width: "50px" }}>Count</th>
 					</tr>
 				</thead>

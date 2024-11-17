@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import React from "react";
+import * as React from "react";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
 
@@ -58,33 +58,40 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 			}
 
 			//insert the shuttle movement logs into the shuttle faults (As a fault with a fault code of -1)
-			ShuttleMovementLogsByLocation.forEach((log) => {
-				//Make log into a json object
-				const logString = JSON.stringify(log);
+			ShuttleMovementLogsByLocation.forEach(
+				(log: { ID: any; aisle: any; level: any; timestamp: any }) => {
+					//Make log into a json object
+					const logString = JSON.stringify(log);
 
-				shuttle.push({
-					ID: log.ID,
-					aisle: log.aisle,
-					level: log.level,
-					timestamp: log.timestamp,
-					macAddress: "N/A",
-					faultCode: "-1",
-					WLocation: 0,
-					ZLocation: 0,
-					shuttleID: "N/A",
-					xLocation: 0,
-					xCoordinate: 0,
-					faultMessage: -1,
-					resolvedReason: "N/A",
-					resolvedTimestamp: null,
-					rawInfo: logString,
-				});
-			});
+					shuttle.push({
+						ID: log.ID,
+						aisle: log.aisle,
+						level: log.level,
+						timestamp: log.timestamp,
+						macAddress: "N/A",
+						faultCode: "-1",
+						WLocation: 0,
+						ZLocation: 0,
+						shuttleID: "N/A",
+						xLocation: 0,
+						xCoordinate: 0,
+						faultMessage: -1,
+						resolvedReason: "N/A",
+						resolvedTimestamp: null,
+						rawInfo: logString,
+					});
+				}
+			);
 
 			//sort the shuttle faults by timestamp
-			shuttle.sort((a, b) => {
-				return b.timestamp.getTime() - a.timestamp.getTime();
-			});
+			shuttle.sort(
+				(
+					a: { timestamp: { getTime: () => number } },
+					b: { timestamp: { getTime: () => number } }
+				) => {
+					return b.timestamp.getTime() - a.timestamp.getTime();
+				}
+			);
 
 			setIsLoading(false);
 			setFaults(shuttle);

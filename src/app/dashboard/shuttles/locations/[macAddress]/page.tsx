@@ -11,10 +11,10 @@ import ShuttlePageFaultsFromThisShuttle from "./parts/shuttlePageFaultsFromThisS
 import ShuttlePageFaultsFromThisLocation from "./parts/shuttlePageFaultsFromThisLocation";
 import ShuttlePageFaultsFromThisLocationGrouped from "./parts/shuttlePageFaultsFromThisLocationGroup";
 import ShuttlePageFaultsFromThisShuttleGrouped from "./parts/shuttlePageFaultsFromThisShuttleGrouped";
+import ShuttlePageCounts from "./parts/shuttlePageCounts";
 
 import PanelTop from "@/components/panels/panelTop";
 import { updateUrlParams } from "@/utils/url/params";
-import ShuttlePageCounts from "./parts/shuttlePageCounts";
 
 export default function ShuttlePage({
 	params,
@@ -47,18 +47,19 @@ export default function ShuttlePage({
 	const [humanReadableLoaction, setHumanReadableLocation] =
 		useState<string>("");
 
-		const [allCounts, setAllCounts] = 
-		useState<	{
-			ID: string;
-			timeStamp: Date;
-			timeRange: string;
-			aisle: number;
-			level: number;
-			shuttleID: string;
-			totalPicks: number;
-			totalDrops: number;
-			totalIATs: number;
-		}[]>([])
+	// const [allCounts, setAllCounts] = useState<
+	// 	{
+	// 		ID: string;
+	// 		timeStamp: Date;
+	// 		timeRange: string;
+	// 		aisle: number;
+	// 		level: number;
+	// 		shuttleID: string;
+	// 		totalPicks: number;
+	// 		totalDrops: number;
+	// 		totalIATs: number;
+	// 	}[]
+	//>([]);
 
 	useEffect(() => {
 		const fetchShuttle = async () => {
@@ -91,13 +92,24 @@ export default function ShuttlePage({
 		fetchShuttle();
 	}, []);
 
+	function returnToPreviousPage() {
+		//go back to the previous page if the back button is clicked - add the search params
+
+		// /dashboard/shuttles/locations?currentSearchTime=7&currentTab=0
+		router.replace(
+			"/dashboard/shuttles/locations?currentSearchTime=" + timeToSearch
+		);
+	}
+
 	if (isLoading) {
 		return (
 			<div>
 				<PanelTop
 					className="w-full"
 					title={"Shuttle Details "}
-					topRight={<button onClick={() => router.back()}>Back</button>}
+					topRight={
+						<button onClick={() => returnToPreviousPage()}>Back</button>
+					}
 				>
 					<div className="justify-left flex flex-col">
 						<div className="text-xl">Mac Address: {macAddress}</div>
@@ -114,7 +126,9 @@ export default function ShuttlePage({
 				<PanelTop
 					className="w-full"
 					title={"Shuttle Details "}
-					topRight={<button onClick={() => router.back()}>Back</button>}
+					topRight={
+						<button onClick={() => returnToPreviousPage()}>Back</button>
+					}
 				>
 					<div className="justify-left flex flex-col">
 						<div className="text-xl">Mac Address: {macAddress}</div>
@@ -161,25 +175,21 @@ export default function ShuttlePage({
 							<option value={150}>5 months</option>
 							<option value={180}>6 months</option>
 						</select>
-						<button
-							onClick={() => router.replace("/dashboard/shuttles/locations?")}
-						>
-							Back
-						</button>
+						<button onClick={() => returnToPreviousPage()}>Back</button>
 					</div>
 				}
 			>
 				<div className="justify-left flex flex-col">
 					<div className="text-xl">Mac Address: {macAddress}</div>
 					<div className="text-xl">Shuttle ID: {shuttleID}</div>
-					<div className="text-xl">Current Location: {humanReadableLoaction} </div>
+					<div className="text-xl">
+						Current Location: {humanReadableLoaction}{" "}
+					</div>
 				</div>
 				<div className="h-2" />
 				<Tabs
 					selectedIndex={currentTab}
 					onSelect={(index) => {
-						console.log(`Selected tab: ${index}`);
-
 						//update the current tab in the url
 						setCurrentTab(index);
 						updateUrlParams(
@@ -199,7 +209,7 @@ export default function ShuttlePage({
 						{currentLocation !== "Maintenance Bay" && (
 							<Tab>Faults From This Location</Tab>
 						)}
-<Tab>Counts</Tab>
+						<Tab>Counts</Tab>
 						<Tab>Settings</Tab>
 					</TabList>
 
@@ -234,7 +244,7 @@ export default function ShuttlePage({
 						</TabPanel>
 					)}
 					<TabPanel>
-						<ShuttlePageCounts 
+						<ShuttlePageCounts
 							daysToSearch={timeToSearch}
 							location={currentLocation}
 						/>

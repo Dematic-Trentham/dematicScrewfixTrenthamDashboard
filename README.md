@@ -2,6 +2,6 @@
 
 ## Current Build Status
 
-Testing Branch - ![example workflow](http://10.4.5.227:3080/jwlyons/dematicScrewfixTrenthamDashboard/actions/workflows/gitea-ci.yaml/badge.svg?branch=testing)
+Testing Branch - [![Build and Test - Testing Branch](https://github.com/Dematic-Trentham/dematicScrewfixTrenthamDashboard/actions/workflows/BuildAndTest-testing.yml/badge.svg)](https://github.com/Dematic-Trentham/dematicScrewfixTrenthamDashboard/actions/workflows/BuildAndTest-testing.yml)
 
-Main Branch - ![example workflow](http://10.4.5.227:3080/jwlyons/dematicScrewfixTrenthamDashboard/actions/workflows/gitea-ci.yaml/badge.svg?branch=main)
+Main Branch - [![Build and Test- Main Branch](https://github.com/Dematic-Trentham/dematicScrewfixTrenthamDashboard/actions/workflows/BuildAndTest-Main.yml/badge.svg)](https://github.com/Dematic-Trentham/dematicScrewfixTrenthamDashboard/actions/workflows/BuildAndTest-Main.yml)

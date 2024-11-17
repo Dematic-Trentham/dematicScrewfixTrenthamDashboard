@@ -16,10 +16,11 @@
     "prisma-push": "npx prisma db push --schema=./node_modules/masterPrismaSchema/prisma/schema",
     "packageJsonStripper": "node tools/packageJsonStripper.js",
     "build-docker": "npm run prisma-merge && npm run packageJsonStripper && docker build -t dematicscrewfixtrenthamdashboard .",
-    "test": "jest"
+    "test": "jest",
+    "npm-check": "npm-check",
+    "lint:fix": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
   },
   "dependencies": {
-    "@material-ui/core": "^4.12.4",
     "@mui/material": "^5.16.7",
     "@nextui-org/button": "^2.0.37",
     "@nextui-org/input": "^2.2.4",
@@ -78,7 +79,8 @@
     "jest-environment-jsdom": "^29.7.0",
     "jest-github-actions-reporter": "^1.0.0",
     "local-ssl-proxy": "^2.0.5",
-    "masterPrismaSchema": "git+https://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:x-oauth-basic@github.com/jameswlyons/dematicDashboardScrewfixTrenthamMasterPrismaSchema.git",
+    "masterPrismaSchema": "git+https://github.com/jameswlyons/dematicDashboardScrewfixTrenthamMasterPrismaSchema.git",
+    "npm-check": "^6.0.1",
     "postcss": "8.4.38",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.6",

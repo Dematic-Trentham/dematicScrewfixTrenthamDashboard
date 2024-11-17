@@ -1,23 +1,41 @@
 "use client";
-import React from "react";
+import * as React from "react";
+import {
+	AwaitedReactNode,
+	JSXElementConstructor,
+	ReactElement,
+	ReactNode,
+} from "react";
 
 interface JourneyLineProps {
 	line: string;
 	raw: boolean;
 }
 
-const JourneyLine: React.FC<JourneyLineProps> = (props) => {
+const JourneyLine: React.FC<JourneyLineProps> = (props: {
+	raw: any;
+	line:
+		| string
+		| number
+		| bigint
+		| boolean
+		| ReactElement<any, string | JSXElementConstructor<any>>
+		| Iterable<ReactNode>
+		| Promise<AwaitedReactNode>
+		| null
+		| undefined;
+}) => {
 	// Implement your component logic here
-	const hover = (
-		<div className="rounded-md bg-slate-500 p-2 text-white">
-			<div>Time: {decodeTraceLine(props.line).time}</div>
-			<div>Message Number: {decodeTraceLine(props.line).messageNumber}</div>
-			<div>Message Type: {decodeTraceLine(props.line).messageType}</div>
-			<div>
-				Message Type Station: {decodeTraceLine(props.line).messageTypeStation}
-			</div>
-		</div>
-	);
+	// const hover = (
+	// 	<div className="rounded-md bg-slate-500 p-2 text-white">
+	// 		<div>Time: {decodeTraceLine(props.line).time}</div>
+	// 		<div>Message Number: {decodeTraceLine(props.line).messageNumber}</div>
+	// 		<div>Message Type: {decodeTraceLine(props.line).messageType}</div>
+	// 		<div>
+	// 			Message Type Station: {decodeTraceLine(props.line).messageTypeStation}
+	// 		</div>
+	// 	</div>
+	// );
 
 	if (props.raw) {
 		return <div className="hover:bg-yellow-300">{props.line}</div>;
@@ -25,13 +43,15 @@ const JourneyLine: React.FC<JourneyLineProps> = (props) => {
 
 	let bg = "";
 
-	if (decodeTraceLine(props.line).explained) {
+	if (typeof props.line === "string" && decodeTraceLine(props.line).explained) {
 		bg = "bg-green-200";
 	}
 
 	return (
 		<div className={`hover:bg-yellow-300 ${bg}`}>
-			{decodeTraceLine(props.line).decodedLine}
+			{typeof props.line === "string"
+				? decodeTraceLine(props.line).decodedLine
+				: props.line}
 		</div>
 	);
 };
@@ -40,8 +60,6 @@ export default JourneyLine;
 
 const decodeTraceLine = (traceLine: string) => {
 	let decodedLine = "";
-
-	
 
 	//(hh:mm:ss:ms)xxxxx
 	const time = traceLine.slice(1, 13);
@@ -60,8 +78,8 @@ const decodeTraceLine = (traceLine: string) => {
 	let explain = "";
 
 	explain += checkLoadMGN(messageType, traceLine, messageTypeStation);
-	explain += checkRouting(messageType, traceLine, messageTypeStation);
-	explain += checkPH1(messageType, traceLine, messageTypeStation);
+	explain += checkRouting(messageType, traceLine);
+	explain += checkPH1(messageType);
 	explain += checkOFFMGN(messageType, traceLine, messageTypeStation);
 
 	decodedLine += explain;
@@ -101,9 +119,9 @@ function checkLoadMGN(
 
 function checkRouting(
 	messageType: string,
-	traceLine: string,
+	traceLine: string
 
-	messageTypeStation: string
+	//messageTypeStation: string
 ) {
 	let explain = "";
 
@@ -135,10 +153,10 @@ function checkRouting(
 }
 
 function checkPH1(
-	messageType: string,
-	traceLine: string,
+	messageType: string
+	//traceLine: string
 
-	messageTypeStation: string
+	//messageTypeStation: string
 ) {
 	let explain = "";
 

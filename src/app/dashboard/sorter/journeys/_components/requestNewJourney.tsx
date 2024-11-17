@@ -8,7 +8,7 @@ import { toast } from "react-toastify";
 import { requestNewJourneyToDB } from "../_actions/requestNewJourney";
 interface RequestNewJourneyProps {}
 
-const RequestNewJourney: React.FC<RequestNewJourneyProps> = (props) => {
+const RequestNewJourney: React.FC<RequestNewJourneyProps> = () => {
 	const [isDirty, setIsDirty] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 
@@ -20,7 +20,6 @@ const RequestNewJourney: React.FC<RequestNewJourneyProps> = (props) => {
 
 		if (!ul || ul.value.length !== 8) {
 			setError("Please enter a valid UL");
-			console.log("Please enter a valid UL");
 
 			return;
 		}
@@ -34,7 +33,6 @@ const RequestNewJourney: React.FC<RequestNewJourneyProps> = (props) => {
 		//reset the form
 		ul.value = "";
 		setIsDirty(false);
-		console.log("Request added");
 	};
 
 	return (
@@ -54,7 +52,7 @@ const RequestNewJourney: React.FC<RequestNewJourneyProps> = (props) => {
 					placeholder="Enter a Ul To Search"
 					type="text"
 					onChange={() => setIsDirty(true)}
-					onKeyDown={(event) => {
+					onKeyDown={(event: { key: string }) => {
 						if (event.key === "Enter") {
 							addRequest();
 						}

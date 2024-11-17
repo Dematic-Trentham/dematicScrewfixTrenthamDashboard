@@ -1,6 +1,7 @@
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { CookiesProvider } from "next-client-cookies/server";
+import { Suspense } from "react";
 
 import { Providers } from "./providers";
 
@@ -10,8 +11,6 @@ import { siteConfig } from "@/config/site";
 import Sidebar from "@/components/sidebar/sidebar";
 import Topbar from "@/components/topbar/topbar";
 import ReloadPage from "@/components/reload";
-import { Suspense } from "react";
-import ErrorBoundary from "@/components/ErrorBoundary";
 
 export const metadata: Metadata = {
 	title: {
@@ -41,30 +40,32 @@ export default function RootLayout({
 			<head />
 
 			<body className="antialiased">
-		
-			<Suspense>
-				<CookiesProvider>
-					<Providers
-						themeProps={{ attribute: "class", defaultTheme: "dark", children }}
-					>
-						<ToastContextProvider>
-							<ToastProvider>
-								<ReloadPage />
-								<div className="duration-5000 flex h-screen bg-gray-200 text-black transition-all dark:bg-slate-500 dark:text-slate-100">
-									<Sidebar />
-									{/* Main content */}
-									<div className="y-auto flex flex-1 flex-col overflow-auto">
-										<Topbar />
+				<Suspense>
+					<CookiesProvider>
+						<Providers
+							themeProps={{
+								attribute: "class",
+								defaultTheme: "dark",
+								children,
+							}}
+						>
+							<ToastContextProvider>
+								<ToastProvider>
+									<ReloadPage />
+									<div className="duration-5000 flex h-screen bg-gray-200 text-black transition-all dark:bg-slate-500 dark:text-slate-100">
+										<Sidebar />
+										{/* Main content */}
+										<div className="y-auto flex flex-1 flex-col overflow-auto">
+											<Topbar />
 
-										<div className="flex flex-1 flex-col p-4">{children}</div>
+											<div className="flex flex-1 flex-col p-4">{children}</div>
+										</div>
 									</div>
-								</div>
-							</ToastProvider>
-						</ToastContextProvider>
-					</Providers>
-				</CookiesProvider>
+								</ToastProvider>
+							</ToastContextProvider>
+						</Providers>
+					</CookiesProvider>
 				</Suspense>
-				
 			</body>
 		</html>
 	);
