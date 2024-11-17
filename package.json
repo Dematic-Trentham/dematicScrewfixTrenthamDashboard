@@ -17,7 +17,8 @@
     "packageJsonStripper": "node tools/packageJsonStripper.js",
     "build-docker": "npm run prisma-merge && npm run packageJsonStripper && docker build -t dematicscrewfixtrenthamdashboard .",
     "test": "jest",
-    "npm-check": "npm-check"
+    "npm-check": "npm-check",
+    "lint:fix": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"
   },
   "dependencies": {
     "@mui/material": "^5.16.7",
