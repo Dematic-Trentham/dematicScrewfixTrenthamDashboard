@@ -56,7 +56,7 @@ async function checkUsersAndDelete() {
 		});
 
 		if (newPermissions.length !== usersPermissions.length) {
-			const result = await prisma.user.update({
+			const result = await prisma.dashboardUsers.update({
 				where: {
 					id: user.id,
 				},

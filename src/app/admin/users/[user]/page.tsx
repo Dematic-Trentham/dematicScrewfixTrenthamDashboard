@@ -8,7 +8,7 @@ import "react-tabs/style/react-tabs.css";
 import { hasPermission } from "@/utils/getUser";
 
 export default async function UserPage(props: {
-	params: { user: string };
+	params: Promise <{ user: string }>;
 }) {
 
 	const  params  = await props.params
