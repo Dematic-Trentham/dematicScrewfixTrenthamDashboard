@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import * as React from "react";
+import Tippy from "@tippyjs/react";
 
+import "tippy.js/dist/tippy.css";
 import { getFaultCodeLookup, getLocationFaults } from "./_actions";
 import { getShuttleMovementLogsByLocation } from "./_actions/index";
 
@@ -8,7 +10,6 @@ import {
 	shuttleFault,
 	shuttleFaultCodeLookup,
 } from "@/app/dashboard/shuttles/_types/shuttle";
-import Tooltip from "@/components/tooltip";
 
 interface ShuttlePageFaultsFromThisLocationProps {
 	location: string;
@@ -261,107 +262,119 @@ function makeFaultRow(
 				</td>
 
 				<td>
-					<Tooltip button={<button>Details</button>}>
-						<div>W Location: {fault.WLocation}</div>
-						<div>Z Location: {fault.ZLocation}</div>
-						<div>Aisle: {fault.aisle}</div>
-						<div>Level: {fault.level}</div>
-						<div>Shuttle ID: {fault.shuttleID}</div>
-						<div>X Location: {fault.xLocation}</div>
-						<div>X Coordinate: {fault.xCoordinate}</div>
-					</Tooltip>
+					<Tippy
+						content={
+							<>
+								<div>W Location: {fault.WLocation}</div>
+								<div>Z Location: {fault.ZLocation}</div>
+								<div>Aisle: {fault.aisle}</div>
+								<div>Level: {fault.level}</div>
+								<div>Shuttle ID: {fault.shuttleID}</div>
+								<div>X Location: {fault.xLocation}</div>
+								<div>X Coordinate: {fault.xCoordinate}</div>
+							</>
+						}
+					>
+						<button>Details</button>
+					</Tippy>
 				</td>
 				<td>
-					<Tooltip button={<button>Extras</button>}>
-						<div className="flex flex-row">
-							<table className="border-separate border-spacing-y-0">
-								<tbody>
-									<tr>
-										<td>Shuttle Status:</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Configured:</td>
-										<td>{rawInfo.shuttleStatus.configured}</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Homed:</td>
-										<td>{rawInfo.shuttleStatus.homed}</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Taught:</td>
-										<td>{rawInfo.shuttleStatus.taught}</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Maintenance Mode:</td>
-										<td>{rawInfo.shuttleStatus.maintMode}</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Mode</td>
-										<td>{rawInfo.mode}</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Order Step:</td>
-										<td>{rawInfo.orderStep}</td>
-									</tr>
-									<tr>
-										<td>Load Status</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Loaded:</td>
-										<td>{rawInfo.loadStatus.loaded}</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Sensor 1 Blocked:</td>
-										<td>{rawInfo.loadStatus.sensor1Blocked}</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Sensor 2 Blocked:</td>
-										<td>{rawInfo.loadStatus.sensor2Blocked}</td>
-									</tr>
-								</tbody>
-							</table>
+					<Tippy
+						content={
+							<>
+								<div className="flex flex-row">
+									<table className="border-separate border-spacing-y-0">
+										<tbody>
+											<tr>
+												<td>Shuttle Status:</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Configured:</td>
+												<td>{rawInfo.shuttleStatus.configured}</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Homed:</td>
+												<td>{rawInfo.shuttleStatus.homed}</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Taught:</td>
+												<td>{rawInfo.shuttleStatus.taught}</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Maintenance Mode:</td>
+												<td>{rawInfo.shuttleStatus.maintMode}</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Mode</td>
+												<td>{rawInfo.mode}</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Order Step:</td>
+												<td>{rawInfo.orderStep}</td>
+											</tr>
+											<tr>
+												<td>Load Status</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Loaded:</td>
+												<td>{rawInfo.loadStatus.loaded}</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Sensor 1 Blocked:</td>
+												<td>{rawInfo.loadStatus.sensor1Blocked}</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Sensor 2 Blocked:</td>
+												<td>{rawInfo.loadStatus.sensor2Blocked}</td>
+											</tr>
+										</tbody>
+									</table>
 
-							<table className="border-separate border-spacing-y-0">
-								<tbody>
-									<tr>
-										<td>Finger Status:</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Finger Pair 1:</td>
-										<td>
-											Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair1},
-											Down:&nbsp;
-											{rawInfo.fingerStatus.fingerDownStatus.pair1}
-										</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Finger Pair 2:</td>
-										<td>
-											Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair2},
-											Down:&nbsp;
-											{rawInfo.fingerStatus.fingerDownStatus.pair2}
-										</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Finger Pair 3:</td>
-										<td>
-											Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair3},
-											Down:&nbsp;
-											{rawInfo.fingerStatus.fingerDownStatus.pair3}
-										</td>
-									</tr>
-									<tr>
-										<td>&emsp;&emsp;Finger Pair 4:</td>
-										<td>
-											Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair4},
-											Down:&nbsp;
-											{rawInfo.fingerStatus.fingerDownStatus.pair4}
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>
-					</Tooltip>
+									<table className="border-separate border-spacing-y-0">
+										<tbody>
+											<tr>
+												<td>Finger Status:</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Finger Pair 1:</td>
+												<td>
+													Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair1},
+													Down:&nbsp;
+													{rawInfo.fingerStatus.fingerDownStatus.pair1}
+												</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Finger Pair 2:</td>
+												<td>
+													Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair2},
+													Down:&nbsp;
+													{rawInfo.fingerStatus.fingerDownStatus.pair2}
+												</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Finger Pair 3:</td>
+												<td>
+													Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair3},
+													Down:&nbsp;
+													{rawInfo.fingerStatus.fingerDownStatus.pair3}
+												</td>
+											</tr>
+											<tr>
+												<td>&emsp;&emsp;Finger Pair 4:</td>
+												<td>
+													Up:&nbsp;{rawInfo.fingerStatus.fingerUpStatus.pair4},
+													Down:&nbsp;
+													{rawInfo.fingerStatus.fingerDownStatus.pair4}
+												</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</>
+						}
+					>
+						<button>Extras</button>
+					</Tippy>
 				</td>
 			</tr>
 		);
