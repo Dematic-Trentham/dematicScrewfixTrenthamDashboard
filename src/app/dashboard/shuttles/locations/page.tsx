@@ -355,7 +355,6 @@ export default function Home() {
 						<option value={150}>5 months</option>
 						<option value={180}>6 months</option>
 					</select>
-
 				</div>
 			}
 		>

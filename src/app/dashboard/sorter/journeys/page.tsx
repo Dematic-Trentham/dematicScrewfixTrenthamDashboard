@@ -8,6 +8,8 @@ import TableRow from "@mui/material/TableRow";
 import { Button, TableFooter } from "@mui/material";
 import { TableContainer } from "@mui/material";
 import Link from "next/link";
+//import { user } from "@nextui-org/theme";
+import { toast } from "react-toastify";
 
 import { changeDateToReadable } from "../../../../utils/changeDateToReadable";
 
@@ -17,9 +19,7 @@ import { deleteAJourney } from "./[uuid]/_actions/getJourney";
 
 import PanelTop from "@/components/panels/panelTop";
 import YesNoBox from "@/components/visual/yesNoBox";
-import { user } from "@nextui-org/theme";
 import { hasPermission } from "@/utils/getUser";
-import { toast } from "react-toastify";
 
 export default function Home() {
 	const [isLoading, setIsLoading] = useState(true);
@@ -61,19 +61,22 @@ export default function Home() {
 			setPermission(await hasPermission("sorterJourneyEdit"));
 		};
 
+		fetchUserPemission();
 	}, []);
 
 	const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
 	const handleDelete = async (id: string) => {
-
 		//does the user have permission to delete this journey?
 		//if not, return
 		//if yes,
 		//setConfirmDelete(id);
 
 		if (!permission) {
-			toast.error('You do not have permission to delete this journey, you require the "sorterJourneyEdit" permission Please ask admin to grant access.');
+			toast.error(
+				'You do not have permission to delete this journey, you require the "sorterJourneyEdit" permission Please ask admin to grant access.'
+			);
+
 			return;
 		}
 
@@ -127,7 +130,6 @@ export default function Home() {
 			<PanelTop className="h-fit w-full" title="Sorter journey's">
 				<div className="flex w-full flex-col items-center justify-center">
 					<p>{error}</p>
-
 				</div>
 			</PanelTop>
 		);

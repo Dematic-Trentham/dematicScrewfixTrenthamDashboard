@@ -13,6 +13,7 @@ const Tooltip: React.FC<TooltipProps> = ({ children, button }) => {
 		const handleResize = () => {
 			if (tooltipRef.current) {
 				const { right, bottom } = tooltipRef.current.getBoundingClientRect();
+
 				if (right > window.innerWidth) {
 					tooltipRef.current.style.left = `${window.innerWidth - right}px`;
 				}
@@ -34,11 +35,11 @@ const Tooltip: React.FC<TooltipProps> = ({ children, button }) => {
 
 	return (
 		<div
-			onMouseOver={() => setVisible(true)}
-			onMouseOut={() => setVisible(false)}
-			onFocus={() => setVisible(true)}
-			onBlur={() => setVisible(false)}
 			style={{ position: "relative", display: "inline-block" }}
+			onBlur={() => setVisible(false)}
+			onFocus={() => setVisible(true)}
+			onMouseOut={() => setVisible(false)}
+			onMouseOver={() => setVisible(true)}
 		>
 			<div>{button}</div>
 			{visible && (
