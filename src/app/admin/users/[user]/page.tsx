@@ -11,7 +11,7 @@ export default async function UserPage(props: {
 	params: { user: string };
 }) {
 
-	const params = await props.params;
+	const  params  = await props.params
 
 	console.log(params);
 
@@ -24,6 +24,6 @@ export default async function UserPage(props: {
 	}
 
 
-	return <AdminUserContent user={params.user} />;
+	return <AdminUserContent user={await params.user} />;
 
 }
