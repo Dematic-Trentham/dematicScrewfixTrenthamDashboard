@@ -4,7 +4,7 @@ import { hasPermission } from "@/utils/getUser";
 
 export default async function UserPage(
     props: {
-        params: Promise<{ user: string }>;
+        params: { user: string };
     }
 ) {
     const params = await props.params;
