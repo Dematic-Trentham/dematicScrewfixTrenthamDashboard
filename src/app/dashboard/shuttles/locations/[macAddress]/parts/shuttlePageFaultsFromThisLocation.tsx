@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import * as React from "react";
-import Tippy from "@tippyjs/react";
+
 
 import { getFaultCodeLookup, getLocationFaults } from "./_actions";
 import { getShuttleMovementLogsByLocation } from "./_actions/index";
-
-import "tippy.js/dist/tippy.css";
 
 import {
 	shuttleFault,
 	shuttleFaultCodeLookup,
 } from "@/app/dashboard/shuttles/_types/shuttle";
+import Tooltip from "@/components/tooltip";
 
 interface ShuttlePageFaultsFromThisLocationProps {
 	location: string;
@@ -263,26 +262,26 @@ function makeFaultRow(
 				</td>
 
 				<td>
-					<Tippy
-						content={
-							<>
-								<div>W Location: {fault.WLocation}</div>
+					<Tooltip
+							button={<button>Details</button>}
+					>
+					
+						<div>W Location: {fault.WLocation}</div>
 								<div>Z Location: {fault.ZLocation}</div>
 								<div>Aisle: {fault.aisle}</div>
 								<div>Level: {fault.level}</div>
 								<div>Shuttle ID: {fault.shuttleID}</div>
 								<div>X Location: {fault.xLocation}</div>
 								<div>X Coordinate: {fault.xCoordinate}</div>
-							</>
-						}
-					>
-						<button>Details</button>
-					</Tippy>
+					</Tooltip>
 				</td>
 				<td>
-					<Tippy
-						content={
-							<div className="flex flex-row">
+					<Tooltip
+						button={
+							<button>Extras</button>
+						}
+					>
+						<div className="flex flex-row">
 								<table className="border-separate border-spacing-y-0">
 									<tbody>
 										<tr>
@@ -370,10 +369,7 @@ function makeFaultRow(
 									</tbody>
 								</table>
 							</div>
-						}
-					>
-						<button>Extras</button>
-					</Tippy>
+					</Tooltip>
 				</td>
 			</tr>
 		);
