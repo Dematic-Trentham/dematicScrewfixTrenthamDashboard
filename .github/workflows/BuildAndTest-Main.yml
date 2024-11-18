@@ -6,25 +6,34 @@ on:
       - main
 
 jobs:
-  Build_Test_and_Run:
+  Coverage:
     runs-on: self-hosted
+    permissions: write-all
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ArtiomTr/jest-coverage-report-action@v2
+
+  Update_permissions:
+    runs-on: self-hosted
+    needs: Coverage
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      #- name: Set up Docker Buildx
-      #  uses: docker/setup-buildx-action@v3
+      - name: Install dependencies
+        run: npm install
 
-      - name: Build Test Image
-        run: docker build -t dematicscrewfixtrenthamdashboard:testing -f Dockerfile.testing . --progress=plain --no-cache
+      - name: Generate Prisma
+        run: npm run prisma-merge
 
-      - name: Run Tests
-        run: docker run --rm dematicscrewfixtrenthamdashboard:testing npm run test
+      - name: Update Permissions
+        run: |
+          npm run make-permissions
 
   Build_Image:
     runs-on: self-hosted
-    needs: Build_Test_and_Run
+    needs: Coverage
 
     steps:
       - name: Docker metadata

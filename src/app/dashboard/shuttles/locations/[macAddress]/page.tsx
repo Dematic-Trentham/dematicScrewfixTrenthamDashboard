@@ -1,7 +1,7 @@
 "use client";
 
 import "react-tabs/style/react-tabs.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -16,11 +16,10 @@ import ShuttlePageCounts from "./parts/shuttlePageCounts";
 import PanelTop from "@/components/panels/panelTop";
 import { updateUrlParams } from "@/utils/url/params";
 
-export default function ShuttlePage({
-	params,
-}: {
-	params: { macAddress: string };
+export default function ShuttlePage(props: {
+	params: Promise<{ macAddress: string }>;
 }) {
+	const params = use(props.params);
 	const router = useRouter();
 	const searchParams = useSearchParams();
 

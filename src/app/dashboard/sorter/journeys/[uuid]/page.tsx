@@ -1,6 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, use } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
 import Journey from "./_components/journey";
@@ -10,7 +10,8 @@ import PanelTop from "@/components/panels/panelTop";
 import "react-tabs/style/react-tabs.css";
 import { changeDateToReadable } from "@/utils/changeDateToReadable";
 
-export default function SorterUL({ params }: { params: { uuid: string } }) {
+export default function SorterUL(props: { params: Promise<{ uuid: string }> }) {
+	const params = use(props.params);
 	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState(true);

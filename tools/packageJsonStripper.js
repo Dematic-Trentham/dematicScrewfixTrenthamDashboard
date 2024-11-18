@@ -10,4 +10,7 @@ const packageJsonParsed = JSON.parse(packageJson);
 delete packageJsonParsed.devDependencies;
 
 // Write the packageProduction.json file
-fs.writeFileSync("./packageProduction.json", JSON.stringify(packageJsonParsed, null, 2));
+fs.writeFileSync(
+	"./packageProduction.json",
+	JSON.stringify(packageJsonParsed, null, 2)
+);

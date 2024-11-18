@@ -1,16 +1,16 @@
 "use server";
 import { env } from "process";
 
-import { getCookies } from "next-client-cookies/server";
+import { cookies } from "next/headers";
 
 import { decodeJWT } from "@/utils/decodeJWT";
 //import { typeUserVisible } from "@/types/user";
 
 const getUser = async () => {
-	const cookies = getCookies();
+	const cookieStore = await cookies();
 
 	//get the cookie
-	const cookie = cookies.get("user-token");
+	const cookie = cookieStore.get("user-token");
 
 	//if no cookie return null
 	if (!cookie) {
@@ -18,7 +18,7 @@ const getUser = async () => {
 	}
 
 	//decode the JWT
-	const user = decodeJWT(cookie);
+	const user = decodeJWT(cookie.value);
 
 	//if the JWT is invalid return null
 	if (!user) {
