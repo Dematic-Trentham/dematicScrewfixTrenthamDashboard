@@ -36,7 +36,10 @@ const Tooltip: React.FC<TooltipProps> = ({ children, button }) => {
 		<div
 			onMouseOver={() => setVisible(true)}
 			onMouseOut={() => setVisible(false)}
+			onFocus={() => setVisible(true)}
+			onBlur={() => setVisible(false)}
 			style={{ position: "relative", display: "inline-block" }}
+			tabIndex={0}
 		>
 			<div>{button}</div>
 			{visible && (
