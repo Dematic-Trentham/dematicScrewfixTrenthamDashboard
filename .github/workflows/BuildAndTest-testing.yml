@@ -11,45 +11,6 @@ defaults:
     working-directory: ./
 
 jobs:
-  Build_Test_and_Run:
-    runs-on: self-hosted
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Set up node
-        uses: actions/setup-node@v3
-        with:
-          node-version: "20.x"
-
-      - name: Install dependencies
-        uses: bahmutov/npm-install@v1
-
-      - name: Restore next build
-        uses: actions/cache@v2
-        id: restore-build-cache
-        env:
-          cache-name: cache-next-build
-        with:
-          # if you use a custom build directory, replace all instances of `.next` in this file with your build directory
-          # ex: if your app builds to `dist`, replace `.next` with `dist`
-          path: ./projects/wp-nextjs-app/.next/cache
-          # change this if you prefer a more strict cache
-          key: ${{ runner.os }}-build-${{ env.cache-name }}
-
-      - name: Build next.js app
-        # change this if your site requires a custom build command
-        run: npm run build
-
-      - name: Run Tests
-        run: npm run test -- --json --outputFile=jest-test-results.json
-
-      - name: Upload Test Report
-        uses: actions/upload-artifact@v4
-        with:
-          name: jest-test-results
-          path: jest-test-results.json
-
   coverage:
     runs-on: self-hosted
     permissions: write-all
@@ -59,7 +20,7 @@ jobs:
 
   analyze:
     runs-on: self-hosted
-    needs: Build_Test_and_Run
+    needs: coverage
     steps:
       - uses: actions/checkout@v2
 
@@ -159,7 +120,7 @@ jobs:
 
   update_permissions:
     runs-on: self-hosted
-    needs: Build_Test_and_Run
+    needs: coverage
 
     steps:
       - name: Checkout repository
