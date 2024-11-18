@@ -1,4 +1,5 @@
-import { use } from "react";
+"use server"
+// import { use } from "react";
 
 import AdminUserContent from "./content";
 
@@ -6,10 +7,14 @@ import "react-tabs/style/react-tabs.css";
 
 import { hasPermission } from "@/utils/getUser";
 
-export default async function UserPage(props: {
-	params: Promise<{ user: string }>;
-}) {
-	const params = use(props.params);
+type UserPageProps = Promise<{ user: string }>;
+
+export default async function UserPage(props: { params: UserPageProps }) {
+
+	const  params  = await props.params
+
+	console.log(params);
+
 	const permission = await hasPermission("admin");
 
 	if (!permission) {
@@ -18,5 +23,7 @@ export default async function UserPage(props: {
 		return <p>You dont have permission</p>;
 	}
 
-	return <AdminUserContent user={params.user} />;
+
+	return <AdminUserContent user={await params.user} />;
+
 }
