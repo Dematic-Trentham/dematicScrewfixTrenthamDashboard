@@ -52,12 +52,7 @@ jobs:
 
   coverage:
     runs-on: self-hosted
-    permissions:
-      checks: write
-      contents: read
-      actions: read
-      pull-requests: write
-      repository-projects: write
+    permissions: write-all
     steps:
       - uses: actions/checkout@v3
       - uses: ArtiomTr/jest-coverage-report-action@v2
