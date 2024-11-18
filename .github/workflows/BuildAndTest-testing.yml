@@ -50,6 +50,12 @@ jobs:
           name: jest-test-results
           path: jest-test-results.json
 
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ArtiomTr/jest-coverage-report-action@v2
+
   analyze:
     runs-on: self-hosted
     needs: Build_Test_and_Run
