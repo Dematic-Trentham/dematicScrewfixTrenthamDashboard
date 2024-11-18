@@ -17,9 +17,18 @@ export const getOrderStartStats = async () => {
 		};
 	} = {};
 
-	result.forEach((res) => {
-		resultObject[res.name] = res;
-	});
+	result.forEach(
+		(res: {
+			id: string;
+			lastUpdated: Date;
+			name: string;
+			location: string;
+			description: string;
+			value: string;
+		}) => {
+			resultObject[res.name] = res;
+		}
+	);
 
 	return resultObject;
 };
