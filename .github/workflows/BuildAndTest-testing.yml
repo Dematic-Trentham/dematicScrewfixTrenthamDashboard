@@ -11,16 +11,16 @@ defaults:
     working-directory: ./
 
 jobs:
-  coverage:
+  Coverage:
     runs-on: self-hosted
     permissions: write-all
     steps:
       - uses: actions/checkout@v3
       - uses: ArtiomTr/jest-coverage-report-action@v2
 
-  analyze:
+  Analyze:
     runs-on: self-hosted
-    needs: coverage
+    needs: Coverage
     steps:
       - uses: actions/checkout@v2
 
@@ -118,9 +118,9 @@ jobs:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           edit-mode: replace
 
-  update_permissions:
+  Update_permissions:
     runs-on: self-hosted
-    needs: coverage
+    needs: Coverage
 
     steps:
       - name: Checkout repository
@@ -141,7 +141,7 @@ jobs:
 
   Build_Image:
     runs-on: self-hosted
-    needs: analyze
+    needs: Coverage
 
     steps:
       - name: Docker metadata
