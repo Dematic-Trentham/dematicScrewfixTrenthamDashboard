@@ -45,7 +45,7 @@ jobs:
         run: npm run test -- --json --outputFile=jest-test-results.json
 
       - name: Upload Test Report
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: jest-test-results
           path: jest-test-results.json
