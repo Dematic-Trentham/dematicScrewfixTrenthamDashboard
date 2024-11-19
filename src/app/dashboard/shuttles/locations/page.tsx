@@ -272,7 +272,7 @@ export default function Home() {
 		fetchFaults();
 		fetchLocations();
 
-		return () => clearInterval(intervalId);
+		//return () => clearInterval(intervalId);
 	}, [timeToSearch]);
 
 	if (isLoading) {
