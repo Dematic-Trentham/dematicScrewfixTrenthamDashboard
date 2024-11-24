@@ -1,5 +1,6 @@
 "use server";
 
+import db from "@/db/db";
 import { revalidatePath } from "next/cache";
 
 export async function requestNewJourneyToDB(ul: string) {
@@ -10,14 +11,14 @@ export async function requestNewJourneyToDB(ul: string) {
 
 	//add to db
 
-	// const result = await db.sorterJourneyRequests.create({
-	// 	data: {
-	// 		requestedUL: ul,
-	// 		status: "REQUESTED",
-	// 		createdDate: new Date(),
-	// 		journey: "",
-	// 	},
-	// });
+	 const result = await db.sorterJourneyRequests.create({
+	 	data: {
+	 		requestedUL: ul,
+			status: "REQUESTED",
+	 		createdDate: new Date(),
+	 		journey: "",
+	 	},
+	 });
 
 	revalidatePath("/dashboard/sorter/journeys");
 
