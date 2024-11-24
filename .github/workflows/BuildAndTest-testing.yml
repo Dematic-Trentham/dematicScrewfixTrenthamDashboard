@@ -3,7 +3,7 @@ name: Build and Test - Testing Branch
 on:
   push:
     branches:
-      - testing
+      - "!main"
 
 defaults:
   run:
