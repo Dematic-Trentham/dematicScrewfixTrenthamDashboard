@@ -42,20 +42,28 @@ export default function SorterUL(props: { params: Promise<{ uuid: string }> }) {
 				return;
 			}
 
-			//make sure the a copy of the result / to add a tab color
-			const newJourney = JSON.parse(result.journey).map(
-				(journeyObject: any) => {
-					return {
-						...journeyObject,
-						tabColor:
-							journeyObject.rejectReason === "0x0"
-								? "bg-green-400"
-								: journeyObject.rejectReason === "0x800"
-									? "bg-yellow-400"
-									: "bg-red-400",
-					};
-				}
-			);
+			// Check if JSON is valid before parsing
+			let newJourney = [];
+			try {
+				newJourney = JSON.parse(result.journey).map(
+					(journeyObject: any) => {
+						return {
+							...journeyObject,
+							tabColor:
+								journeyObject.rejectReason === "0x0"
+									? "bg-green-400"
+									: journeyObject.rejectReason === "0x800"
+										? "bg-yellow-400"
+										: "bg-red-400",
+						};
+					}
+				);
+			} catch (e) {
+				
+				setError(`${result.currentStatusStep} for ${result.requestedUL}`)
+				setIsLoading(false);
+				return;
+			}
 
 			result.journey = JSON.stringify(newJourney);
 
