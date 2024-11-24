@@ -2,8 +2,8 @@ name: Build and Test - Testing Branch
 
 on:
   push:
-    branches:
-      - "!main"
+    branches-ignore:
+      - main
 
 defaults:
   run:
