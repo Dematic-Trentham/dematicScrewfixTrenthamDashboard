@@ -10,6 +10,7 @@ import SidebarAdmin from "./admin/sidebarAdmin";
 import SidebarShuttles from "./shuttles/sidebarShuttles";
 import SidebarSorter from "./sorter/sidebarSorter";
 import SidebarOrderStart from "./orderStart/sidebarOrderStart";
+import SidebarAutoCarton from "./autoCarton/sidebarAutoCarton";
 
 const Sidebar = () => {
 	const sideBar = (
@@ -23,9 +24,12 @@ const Sidebar = () => {
 							link="/"
 							text="Dashboard"
 						/>
-						<SidebarShuttles />
 						<SidebarOrderStart />
+						<SidebarAutoCarton />
+						<SidebarShuttles />
+
 						<SidebarSorter />
+
 						<SidebarAdmin />
 					</nav>
 				</div>
