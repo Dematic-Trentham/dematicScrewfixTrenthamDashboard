@@ -70,7 +70,7 @@ export const restartWMSSystem = async () => {
 	if (!ip) {
 		return { success: false, error: "IP address for docker host not found" };
 	}
-	const sshCommand = `ssh -o StrictHostKeyChecking=no -p 22 dematic@${ip.value} "echo 'dematicdematic' | docker restart dematic-dashboard-dematicscrewfixtrenthamwmstodb-1"`;
+	const sshCommand = `sshpass -p 'dematicdematic' ssh -o StrictHostKeyChecking=no -p 2222 dematic@${ip.value} "docker restart dematic-dashboard-screwfix-trentham-wmstodb-1"`;
 	const execPromise = promisify(exec);
 	try {
 		const { stdout, stderr } = await execPromise(sshCommand);
@@ -110,7 +110,7 @@ export const restartPLCSystem = async () => {
 	if (!ip) {
 		return { success: false, error: "IP address for docker host not found" };
 	}
-	const sshCommand = `ssh -o StrictHostKeyChecking=no -p 2222 dematic@${ip.value} "echo 'dematicdematic' | docker restart dematic-dashboard-screwfix-trentham-plctodb-1"`;
+	const sshCommand = `sshpass -p 'dematicdematic' ssh -o StrictHostKeyChecking=no -p 2222 dematic@${ip.value} "docker restart dematic-dashboard-screwfix-trentham-plctodb-1"`;
 	const execPromise = promisify(exec);
 	try {
 		const { stdout, stderr } = await execPromise(sshCommand);
