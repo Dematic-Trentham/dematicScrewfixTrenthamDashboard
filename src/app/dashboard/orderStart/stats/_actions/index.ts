@@ -45,7 +45,11 @@ export const getsystemErrors = async () => {
 export const getSystemErrorsNamed = async (system: string) => {
 	const results = await getsystemErrors();
 
-	return results.filter((result) => result.system === system)[0]?.error || "";
+	return (
+		results.filter(
+			(result: { system: string; error: string }) => result.system === system
+		)[0]?.error || ""
+	);
 };
 
 export const restartWMSSystem = async () => {
