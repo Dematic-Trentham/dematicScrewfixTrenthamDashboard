@@ -71,10 +71,21 @@ export const restartWMSSystem = async () => {
 		},
 	});
 
+	const wmsContainerName = await db.dashboardSystemParameters.findFirst({
+		where: {
+			parameter: "constainerName_wms",
+		},
+	});
+
 	if (!ip) {
 		return { success: false, error: "IP address for docker host not found" };
 	}
-	const sshCommand = `sshpass -p 'dematicdematic' ssh -o StrictHostKeyChecking=no -p 22 dematic@${ip.value} "docker restart dematic-dashboard-screwfix-trentham-wmstodb-1"`;
+
+	if (!wmsContainerName) {
+		return { success: false, error: "WMS container name not found" };
+	}
+
+	const sshCommand = `sshpass -p 'dematicdematic' ssh -o StrictHostKeyChecking=no -p 22 dematic@${ip.value} "docker restart ${wmsContainerName.value}"`;
 	const execPromise = promisify(exec);
 	try {
 		const { stdout, stderr } = await execPromise(sshCommand);
@@ -111,10 +122,20 @@ export const restartPLCSystem = async () => {
 		},
 	});
 
+	const plcContainerName = await db.dashboardSystemParameters.findFirst({
+		where: {
+			parameter: "constainerName_plc",
+		},
+	});
+
+	if (!plcContainerName) {
+		return { success: false, error: "PLC container name not found" };
+	}
+
 	if (!ip) {
 		return { success: false, error: "IP address for docker host not found" };
 	}
-	const sshCommand = `sshpass -p 'dematicdematic' ssh -o StrictHostKeyChecking=no -p 22 dematic@${ip.value} "docker restart dematic-dashboard-screwfix-trentham-plctodb-1"`;
+	const sshCommand = `sshpass -p 'dematicdematic' ssh -o StrictHostKeyChecking=no -p 22 dematic@${ip.value} "docker restart ${plcContainerName.value}"`;
 	const execPromise = promisify(exec);
 	try {
 		const { stdout, stderr } = await execPromise(sshCommand);
