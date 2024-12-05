@@ -2,9 +2,19 @@
 
 import { useEffect, useState } from "react";
 
-import { getOrderStartStats } from "./_actions";
+import {
+	getOrderStartStats,
+	getSystemErrorsNamed,
+	getsystemErrors,
+	resetWMSpassword,
+	restartPLCSystem,
+	restartWMSSystem,
+} from "./_actions";
 
 import PanelTop from "@/components/panels/panelTop";
+import { hasPermission } from "@/utils/getUser";
+import { toast } from "react-toastify";
+import { set } from "zod";
 
 const boarderStyle = "border border-gray-400 p-2";
 
@@ -21,6 +31,14 @@ export default function OrderStartStats() {
 		};
 	}>({});
 
+	const [hasRestartOrderStartStats, setHasRestartOrderStartStats] =
+		useState(false);
+	const [wmsString, setWmsString] = useState("");
+	const [plcString, setPlcString] = useState("");
+	const[restartPLCSystemLocalisLoading, setRestartPLCSystemLocalisLoading] = useState(false);
+	const[restartWMSSystemLocalisLoading, setRestartWMSSystemLocalisLoading] = useState(false);
+	const[resetWMSpasswordLocalisLoading, setResetWMSpasswordLocalisLoading] = useState(false);
+
 	useEffect(() => {
 		const fetchOrderStartStats = async () => {
 			const results = await getOrderStartStats();
@@ -29,11 +47,33 @@ export default function OrderStartStats() {
 				setResults(results);
 				setIsLoading(false);
 			}
+
+			setWmsString(
+				await getSystemErrorsNamed(
+					"dematic-dashboard-dematicscrewfixtrenthamwmstodb"
+				)
+			);
+			setPlcString(
+				await getSystemErrorsNamed(
+					"dematic-dashboard-screwfix-trentham-plctodb"
+				)
+			);
+
+			//console.log(await  getSystemErrorsNamed("dematic-dashboard-dematicscrewfixtrenthamwmstodb"))
 		};
 
 		fetchOrderStartStats();
 
 		setInterval(() => fetchOrderStartStats(), 5000);
+
+		const permissionCheck = async () => {
+			const RestartOrderStartStatsResult = await hasPermission(
+				"RestartOrderStartStats"
+			);
+
+			setHasRestartOrderStartStats(RestartOrderStartStatsResult);
+		};
+		permissionCheck();
 	}, []);
 
 	if (isLoading) {
@@ -62,6 +102,7 @@ export default function OrderStartStats() {
 					{totesRow(results)}
 					{separator()}
 					{lastUpdatedRow(results)}
+					{explainRow(hasRestartOrderStartStats, wmsString, plcString)}
 				</tbody>
 			</table>
 
@@ -72,11 +113,53 @@ export default function OrderStartStats() {
 			</div>
 		</PanelTop>
 	);
-}
-function makeARow(
-	name: string,
-	key: string,
-	results: {
+
+	function makeARow(
+		name: string,
+		key: string,
+		results: {
+			[key: string]: {
+				id: string;
+				lastUpdated: Date;
+				name: string;
+				location: string;
+				description: string;
+				value: string;
+			};
+		}
+	) {
+		const PLC = results["dematic_dashboard_PLC31_" + key]?.value;
+		const WMS = results["dematic_dashboard_WMS_" + key]?.value;
+
+		const mismatch = Number(WMS) - Number(PLC);
+
+		let mismatchColor = "";
+
+		if (mismatch > 0 && mismatch < 25) {
+			mismatchColor = "bg-yellow-200";
+		} else if (mismatch >= 25) {
+			mismatchColor = "bg-red-200";
+		}
+
+		return (
+			<tr className={`text-2xl font-bold ${mismatchColor}`}>
+				<td className={boarderStyle}>{name}</td>
+				<td className={boarderStyle}>{PLC}</td>
+				<td className={boarderStyle}>{WMS}</td>
+				<td className={boarderStyle}>{mismatch}</td>
+			</tr>
+		);
+	}
+
+	function separator() {
+		return (
+			<tr>
+				<td className={`h-1 bg-black ${boarderStyle}`} colSpan={4} />
+			</tr>
+		);
+	}
+
+	function totesRow(results: {
 		[key: string]: {
 			id: string;
 			lastUpdated: Date;
@@ -85,139 +168,205 @@ function makeARow(
 			description: string;
 			value: string;
 		};
-	}
-) {
-	const PLC = results["dematic_dashboard_PLC31_" + key]?.value;
-	const WMS = results["dematic_dashboard_WMS_" + key]?.value;
+	}) {
+		const PLC = results["dematic_dashboard_PLC31_OrderTotes"]?.value;
+		const WMSLegacy = results["dematic_dashboard_WMS_OrderTotes"]?.value;
+		const WMSDMS = results["dematic_dashboard_WMS_OrderTotes_DMS"]?.value;
 
-	const mismatch = Number(WMS) - Number(PLC);
+		const mismatch = Number(WMSLegacy) + Number(WMSDMS) - Number(PLC);
 
-	let mismatchColor = "";
+		let mismatchColor = "";
 
-	if (mismatch > 0 && mismatch < 25) {
-		mismatchColor = "bg-yellow-200";
-	} else if (mismatch >= 25) {
-		mismatchColor = "bg-red-200";
-	}
+		if (mismatch > 0 && mismatch < 25) {
+			mismatchColor = "bg-yellow-200";
+		} else if (mismatch >= 25) {
+			mismatchColor = "bg-red-200";
+		}
 
-	return (
-		<tr className={`text-2xl font-bold ${mismatchColor}`}>
-			<td className={boarderStyle}>{name}</td>
-			<td className={boarderStyle}>{PLC}</td>
-			<td className={boarderStyle}>{WMS}</td>
-			<td className={boarderStyle}>{mismatch}</td>
-		</tr>
-	);
-}
-
-function separator() {
-	return (
-		<tr>
-			<td className={`h-1 bg-black ${boarderStyle}`} colSpan={4} />
-		</tr>
-	);
-}
-
-function totesRow(results: {
-	[key: string]: {
-		id: string;
-		lastUpdated: Date;
-		name: string;
-		location: string;
-		description: string;
-		value: string;
-	};
-}) {
-	const PLC = results["dematic_dashboard_PLC31_OrderTotes"]?.value;
-	const WMSLegacy = results["dematic_dashboard_WMS_OrderTotes"]?.value;
-	const WMSDMS = results["dematic_dashboard_WMS_OrderTotes_DMS"]?.value;
-
-	const mismatch = Number(WMSLegacy) + Number(WMSDMS) - Number(PLC);
-
-	let mismatchColor = "";
-
-	if (mismatch > 0 && mismatch < 25) {
-		mismatchColor = "bg-yellow-200";
-	} else if (mismatch >= 25) {
-		mismatchColor = "bg-red-200";
+		return (
+			<>
+				<tr className={`text-2xl font-bold ${mismatchColor} `}>
+					<td className={boarderStyle}>Totes To Legacy</td>
+					<td className={boarderStyle} rowSpan={2}>
+						{PLC}
+					</td>
+					<td className={boarderStyle} rowSpan={1}>
+						{WMSLegacy}
+					</td>
+					<td className={boarderStyle} rowSpan={2}>
+						{mismatch}
+					</td>
+				</tr>
+				<tr className={`text-2xl font-bold ${mismatchColor} `}>
+					<td className={boarderStyle}>Totes To DMS</td>
+					<td className={boarderStyle}>{WMSDMS}</td>
+				</tr>
+			</>
+		);
 	}
 
-	return (
-		<>
-			<tr className={`text-2xl font-bold ${mismatchColor} `}>
-				<td className={boarderStyle}>Totes To Legacy</td>
-				<td className={boarderStyle} rowSpan={2}>
-					{PLC}
+	function lastUpdatedRow(results: {
+		[key: string]: {
+			id: string;
+			lastUpdated: Date;
+			name: string;
+			location: string;
+			description: string;
+			value: string;
+		};
+	}) {
+		let plcBackgroundColor = "";
+		let wmsBackgroundColor = "";
+
+		if (results["dematic_dashboard_PLC31_carton_erector_1"].lastUpdated) {
+			const lastUpdated = new Date(
+				results["dematic_dashboard_PLC31_carton_erector_1"].lastUpdated
+			);
+			const now = new Date();
+			const diffMinutes = Math.floor(
+				(now.getTime() - lastUpdated.getTime()) / 60000
+			);
+
+			if (diffMinutes > 1) {
+				plcBackgroundColor = "bg-red-200";
+			}
+		}
+
+		if (results["dematic_dashboard_WMS_carton_erector_1"].lastUpdated) {
+			const lastUpdated = new Date(
+				results["dematic_dashboard_WMS_carton_erector_1"].lastUpdated
+			);
+			const now = new Date();
+			const diffMinutes = Math.floor(
+				(now.getTime() - lastUpdated.getTime()) / 60000
+			);
+
+			if (diffMinutes > 1) {
+				wmsBackgroundColor = "bg-red-200";
+			}
+		}
+
+		return (
+			<tr>
+				<td className={boarderStyle}>Last Updated</td>
+				<td className={`${boarderStyle} ${plcBackgroundColor} `}>
+					{results[
+						"dematic_dashboard_PLC31_carton_erector_1"
+					].lastUpdated.toLocaleString()}
 				</td>
-				<td className={boarderStyle} rowSpan={1}>
-					{WMSLegacy}
-				</td>
-				<td className={boarderStyle} rowSpan={2}>
-					{mismatch}
+				<td className={`${boarderStyle} ${wmsBackgroundColor} `}>
+					{results[
+						"dematic_dashboard_WMS_carton_erector_1"
+					].lastUpdated.toLocaleString()}
 				</td>
 			</tr>
-			<tr className={`text-2xl font-bold ${mismatchColor} `}>
-				<td className={boarderStyle}>Totes To DMS</td>
-				<td className={boarderStyle}>{WMSDMS}</td>
+		);
+	}
+
+
+	
+	function explainRow(
+		hasRestartOrderStartStats: boolean,
+		wmsString: string,
+		plcString: string
+	) {
+		//if  (!hasRestartOrderStartStats) {
+		return (
+			<tr>
+				<td className={boarderStyle}></td>
+				<td className={boarderStyle}>
+					{plcString}
+					<br />
+					<button
+						className="rounded-md bg-blue-600 m-1 p-2"
+						onClick={() => restartPLCSystemLocal()}
+						disabled={restartPLCSystemLocalisLoading}
+						style={{ opacity: restartPLCSystemLocalisLoading ? 0.5 : 1 }}
+					>
+						Restart Process
+					</button>
+				</td>
+				<td className={boarderStyle}>
+					{wmsString}
+					<br />
+					<button
+						className="rounded-md bg-blue-600 m-1 p-2"
+						onClick={() => restartWMSSystemLocal()}
+						disabled={restartWMSSystemLocalisLoading}
+						style={{ opacity: restartWMSSystemLocalisLoading ? 0.5 : 1 }}
+					>
+						Restart Process
+					</button>
+					<br />
+					<button
+						className="rounded-md bg-blue-600 m-1 p-2"
+						onClick={() => resetWMSpasswordLocal()}
+						disabled={resetWMSpasswordLocalisLoading}
+						style={{ opacity: resetWMSpasswordLocalisLoading ? 0.5 : 1 }}
+					>
+						Reset Password
+					</button>
+				</td>
+				<td className={boarderStyle}></td>
 			</tr>
-		</>
-	);
-}
-
-function lastUpdatedRow(results: {
-	[key: string]: {
-		id: string;
-		lastUpdated: Date;
-		name: string;
-		location: string;
-		description: string;
-		value: string;
-	};
-}) {
-	let plcBackgroundColor = "";
-	let wmsBackgroundColor = "";
-
-	if (results["dematic_dashboard_PLC31_carton_erector_1"].lastUpdated) {
-		const lastUpdated = new Date(
-			results["dematic_dashboard_PLC31_carton_erector_1"].lastUpdated
 		);
-		const now = new Date();
-		const diffMinutes = Math.floor(
-			(now.getTime() - lastUpdated.getTime()) / 60000
-		);
-
-		if (diffMinutes > 1) {
-			plcBackgroundColor = "bg-red-200";
-		}
+		//}
 	}
 
-	if (results["dematic_dashboard_WMS_carton_erector_1"].lastUpdated) {
-		const lastUpdated = new Date(
-			results["dematic_dashboard_WMS_carton_erector_1"].lastUpdated
-		);
-		const now = new Date();
-		const diffMinutes = Math.floor(
-			(now.getTime() - lastUpdated.getTime()) / 60000
-		);
 
-		if (diffMinutes > 1) {
-			wmsBackgroundColor = "bg-red-200";
+
+	async function restartWMSSystemLocal() {
+
+		setRestartWMSSystemLocalisLoading(true);
+
+		const result = await restartWMSSystem();
+
+		if (result?.error) {
+			toast.error(result.error);
 		}
+
+		if (result?.success) {
+			toast.success("WMS system restarted");
+		}
+
+		setRestartWMSSystemLocalisLoading(false);
+		console.log(result);
 	}
 
-	return (
-		<tr>
-			<td className={boarderStyle}>Last Updated</td>
-			<td className={`${boarderStyle} ${plcBackgroundColor} `}>
-				{results[
-					"dematic_dashboard_PLC31_carton_erector_1"
-				].lastUpdated.toLocaleString()}
-			</td>
-			<td className={`${boarderStyle} ${wmsBackgroundColor} `}>
-				{results[
-					"dematic_dashboard_WMS_carton_erector_1"
-				].lastUpdated.toLocaleString()}
-			</td>
-		</tr>
-	);
+	
+	async function restartPLCSystemLocal() {
+
+		setRestartPLCSystemLocalisLoading(true);
+
+		const result = await restartPLCSystem();
+
+		if (result?.error) {
+			toast.error(result.error);
+		}
+
+		if (result?.success) {
+			toast.success("PLC system restarted");
+		}
+
+		console.log(result);
+		setRestartPLCSystemLocalisLoading(false);
+	}
+
+	async function resetWMSpasswordLocal	() {
+		setResetWMSpasswordLocalisLoading(true);
+		const result = await resetWMSpassword();
+
+		if (result?.error) {
+			toast.error(result.error);
+		}
+
+		if (result?.success) {
+			toast.success(`The Password in the dashboard database has been reset to "Dematic1"
+				 Please ensure the WMS system is updated with the new password for user "DEMATDASH" then restart the WMS system`);
+		}
+
+		console.log(result);
+		setResetWMSpasswordLocalisLoading(false);
+	}
+
 }

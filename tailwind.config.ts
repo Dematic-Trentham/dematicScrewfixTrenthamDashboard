@@ -19,7 +19,7 @@ const config: Config = {
 			},
 		},
 	},
-	plugins: [nextui()],
+	plugins: [nextui(), require("@khoohaoyit/tailwind-grid-center")],
 };
 
 export default config;

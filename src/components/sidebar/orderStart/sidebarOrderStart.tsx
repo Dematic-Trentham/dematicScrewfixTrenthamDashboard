@@ -15,7 +15,7 @@ const SidebarOrderStart = async () => {
 			<SidebarParentComponentGroup
 				icon={<BsDropbox />}
 				link="/dashboard/orderStart"
-				text="Order Start"
+				text="Order Start Stats"
 			>
 				<SidebarParentComponent
 					icon={<BsDropbox />}
