@@ -9,6 +9,10 @@ import SidebarParentComponentGroup from "../sidebarParentComponentGroup";
 import HorizontalBar from "@/components/visual/horizontalBar";
 
 const SidebarAutoCarton = async () => {
+
+	//todo remove 
+	return (<>	</>
+	);
 	return (
 		<>
 			<HorizontalBar />
