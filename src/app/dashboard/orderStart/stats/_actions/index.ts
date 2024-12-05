@@ -135,6 +135,7 @@ export const restartPLCSystem = async () => {
 	if (!ip) {
 		return { success: false, error: "IP address for docker host not found" };
 	}
+
 	const sshCommand = `sshpass -p 'dematicdematic' ssh -o StrictHostKeyChecking=no -p 22 dematic@${ip.value} "docker restart ${plcContainerName.value}"`;
 	const execPromise = promisify(exec);
 	try {
