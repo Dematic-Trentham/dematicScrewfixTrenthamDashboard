@@ -270,7 +270,7 @@ export default function OrderStartStats() {
 		wmsString: string,
 		plcString: string
 	) {
-		//if  (!hasRestartOrderStartStats) {
+		if  (hasRestartOrderStartStats) {
 		return (
 			<tr>
 				<td className={boarderStyle}></td>
@@ -282,6 +282,7 @@ export default function OrderStartStats() {
 						onClick={() => restartPLCSystemLocal()}
 						disabled={restartPLCSystemLocalisLoading}
 						style={{ opacity: restartPLCSystemLocalisLoading ? 0.5 : 1 }}
+						title="This will restart the PLC Collector Process"
 					>
 						Restart Process
 					</button>
@@ -294,6 +295,7 @@ export default function OrderStartStats() {
 						onClick={() => restartWMSSystemLocal()}
 						disabled={restartWMSSystemLocalisLoading}
 						style={{ opacity: restartWMSSystemLocalisLoading ? 0.5 : 1 }}
+						title = "This will restart the WMS Collector Process"
 					>
 						Restart Process
 					</button>
@@ -303,6 +305,7 @@ export default function OrderStartStats() {
 						onClick={() => resetWMSpasswordLocal()}
 						disabled={resetWMSpasswordLocalisLoading}
 						style={{ opacity: resetWMSpasswordLocalisLoading ? 0.5 : 1 }}
+						title="This will reset the password in the dashboard database to 'Dematic1' and will require the WMS system to be updated with the new password for user 'DEMATDASH' then restart the WMS system"
 					>
 						Reset Password
 					</button>
@@ -310,7 +313,21 @@ export default function OrderStartStats() {
 				<td className={boarderStyle}></td>
 			</tr>
 		);
-		//}
+		} else
+		{
+			return (
+				<tr>	
+					<td className={boarderStyle}></td>
+					<td className={boarderStyle}>
+						{plcString}
+					</td>
+					<td className={boarderStyle}>
+						{wmsString}
+					</td>
+					<td className={boarderStyle}></td>
+				</tr>
+			);
+		}	
 	}
 
 
