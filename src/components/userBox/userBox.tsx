@@ -1,3 +1,4 @@
+"use client"
 import React from "react";
 import { FaAngleDown, FaUserAstronaut } from "react-icons/fa";
 import Link from "next/link";
@@ -5,12 +6,21 @@ import Link from "next/link";
 import HorizontalBar from "../visual/horizontalBar";
 import HoverPopup from "../visual/hoverPopupUserBox";
 
+import { typeUserVisible } from "@/types/user";
 import { getUser } from "@/utils/getUser";
 
 interface UserBoxProps {}
 
-const UserBox: React.FC<UserBoxProps> = async () => {
-	const user = await getUser();
+const UserBox: React.FC<UserBoxProps> = () => {
+	const [user, setUser] = React.useState<typeUserVisible | null>(null);
+
+	React.useEffect(() => {
+		const fetchUser = async () => {
+			const userData = await getUser();
+			setUser(userData);
+		};
+		fetchUser();
+	}, []);
 
 	//console.log(user);
 

@@ -4,9 +4,10 @@ import { env } from "process";
 import { cookies } from "next/headers";
 
 import { decodeJWT } from "@/utils/decodeJWT";
+import { typeUserVisible } from "@/types/user";
 //import { typeUserVisible } from "@/types/user";
 
-const getUser = async () => {
+const getUser = async (): Promise<typeUserVisible | null> => {
 	const cookieStore = await cookies();
 
 	//get the cookie
