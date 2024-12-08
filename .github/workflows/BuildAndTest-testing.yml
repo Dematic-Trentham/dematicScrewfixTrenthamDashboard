@@ -144,6 +144,8 @@ jobs:
     needs: Coverage
 
     steps:
+      - uses: actions/checkout@v2
+
       - name: Docker metadata
         id: metadata
         uses: docker/metadata-action@v5
