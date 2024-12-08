@@ -54,6 +54,7 @@
 		"@emotion/styled": "^11.13.0",
 		"@khoohaoyit/tailwind-grid-center": "^0.0.5",
 		"@next/bundle-analyzer": "^15.0.3",
+		"@next/eslint-plugin-next": "^15.0.4",
 		"@react-aria/ssr": "^3.9.5",
 		"@react-aria/visually-hidden": "^3.8.15",
 		"@testing-library/dom": "^10.4.0",
