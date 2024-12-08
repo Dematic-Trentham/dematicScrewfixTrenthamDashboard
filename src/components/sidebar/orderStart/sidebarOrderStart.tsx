@@ -8,7 +8,7 @@ import SidebarParentComponentGroup from "../sidebarParentComponentGroup";
 
 import HorizontalBar from "@/components/visual/horizontalBar";
 
-const SidebarOrderStart = async () => {
+const SidebarOrderStart = () => {
 	return (
 		<>
 			<HorizontalBar />
