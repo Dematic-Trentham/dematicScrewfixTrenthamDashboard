@@ -1,7 +1,7 @@
-"use server";
+"use client";
 
 import { GoBook } from "react-icons/go";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { FaCogs, FaUserShield } from "react-icons/fa";
 import { FaUsersGear } from "react-icons/fa6";
 
@@ -11,8 +11,16 @@ import SidebarparentcomponentGroup from "../sidebarParentComponentGroup";
 import { hasPermission } from "@/utils/getUser";
 import HorizontalBar from "@/components/visual/horizontalBar";
 
-const Sidebaradmin = async () => {
-	const userHasPermission = await hasPermission("admin");
+const Sidebaradmin = () => {
+	const [userHasPermission, setUserHasPermission] = useState(false);
+
+	useEffect(() => {
+		const checkPermission = async () => {
+			const hasPerm = await hasPermission("admin");
+			setUserHasPermission(hasPerm);
+		};
+		checkPermission();
+	}, []);
 
 	if (!userHasPermission) {
 		return <> </>;
