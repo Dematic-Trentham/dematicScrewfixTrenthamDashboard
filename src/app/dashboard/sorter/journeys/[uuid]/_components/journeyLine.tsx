@@ -1,11 +1,6 @@
 "use client";
 import * as React from "react";
-import {
-	AwaitedReactNode,
-	JSXElementConstructor,
-	ReactElement,
-	ReactNode,
-} from "react";
+import { JSXElementConstructor, ReactElement, ReactNode } from "react";
 
 interface JourneyLineProps {
 	line: string;
@@ -21,7 +16,6 @@ const JourneyLine: React.FC<JourneyLineProps> = (props: {
 		| boolean
 		| ReactElement<any, string | JSXElementConstructor<any>>
 		| Iterable<ReactNode>
-		| Promise<AwaitedReactNode>
 		| null
 		| undefined;
 }) => {

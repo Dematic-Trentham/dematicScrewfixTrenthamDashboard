@@ -1,7 +1,7 @@
 FROM node:18-alpine AS base
 
 # Stage 1: Builder
-FROM base as builder
+FROM base AS builder
 
 # Set the working directory
 WORKDIR /app
