@@ -12,7 +12,6 @@ const JourneyLine: React.FC<JourneyLineProps> = (props: {
 	line:
 		| string
 		| number
-		| bigint
 		| boolean
 		| ReactElement<any, string | JSXElementConstructor<any>>
 		| Iterable<ReactNode>
