@@ -16,7 +16,7 @@ export async function getUser(): Promise<typeUserVisible | { error: string }> {
 		return { error: "User not found" };
 	}
 
-	const idFromCookie = userCookie.id;
+	const idFromCookie = userCookie.id ?? undefined;
 
 	//if id is not a string, return an error
 	if (typeof idFromCookie !== "string") {
@@ -25,7 +25,7 @@ export async function getUser(): Promise<typeUserVisible | { error: string }> {
 
 	const userResult = await prisma.dashboardUsers.findUnique({
 		where: {
-			id: idFromCookie,
+			id: idFromCookie ?? undefined,
 		},
 	});
 
@@ -123,7 +123,7 @@ export async function uploadProfilePic(
 
 	const result = await prisma.dashboardUsers.update({
 		where: {
-			id: idFromCookie,
+			id: idFromCookie ?? undefined,
 		},
 		data: {
 			profilePic: filePath,
