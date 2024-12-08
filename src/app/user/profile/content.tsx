@@ -37,16 +37,20 @@ const ProfileContent = () => {
 
 			const currentUser = await getUser();
 
-			setCurrentUser(currentUser);
 
-			if ("error" in user) {
+			//check if the user is valid
+			if (!user) {
 				setUser(null);
 				setNewUser(null);
-				setError(user.error);
+				setError("User not found");
 				setIsLoading(false);
 
 				return;
 			}
+
+			setCurrentUser(currentUser);
+
+		
 
 			setAllPermissions(allPermissions);
 			setUser(user);

@@ -14,10 +14,15 @@ export default async function updateUserToken(): Promise<{
 	//get the user data from the server
 	const user = await getUser();
 
+	// Check if the user exists
+	if (!user) {
+		return { error: "User not found" };
+	}
+
 	//get the user data from the server
 	const userFromDb = await prisma.dashboardUsers.findUnique({
 		where: {
-			id: user.id,
+			id: user.id ?? undefined,
 		},
 	});
 

@@ -10,7 +10,7 @@ import shuttleIcon from "./shuttle.png";
 
 import HorizontalBar from "@/components/visual/horizontalBar";
 
-const SidebarAdmin = async () => {
+const SidebarAdmin =  () => {
 	return (
 		<>
 			<HorizontalBar />

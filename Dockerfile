@@ -1,7 +1,7 @@
 FROM node:18-alpine AS base
 
 # Stage 1: Builder
-FROM base as builder
+FROM base AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -10,11 +10,13 @@ RUN apk add --no-cache git
 
 # Copy package.json and package-lock.json
 COPY package.json ./
+#COPY package-lock.json ./
 
-RUN npm set cache /opt/hostedtoolcache
+#RUN npm set cache /opt/hostedtoolcache
 
 # Install dependencies
-RUN npm install --legacy-peer-deps
+RUN npm install 
+#--legacy-peer-deps
 
 RUN npm run prisma-merge
 

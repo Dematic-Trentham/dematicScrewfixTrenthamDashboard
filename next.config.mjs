@@ -8,7 +8,7 @@ const nextConfig = {
 		},
 	},
 	reactStrictMode: false,
-	compress: false,
+	//compress: false,
 	productionBrowserSourceMaps: true,
 	compiler: {
 		removeConsole: false,
@@ -21,9 +21,9 @@ const nextConfig = {
 	webpack(webpackConfig) {
 		return {
 			...webpackConfig,
-			optimization: {
-				minimize: false,
-			},
+			//optimization: {
+			//	minimize: false,
+			//},
 		};
 	},
 };

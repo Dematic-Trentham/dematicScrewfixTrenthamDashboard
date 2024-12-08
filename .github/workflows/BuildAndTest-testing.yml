@@ -33,7 +33,7 @@ jobs:
         uses: bahmutov/npm-install@v1
 
       - name: Restore next build
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         id: restore-build-cache
         env:
           cache-name: cache-next-build
@@ -144,6 +144,8 @@ jobs:
     needs: Coverage
 
     steps:
+      - uses: actions/checkout@v2
+
       - name: Docker metadata
         id: metadata
         uses: docker/metadata-action@v5
