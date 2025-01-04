@@ -4,13 +4,16 @@ export function decodeJWT(token: string) {
 	}
 
 	let decodedObject;
+
 	try {
 		const base64Url = token.split(".")[1];
 		const base64 = base64Url.replace("-", "+").replace("_", "/");
 		const decoded = atob(base64);
+
 		decodedObject = JSON.parse(decoded);
 	} catch (error) {
 		console.error("Failed to decode JWT:", error);
+
 		return;
 	}
 

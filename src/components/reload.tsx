@@ -41,7 +41,6 @@ const ReloadPage: React.FC = () => {
 			clearInterval(activityInterval);
 			window.onload = null;
 			window.onmousemove = null;
-			
 		};
 	}, []);
 

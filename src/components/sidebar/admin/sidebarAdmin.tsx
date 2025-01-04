@@ -17,8 +17,10 @@ const Sidebaradmin = () => {
 	useEffect(() => {
 		const checkPermission = async () => {
 			const hasPerm = await hasPermission("admin");
+
 			setUserHasPermission(hasPerm);
 		};
+
 		checkPermission();
 	}, []);
 
