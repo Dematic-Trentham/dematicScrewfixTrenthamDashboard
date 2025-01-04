@@ -20,6 +20,31 @@ const ReloadPage: React.FC = () => {
 		};
 	}, []);
 
+	useEffect(() => {
+		let lastActivity = Date.now();
+		const refreshAfter = 60 * 60 * 1000; // 1 hour in milliseconds
+
+		function resetActivity() {
+			lastActivity = Date.now();
+		}
+
+		window.onload = resetActivity;
+		window.onmousemove = resetActivity;
+
+		const activityInterval = setInterval(() => {
+			if (Date.now() - lastActivity > refreshAfter) {
+				window.location.reload();
+			}
+		}, 60000); // Check every minute
+
+		return () => {
+			clearInterval(activityInterval);
+			window.onload = null;
+			window.onmousemove = null;
+			
+		};
+	}, []);
+
 	return null;
 };
 
