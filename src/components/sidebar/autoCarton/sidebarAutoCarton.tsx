@@ -1,6 +1,6 @@
 "use server";
 
-import {  BsBoxSeamFill,BsBox ,BsBoxes   } from "react-icons/bs";
+import { BsBoxSeamFill, BsBox, BsBoxes } from "react-icons/bs";
 import React from "react";
 
 import SidebarParentComponent from "../sidebarParentComponent";
@@ -8,11 +8,10 @@ import SidebarParentComponentGroup from "../sidebarParentComponentGroup";
 
 import HorizontalBar from "@/components/visual/horizontalBar";
 
-const SidebarAutoCarton =  () => {
+const SidebarAutoCarton = () => {
+	//todo remove
+	return <> </>;
 
-	//todo remove 
-	return (<>	</>
-	);
 	return (
 		<>
 			<HorizontalBar />
@@ -26,8 +25,8 @@ const SidebarAutoCarton =  () => {
 					link="/dashboard/autoCarton/orderStart"
 					text="Order Start"
 				/>
-					<SidebarParentComponent
-					icon={<BsBoxes  />}
+				<SidebarParentComponent
+					icon={<BsBoxes />}
 					link="/dashboard/autoCarton/cartonClosing"
 					text="Carton Closing"
 				/>

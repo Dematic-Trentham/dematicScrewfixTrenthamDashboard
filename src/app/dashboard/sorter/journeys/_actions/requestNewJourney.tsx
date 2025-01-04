@@ -1,7 +1,8 @@
 "use server";
 
-import db from "@/db/db";
 import { revalidatePath } from "next/cache";
+
+import db from "@/db/db";
 
 export async function requestNewJourneyToDB(ul: string) {
 	//screwfix uses a 8 digit number
@@ -11,14 +12,14 @@ export async function requestNewJourneyToDB(ul: string) {
 
 	//add to db
 
-	 const result = await db.sorterJourneyRequests.create({
-	 	data: {
-	 		requestedUL: ul,
+	const result = await db.sorterJourneyRequests.create({
+		data: {
+			requestedUL: ul,
 			status: "REQUESTED",
-	 		createdDate: new Date(),
-	 		journey: "",
-	 	},
-	 });
+			createdDate: new Date(),
+			journey: "",
+		},
+	});
 
 	revalidatePath("/dashboard/sorter/journeys");
 

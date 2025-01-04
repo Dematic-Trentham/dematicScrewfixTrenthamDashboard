@@ -2,7 +2,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
-import { useParams } from 'next/navigation'
+import { useParams } from "next/navigation";
 
 import Journey from "./_components/journey";
 import { getJourney } from "./_actions/getJourney";
@@ -11,8 +11,8 @@ import PanelTop from "@/components/panels/panelTop";
 import "react-tabs/style/react-tabs.css";
 import { changeDateToReadable } from "@/utils/changeDateToReadable";
 
-export default function SorterUL(props: {  }) {
-	const params = useParams<{ uuid: string;  }>()
+export default function SorterUL(props: {}) {
+	const params = useParams<{ uuid: string }>();
 	const router = useRouter();
 
 	const [isLoading, setIsLoading] = useState(true);
@@ -45,24 +45,23 @@ export default function SorterUL(props: {  }) {
 
 			// Check if JSON is valid before parsing
 			let newJourney = [];
+
 			try {
-				newJourney = JSON.parse(result.journey).map(
-					(journeyObject: any) => {
-						return {
-							...journeyObject,
-							tabColor:
-								journeyObject.rejectReason === "0x0"
-									? "bg-green-400"
-									: journeyObject.rejectReason === "0x800"
-										? "bg-yellow-400"
-										: "bg-red-400",
-						};
-					}
-				);
+				newJourney = JSON.parse(result.journey).map((journeyObject: any) => {
+					return {
+						...journeyObject,
+						tabColor:
+							journeyObject.rejectReason === "0x0"
+								? "bg-green-400"
+								: journeyObject.rejectReason === "0x800"
+									? "bg-yellow-400"
+									: "bg-red-400",
+					};
+				});
 			} catch (e) {
-				
-				setError(`${result.currentStatusStep} for ${result.requestedUL}`)
+				setError(`${result.currentStatusStep} for ${result.requestedUL}`);
 				setIsLoading(false);
+
 				return;
 			}
 

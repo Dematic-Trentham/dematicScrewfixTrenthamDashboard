@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { set } from "zod";
 
 import {
 	getOrderStartStats,
@@ -13,8 +15,6 @@ import {
 
 import PanelTop from "@/components/panels/panelTop";
 import { hasPermission } from "@/utils/getUser";
-import { toast } from "react-toastify";
-import { set } from "zod";
 
 const boarderStyle = "border border-gray-400 p-2";
 
@@ -35,9 +35,12 @@ export default function OrderStartStats() {
 		useState(false);
 	const [wmsString, setWmsString] = useState("");
 	const [plcString, setPlcString] = useState("");
-	const[restartPLCSystemLocalisLoading, setRestartPLCSystemLocalisLoading] = useState(false);
-	const[restartWMSSystemLocalisLoading, setRestartWMSSystemLocalisLoading] = useState(false);
-	const[resetWMSpasswordLocalisLoading, setResetWMSpasswordLocalisLoading] = useState(false);
+	const [restartPLCSystemLocalisLoading, setRestartPLCSystemLocalisLoading] =
+		useState(false);
+	const [restartWMSSystemLocalisLoading, setRestartWMSSystemLocalisLoading] =
+		useState(false);
+	const [resetWMSpasswordLocalisLoading, setResetWMSpasswordLocalisLoading] =
+		useState(false);
 
 	useEffect(() => {
 		const fetchOrderStartStats = async () => {
@@ -73,6 +76,7 @@ export default function OrderStartStats() {
 
 			setHasRestartOrderStartStats(RestartOrderStartStatsResult);
 		};
+
 		permissionCheck();
 	}, []);
 
@@ -263,77 +267,67 @@ export default function OrderStartStats() {
 		);
 	}
 
-
-	
 	function explainRow(
 		hasRestartOrderStartStats: boolean,
 		wmsString: string,
 		plcString: string
 	) {
-		if  (hasRestartOrderStartStats) {
-		return (
-			<tr>
-				<td className={boarderStyle}></td>
-				<td className={boarderStyle}>
-					{plcString}
-					<br />
-					<button
-						className="rounded-md bg-blue-600 m-1 p-2"
-						onClick={() => restartPLCSystemLocal()}
-						disabled={restartPLCSystemLocalisLoading}
-						style={{ opacity: restartPLCSystemLocalisLoading ? 0.5 : 1 }}
-						title="This will restart the PLC Collector Process"
-					>
-						Restart Process
-					</button>
-				</td>
-				<td className={boarderStyle}>
-					{wmsString}
-					<br />
-					<button
-						className="rounded-md bg-blue-600 m-1 p-2"
-						onClick={() => restartWMSSystemLocal()}
-						disabled={restartWMSSystemLocalisLoading}
-						style={{ opacity: restartWMSSystemLocalisLoading ? 0.5 : 1 }}
-						title = "This will restart the WMS Collector Process"
-					>
-						Restart Process
-					</button>
-					<br />
-					<button
-						className="rounded-md bg-blue-600 m-1 p-2"
-						onClick={() => resetWMSpasswordLocal()}
-						disabled={resetWMSpasswordLocalisLoading}
-						style={{ opacity: resetWMSpasswordLocalisLoading ? 0.5 : 1 }}
-						title="This will reset the password in the dashboard database to 'Dematic1' and will require the WMS system to be updated with the new password for user 'DEMATDASH' then restart the WMS system"
-					>
-						Reset Password
-					</button>
-				</td>
-				<td className={boarderStyle}></td>
-			</tr>
-		);
-		} else
-		{
+		if (hasRestartOrderStartStats) {
 			return (
-				<tr>	
-					<td className={boarderStyle}></td>
+				<tr>
+					<td className={boarderStyle} />
 					<td className={boarderStyle}>
 						{plcString}
+						<br />
+						<button
+							className="m-1 rounded-md bg-blue-600 p-2"
+							disabled={restartPLCSystemLocalisLoading}
+							style={{ opacity: restartPLCSystemLocalisLoading ? 0.5 : 1 }}
+							title="This will restart the PLC Collector Process"
+							onClick={() => restartPLCSystemLocal()}
+						>
+							Restart Process
+						</button>
 					</td>
 					<td className={boarderStyle}>
 						{wmsString}
+						<br />
+						<button
+							className="m-1 rounded-md bg-blue-600 p-2"
+							disabled={restartWMSSystemLocalisLoading}
+							style={{ opacity: restartWMSSystemLocalisLoading ? 0.5 : 1 }}
+							title="This will restart the WMS Collector Process"
+							onClick={() => restartWMSSystemLocal()}
+						>
+							Restart Process
+						</button>
+						<br />
+						<button
+							className="m-1 rounded-md bg-blue-600 p-2"
+							disabled={resetWMSpasswordLocalisLoading}
+							style={{ opacity: resetWMSpasswordLocalisLoading ? 0.5 : 1 }}
+							title="This will reset the password in the dashboard database to 'Dematic1' and will require the WMS system to be updated with the new password for user 'DEMATDASH' then restart the WMS system"
+							onClick={() => resetWMSpasswordLocal()}
+						>
+							Reset Password
+						</button>
 					</td>
-					<td className={boarderStyle}></td>
+					<td className={boarderStyle} />
 				</tr>
 			);
-		}	
+		} else {
+			return (
+				<tr>
+					<td className={boarderStyle} />
+					<td className={boarderStyle}>{plcString}</td>
+					<td className={boarderStyle}>{wmsString}</td>
+					<td className={boarderStyle} />
+				</tr>
+			);
+		}
 	}
 
-
-
 	async function restartWMSSystemLocal() {
-
 		setRestartWMSSystemLocalisLoading(true);
 
 		const result = await restartWMSSystem();
@@ -350,9 +344,7 @@ export default function OrderStartStats() {
 		console.log(result);
 	}
 
-	
 	async function restartPLCSystemLocal() {
-
 		setRestartPLCSystemLocalisLoading(true);
 
 		const result = await restartPLCSystem();
@@ -369,7 +361,7 @@ export default function OrderStartStats() {
 		setRestartPLCSystemLocalisLoading(false);
 	}
 
-	async function resetWMSpasswordLocal	() {
+	async function resetWMSpasswordLocal() {
 		setResetWMSpasswordLocalisLoading(true);
 		const result = await resetWMSpassword();
 
@@ -385,5 +377,4 @@ export default function OrderStartStats() {
 		console.log(result);
 		setResetWMSpasswordLocalisLoading(false);
 	}
-
 }

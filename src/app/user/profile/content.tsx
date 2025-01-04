@@ -37,7 +37,6 @@ const ProfileContent = () => {
 
 			const currentUser = await getUser();
 
-
 			//check if the user is valid
 			if (!user) {
 				setUser(null);
@@ -49,8 +48,6 @@ const ProfileContent = () => {
 			}
 
 			setCurrentUser(currentUser);
-
-		
 
 			setAllPermissions(allPermissions);
 			setUser(user);

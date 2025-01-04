@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React from "react";
 import { FaAngleDown, FaUserAstronaut } from "react-icons/fa";
 import Link from "next/link";
@@ -17,8 +17,10 @@ const UserBox: React.FC<UserBoxProps> = () => {
 	React.useEffect(() => {
 		const fetchUser = async () => {
 			const userData = await getUser();
+
 			setUser(userData);
 		};
+
 		fetchUser();
 	}, []);
 

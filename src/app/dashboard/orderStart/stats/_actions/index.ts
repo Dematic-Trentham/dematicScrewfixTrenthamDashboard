@@ -1,9 +1,10 @@
 "use server";
 
-import db from "@/db/db";
-import { hasPermission } from "@/utils/getUser";
 import { exec } from "child_process";
 import { promisify } from "util";
+
+import db from "@/db/db";
+import { hasPermission } from "@/utils/getUser";
 
 export const getOrderStartStats = async () => {
 	const result = await db.siteParameters.findMany();
@@ -87,10 +88,13 @@ export const restartWMSSystem = async () => {
 
 	const sshCommand = `sshpass -p 'dematicdematic' ssh -o StrictHostKeyChecking=no -p 22 dematic@${ip.value} "docker restart ${wmsContainerName.value}"`;
 	const execPromise = promisify(exec);
+
 	try {
 		const { stdout, stderr } = await execPromise(sshCommand);
+
 		if (stderr) {
 			console.error(`Stderr: ${stderr}`);
+
 			return { success: false, error: `Stderr: ${stderr}` };
 		}
 
@@ -99,6 +103,7 @@ export const restartWMSSystem = async () => {
 		return { success: true, message: "WMS system restarted successfully" };
 	} catch (error) {
 		console.error(`Error: ${error}`);
+
 		return { success: false, error: `Error: ${error}` };
 	}
 };
@@ -138,10 +143,13 @@ export const restartPLCSystem = async () => {
 
 	const sshCommand = `sshpass -p 'dematicdematic' ssh -o StrictHostKeyChecking=no -p 22 dematic@${ip.value} "docker restart ${plcContainerName.value}"`;
 	const execPromise = promisify(exec);
+
 	try {
 		const { stdout, stderr } = await execPromise(sshCommand);
+
 		if (stderr) {
 			console.error(`Stderr: ${stderr}`);
+
 			return { success: false, error: `Stderr: ${stderr}` };
 		}
 
@@ -150,6 +158,7 @@ export const restartPLCSystem = async () => {
 		return { success: true, message: "PLC system restarted successfully" };
 	} catch (error) {
 		console.error(`Error: ${error}`);
+
 		return { success: false, error: `Error: ${error}` };
 	}
 };
