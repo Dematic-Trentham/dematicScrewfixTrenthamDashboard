@@ -248,11 +248,11 @@ function makeFaultRow(
 				<td>{fault.resolvedTimestamp?.toLocaleString() || "Not Resolved"}</td>
 				<td>
 					{fault.resolvedTimestamp
-						? Math.round(
-								(fault.resolvedTimestamp.getTime() -
-									fault.timestamp.getTime()) /
-									1000
+						? new Date(
+								fault.resolvedTimestamp.getTime() - fault.timestamp.getTime()
 							)
+								.toISOString()
+								.substr(11, 8)
 						: "Not Resolved"}
 				</td>
 				<td>{fault.shuttleID}</td>
