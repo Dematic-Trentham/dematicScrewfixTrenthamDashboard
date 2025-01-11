@@ -144,7 +144,7 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 
 	if (props.colorByType === colorByTypeType.shuttle || props.inMaintenanceBay) {
 		displayLabel = (
-			<div className={`rounded-xl ${shuttleColor} text-3xl`}>
+			<div className={`rounded-xl ${shuttleColor} text-2xl`}>
 				{props.locations.shuttleID || "Unknown"}
 			</div>
 		);

@@ -19,9 +19,10 @@ const PanelTop: React.FC<PanelProps> = (props) => {
 				)}
 			>
 				<div
-					className={`grid rounded-t-2xl bg-orange-400 text-lg font-bold ${props.title === undefined ? "p-0" : "p-4"} `}
+					className={`flex rounded-t-2xl bg-orange-400 text-lg font-bold ${props.title === undefined ? "p-0" : "p-4 py-2"} `}
 				>
-					{props.title}
+					<div className="w-full">{props.title}</div>
+					<div className="w-full" />
 					{props.topRight ? (
 						<div className="justify-self-end">{props.topRight}</div>
 					) : (
@@ -29,7 +30,7 @@ const PanelTop: React.FC<PanelProps> = (props) => {
 					)}
 				</div>
 
-				<div className="h-fit rounded-b-2xl bg-white px-4 pb-4 pt-2">
+				<div className="h-fit rounded-b-2xl bg-white px-4 pb-4 pt-1">
 					{props.children}
 				</div>
 			</div>

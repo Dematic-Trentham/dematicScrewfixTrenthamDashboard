@@ -58,7 +58,7 @@ export default function RootLayout({
 										<div className="y-auto flex flex-1 flex-col overflow-auto">
 											<Topbar />
 
-											<div className="flex flex-1 flex-col p-2">{children}</div>
+											<div className="flex flex-1 flex-col p-1">{children}</div>
 										</div>
 									</div>
 								</ToastProvider>

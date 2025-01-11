@@ -358,13 +358,8 @@ export default function Home() {
 				</div>
 			}
 		>
-			<div>
-				<p>{`Total Faults ${totalFaults}`}</p>
-			</div>
-			<p className="text-center text-xl font-bold">In Aisle</p>
-
 			<div className="flex w-full flex-wrap content-center justify-center">
-				<div className="hidden min-w-56 flex-col space-x-1 space-y-1 self-center lg:flex">
+				<div className="hidden min-w-56 flex-col space-x-1 space-y-0.5 self-center lg:flex">
 					<p className="text-center text-xl">Aisle</p>
 
 					{Array.from({ length: levelCount }, (_, index) => (
@@ -379,8 +374,8 @@ export default function Home() {
 
 				{locations.map((aisle, index) => (
 					<React.Fragment key={index}>
-						<div className="flex min-w-56 flex-col space-x-1 space-y-1 self-center">
-							<div className="text-center text-xl">Aisle {index + 1}</div>
+						<div className="flex min-w-56 flex-col space-x-1 space-y-0.5 self-center">
+							<div className="text-center text-small">Aisle {index + 1}</div>
 
 							{aisle.map((location, index) => (
 								<div key={index}>
@@ -407,9 +402,9 @@ export default function Home() {
 			</div>
 			<br />
 			<p className="text-medium font-bold">Maintenance Bay</p>
-			<div className="flex w-full flex-wrap content-center justify-center space-x-1 space-y-1">
+			<div className="flex w-full flex-wrap content-center justify-center space-x-1 space-y-0.5">
 				{maintenanceBay.map((location, index) => (
-					<div key={index} className="flex flex-row space-x-2 self-center">
+					<div key={index} className="flex flex-row space-x-1 self-center">
 						<ShuttlePanel
 							colorByType={colorByType}
 							currentLocation=""
@@ -424,6 +419,9 @@ export default function Home() {
 				))}
 			</div>
 			<div className="p-4" />
+			<div>
+				<p>{`Total Faults ${totalFaults}`}</p>
+			</div>
 		</PanelTop>
 	);
 }
