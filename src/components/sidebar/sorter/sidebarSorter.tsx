@@ -21,6 +21,11 @@ const SidebarAdmin = () => {
 					link="/dashboard/sorter/journeys"
 					text="Journey's"
 				/>
+				<SidebarParentComponent
+					icon={<FaBarsProgress />}
+					link="/dashboard/sorter/cells"
+					text="Disabled Cells"
+				/>
 			</SidebarParentComponentGroup>
 		</>
 	);
