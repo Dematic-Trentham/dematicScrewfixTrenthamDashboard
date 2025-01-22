@@ -1,9 +1,27 @@
+"use client";
+import { useEffect, useState } from "react";
+
 import { getAllCells } from "./_actions/actions";
 
 import PanelTop from "@/components/panels/panelTop";
 
-export default async function CellsPage() {
-	const cells = await getAllCells();
+export default function CellsPage() {
+	const [cells, setCells] = useState<
+		{ id: string; cellNumber: number; disabled: boolean; dateChanged: Date }[]
+	>([]);
+
+	useEffect(() => {
+		async function fetchCells() {
+			const cellsData = await getAllCells();
+
+			if (cellsData === null) {
+				return;
+			}
+
+			setCells(cellsData);
+		}
+		fetchCells();
+	}, []);
 
 	return (
 		<PanelTop title="Cells">
