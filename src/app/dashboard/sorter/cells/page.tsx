@@ -9,19 +9,37 @@ export default function CellsPage() {
 	const [cells, setCells] = useState<
 		{ id: string; cellNumber: number; disabled: boolean; dateChanged: Date }[]
 	>([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		async function fetchCells() {
-			const cellsData = await getAllCells();
+			try {
+				const cellsData = await getAllCells();
 
-			if (cellsData === null) {
-				return;
+				if (cellsData === null) {
+					setError("Failed to fetch cells data.");
+
+					return;
+				}
+
+				setCells(cellsData);
+			} catch (err) {
+				setError("An error occurred while fetching cells data.");
+			} finally {
+				setLoading(false);
 			}
-
-			setCells(cellsData);
 		}
 		fetchCells();
 	}, []);
+
+	if (loading) {
+		return <div>Loading...</div>;
+	}
+
+	if (error) {
+		return <div>Error: {error}</div>;
+	}
 
 	return (
 		<PanelTop title="Cells">
