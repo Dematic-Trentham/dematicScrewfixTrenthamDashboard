@@ -11,6 +11,7 @@ export default function CellsPage() {
 	>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [showOnlyDisabled, setShowOnlyDisabled] = useState(false);
 
 	useEffect(() => {
 		async function fetchCells() {
@@ -41,8 +42,26 @@ export default function CellsPage() {
 		return <div>Error: {error}</div>;
 	}
 
+	const filteredCells = showOnlyDisabled
+		? cells.filter((cell) => cell.disabled)
+		: cells;
+
 	return (
-		<PanelTop title="Cells">
+		<PanelTop
+			title="Cells"
+			topRight={
+				<div>
+					<label>
+						<input
+							checked={showOnlyDisabled}
+							type="checkbox"
+							onChange={() => setShowOnlyDisabled(!showOnlyDisabled)}
+						/>
+						Show only disabled cells
+					</label>
+				</div>
+			}
+		>
 			<table
 				style={{
 					width: "100%",
@@ -78,7 +97,7 @@ export default function CellsPage() {
 					</tr>
 				</thead>
 				<tbody>
-					{cells.map((cell, index) => {
+					{filteredCells.map((cell, index) => {
 						return (
 							<tr
 								key={cell.id}
