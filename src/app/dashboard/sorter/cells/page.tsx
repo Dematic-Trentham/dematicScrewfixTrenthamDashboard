@@ -12,6 +12,7 @@ export default function CellsPage() {
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [showOnlyDisabled, setShowOnlyDisabled] = useState(false);
+	const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
 	useEffect(() => {
 		async function fetchCells() {
@@ -23,6 +24,14 @@ export default function CellsPage() {
 
 					return;
 				}
+
+				//date changed on cell 0
+				const dateChanged = new Date(cellsData[0].dateChanged);
+
+				setLastUpdated(dateChanged);
+
+				//remove cell number 0
+				cellsData.splice(0, 1);
 
 				setCells(cellsData);
 			} catch (err) {
@@ -127,6 +136,13 @@ export default function CellsPage() {
 					})}
 				</tbody>
 			</table>
+			{lastUpdated && (
+				<div style={{ fontSize: "0.8em" }}>
+					Last updated: {lastUpdated.toLocaleString("en-GB")} - Please remember
+					that this data is not real-time and will update as the sorter trace
+					files are collected.
+				</div>
+			)}
 		</PanelTop>
 	);
 }
