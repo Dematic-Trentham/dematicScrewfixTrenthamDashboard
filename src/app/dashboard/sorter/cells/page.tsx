@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import { getAllCells } from "./_actions/actions";
 
@@ -14,8 +16,17 @@ export default function CellsPage() {
 	const [showOnlyDisabled, setShowOnlyDisabled] = useState(false);
 	const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
+	const searchParams = useSearchParams();
+
 	useEffect(() => {
 		async function fetchCells() {
+			//get show only disabled from the url
+			const showOnlyDisabled = searchParams.get("showOnlyDisabled");
+
+			if (showOnlyDisabled) {
+				setShowOnlyDisabled(true);
+			}
+
 			try {
 				const cellsData = await getAllCells();
 
@@ -35,7 +46,7 @@ export default function CellsPage() {
 
 				setCells(cellsData);
 			} catch (err) {
-				setError("An error occurred while fetching cells data.");
+				setError("An error occurred while fetching cells data." + err);
 			} finally {
 				setLoading(false);
 			}
@@ -57,7 +68,8 @@ export default function CellsPage() {
 
 	return (
 		<PanelTop
-			title="Cells"
+			className="h-fit w-full"
+			title="Sorter Cells - Status"
 			topRight={
 				<div>
 					<label>
@@ -65,64 +77,50 @@ export default function CellsPage() {
 							checked={showOnlyDisabled}
 							type="checkbox"
 							onChange={() => setShowOnlyDisabled(!showOnlyDisabled)}
-						/>
+						/>{" "}
 						Show only disabled cells
 					</label>
 				</div>
 			}
 		>
-			<table
-				style={{
-					width: "100%",
-					marginBottom: "10px",
-					borderCollapse: "collapse",
-				}}
-			>
+			<table className="dematicTable ce">
 				<thead>
-					<tr style={{ backgroundColor: "#fb923c" }}>
-						<th style={{ border: "1px solid black" }}>Total Cells</th>
-						<th style={{ border: "1px solid black" }}>Total Disabled</th>
-						<th style={{ border: "1px solid black" }}>Total Enabled</th>
+					<tr>
+						<th style={{ width: "30%" }}>Total Cells</th>
+						<th style={{ width: "30%" }}>Total Disabled</th>
+						<th style={{ width: "40%" }}>Total Enabled</th>
 					</tr>
 				</thead>
 				<tbody>
 					<tr>
-						<td style={{ border: "1px solid black" }}>{cells.length}</td>
-						<td style={{ border: "1px solid black" }}>
-							{cells.filter((cell) => cell.disabled).length}
-						</td>
-						<td style={{ border: "1px solid black" }}>
-							{cells.filter((cell) => !cell.disabled).length}
-						</td>
+						<td>{cells.length}</td>
+						<td>{cells.filter((cell) => cell.disabled).length}</td>
+						<td>{cells.filter((cell) => !cell.disabled).length}</td>
 					</tr>
 				</tbody>
 			</table>
-			<table style={{ width: "100%", borderCollapse: "collapse" }}>
+			<br />
+			<table className="dematicTable dematicTableStriped dematicTableHoverable">
 				<thead>
-					<tr style={{ backgroundColor: "#fb923c" }}>
-						<th style={{ border: "1px solid black" }}>Cell Number</th>
-						<th style={{ border: "1px solid black" }}>Status</th>
-						<th style={{ border: "1px solid black" }}>Date Changed</th>
+					<tr>
+						<th style={{ width: "25%" }}>Cell Number</th>
+						<th style={{ width: "25%" }}>Status</th>
+						<th style={{ width: "25%" }}>Date Changed</th>
+						<th style={{ width: "25%" }}>Actions</th>
 					</tr>
 				</thead>
 				<tbody>
-					{filteredCells.map((cell, index) => {
+					{filteredCells.map((cell) => {
 						return (
 							<tr
 								key={cell.id}
 								style={{
-									backgroundColor: cell.disabled
-										? "red"
-										: index % 2 === 0
-											? "#f9f9f9"
-											: "white",
+									backgroundColor: cell.disabled ? "red" : undefined,
 								}}
 							>
-								<td style={{ border: "1px solid black" }}>{cell.cellNumber}</td>
-								<td style={{ border: "1px solid black" }}>
-									{cell.disabled ? "Disabled" : "Enabled"}
-								</td>
-								<td style={{ border: "1px solid black" }}>
+								<td>{cell.cellNumber}</td>
+								<td>{cell.disabled ? "Disabled" : "Enabled"}</td>
+								<td>
 									{new Date(cell.dateChanged).toLocaleString("en-GB", {
 										hour: "2-digit",
 										minute: "2-digit",
@@ -131,16 +129,28 @@ export default function CellsPage() {
 										year: "numeric",
 									})}
 								</td>
+								<td>
+									<Link
+										href={`/dashboard/sorter/cells/${cell.cellNumber}?showOnlyDisabled=${showOnlyDisabled}`}
+									>
+										View History
+									</Link>
+								</td>
 							</tr>
 						);
 					})}
 				</tbody>
 			</table>
 			{lastUpdated && (
-				<div style={{ fontSize: "0.8em" }}>
-					Last updated: {lastUpdated.toLocaleString("en-GB")} - Please remember
-					that this data is not real-time and will update as the sorter trace
-					files are collected.
+				<div>
+					<div style={{ fontSize: "0.8em" }}>
+						Last updated: {lastUpdated.toLocaleString("en-GB")}
+					</div>
+					<div>
+						Please remember that this data is not real-time and will update as
+						the sorter trace files are collected. This is roughly 15 minutes, if
+						the sorter is busy, during quiet times it will be less frequent.
+					</div>
 				</div>
 			)}
 		</PanelTop>
