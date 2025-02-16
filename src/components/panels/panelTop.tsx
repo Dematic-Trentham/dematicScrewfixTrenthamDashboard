@@ -19,7 +19,7 @@ const PanelTop: React.FC<PanelProps> = (props) => {
 				)}
 			>
 				<div
-					className={`grid rounded-t-2xl bg-orange-400 text-lg font-bold ${props.title === undefined ? "p-0" : "p-4"} `}
+					className={`grid grid-cols-2 rounded-t-2xl bg-orange-400 text-lg font-bold ${props.title === undefined ? "p-0" : "p-4 py-2"} `}
 				>
 					{props.title}
 					{props.topRight ? (

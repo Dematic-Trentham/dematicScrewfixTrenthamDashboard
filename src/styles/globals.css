@@ -1,3 +1,46 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.dematicTable {
+	width: 100%;
+	border-collapse: collapse;
+	border: #000 1px solid;
+	text-align: center;
+}
+
+.dematicTable td {
+	padding: 1px;
+	text-align: center;
+	border-bottom: 1px solid #000;
+}
+
+.dematicTable th {
+	background-color: #fd923c;
+	font-weight: bold;
+	border-bottom: 1px solid #000;
+}
+
+.dematicTableStriped tr:nth-child(even) {
+	background-color: #ebe5e5d8;
+}
+
+.dematicTableHoverable tr:hover {
+	background-color: #e6fdd2;
+}
+
+.dematicTableBorderless {
+	border: none;
+}
+
+.dematicTableBorderless td {
+	border: none;
+}
+
+.dematicTableBorderless th {
+	border: none;
+}
+
+.dematicTableBorderless tr {
+	border: none;
+}
