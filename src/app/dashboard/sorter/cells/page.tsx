@@ -1,11 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { getAllCells } from "./_actions/actions";
 
 import PanelTop from "@/components/panels/panelTop";
+import { updateUrlParams } from "@/utils/url/params";
 
 export default function CellsPage() {
 	const [cells, setCells] = useState<
@@ -13,9 +14,10 @@ export default function CellsPage() {
 	>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
-	const [showOnlyDisabled, setShowOnlyDisabled] = useState(false);
+	const [showOnlyDisabledValue, setShowOnlyDisabled] = useState(false);
 	const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
+	const router = useRouter();
 	const searchParams = useSearchParams();
 
 	useEffect(() => {
@@ -23,7 +25,7 @@ export default function CellsPage() {
 			//get show only disabled from the url
 			const showOnlyDisabled = searchParams.get("showOnlyDisabled");
 
-			if (showOnlyDisabled) {
+			if (showOnlyDisabled === "true") {
 				setShowOnlyDisabled(true);
 			}
 
@@ -54,6 +56,12 @@ export default function CellsPage() {
 		fetchCells();
 	}, []);
 
+	function ShowOnlyDisabled(value: boolean) {
+		setShowOnlyDisabled(value);
+
+		updateUrlParams(searchParams, router, "showOnlyDisabled", value.toString());
+	}
+
 	if (loading) {
 		return <div>Loading...</div>;
 	}
@@ -62,7 +70,7 @@ export default function CellsPage() {
 		return <div>Error: {error}</div>;
 	}
 
-	const filteredCells = showOnlyDisabled
+	const filteredCells = showOnlyDisabledValue
 		? cells.filter((cell) => cell.disabled)
 		: cells;
 
@@ -74,9 +82,9 @@ export default function CellsPage() {
 				<div>
 					<label>
 						<input
-							checked={showOnlyDisabled}
+							checked={showOnlyDisabledValue}
 							type="checkbox"
-							onChange={() => setShowOnlyDisabled(!showOnlyDisabled)}
+							onChange={() => ShowOnlyDisabled(!showOnlyDisabledValue)}
 						/>{" "}
 						Show only disabled cells
 					</label>
@@ -131,7 +139,7 @@ export default function CellsPage() {
 								</td>
 								<td>
 									<Link
-										href={`/dashboard/sorter/cells/${cell.cellNumber}?showOnlyDisabled=${showOnlyDisabled}`}
+										href={`/dashboard/sorter/cells/${cell.cellNumber}?showOnlyDisabled=${showOnlyDisabledValue}`}
 									>
 										View History
 									</Link>

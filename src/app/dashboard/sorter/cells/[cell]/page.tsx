@@ -28,7 +28,7 @@ export default function ShuttlePage() {
 			//get show only disabled from the url
 			const showOnlyDisabled = searchParams.get("showOnlyDisabled");
 
-			if (showOnlyDisabled) {
+			if (showOnlyDisabled === "true") {
 				setShowOnlyDisabled(true);
 			}
 
