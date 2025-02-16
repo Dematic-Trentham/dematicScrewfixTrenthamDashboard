@@ -42,6 +42,7 @@ export default function ShuttlePage() {
 
 			if (cellHistory.errorString) {
 				setError(cellHistory.errorString);
+				setLoading(false);
 
 				return;
 			}
