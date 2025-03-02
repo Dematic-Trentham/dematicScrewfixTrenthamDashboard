@@ -19,11 +19,16 @@ class ErrorBoundary extends React.Component<
 		this.state = { hasError: false };
 	}
 
+	static getDerivedStateFromError(error: Error) {
+		return { hasError: true, error };
+	}
+
 	render() {
 		if (this.state.hasError) {
 			return (
 				<div>
 					<h2>Oops, there is an error!</h2>
+					{<pre>{this.state.error.toString()}</pre>}
 					<button
 						type="button"
 						onClick={() => this.setState({ hasError: false })}
