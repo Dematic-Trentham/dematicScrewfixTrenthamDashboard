@@ -1,9 +1,6 @@
 "use server";
 
-import { error } from "console";
-
-import { unstable_cache } from "next/cache";
-import { autoCartonMachineType, autoCartonFaults } from "@prisma/client";
+import { autoCartonFaults } from "@prisma/client";
 
 import db from "@/db/db";
 import { hasPermission } from "@/utils/getUser";
