@@ -14,49 +14,97 @@ const CartonClosingPage: React.FC = () => {
 	const [data, setData] = useState<any | null>(null);
 	const [dataold, setDataold] = useState<any | null>(null);
 
+	const allowedWatchdogTime = 2 * 60 * 1000; //2 minutes
+
+	const [totalTime, setTotalTime] = useState(60);
+
 	useEffect(() => {
+		const url =
+			"http://10.4.5.227:8080/json/mysqlGrouped?totalTime=" +
+			totalTime.toString();
+
+		console.log(url);
+
+		async function timePromise<T>(
+			promise: Promise<T>
+		): Promise<{ time: number; result: T }> {
+			const start = performance.now();
+			const result = await promise;
+			const end = performance.now();
+
+			return { time: end - start, result };
+		}
+
 		async function fetchData() {
-			//fetch data http://10.4.5.227:8080/json/mysqlGrouped?totalTime=
-			fetch("http://10.4.5.227:8080/json/mysqlGrouped?totalTime=60")
-				.then((res) => res.json())
-				.then(async (data) => {
-					const parsedData = await parseDataOld(data);
-					//const machineTotals = await calculateMachineTotals(parsedData);
-					//const machineTotals = "";
+			const tasks = [
+				{ name: "fetchOldData", task: timePromise(fetchOldData()) },
+				{ name: "fetchNewData", task: timePromise(fetchNewData()) },
+			];
 
-					setDataold(parsedData);
+			const results = await Promise.all(
+				tasks.map(({ name, task }) =>
+					task.catch((error) => {
+						console.error(`Error in function ${name}:`, error);
+						setError(error);
+					})
+				)
+			);
 
-					//setLoading(false);
-				})
-				.catch((err) => {
-					setError(err);
-					//setLoading(false);
-				});
+			console.log("Tasks done");
+			console.log(results);
 
-			//get data from server
-			const newData = await getCartonClosingAllTimed(60);
-
-			//if empty data then return
-			if (!newData) {
-				setLoading(false);
-				setError("No data found");
-
-				return;
-			}
-
-			const parsedData2 = await parseData(newData);
-
-			setData(parsedData2);
 			setLoading(false);
+		}
+
+		//fetch data http://10.4.5.227:8080/json/mysqlGrouped?totalTime=
+		async function fetchOldData() {
+			try {
+				const response = await fetch(url);
+				const data = await response.json();
+				const parsedData = await parseDataOld(data);
+
+				setDataold(parsedData);
+
+				return { status: "success", data: parsedData };
+			} catch (err) {
+				return { error: err };
+			}
+		}
+
+		async function fetchNewData() {
+			try {
+				//get data from server
+				const newData = await getCartonClosingAllTimed(totalTime);
+
+				//if empty data then return
+				if (!newData) {
+					return { error: "No data found" };
+				}
+
+				const parsedData2 = await parseData(newData);
+
+				setData(parsedData2);
+
+				return { status: "success", data: parsedData2 };
+			} catch (err) {
+				return { error: err };
+			}
 		}
 
 		//parse data
 		function parseDataOld(data: any) {
 			const parsedData: {
-				[key: string]: { [key: string]: { faults: any[]; timeStamp: Date } };
+				[key: string]: { [key: string]: { faults: any[]; connected: boolean } };
 			} = {};
 
+			console.log(data.rows);
+
 			for (const item of data.rows) {
+				//strip out machine types that are not needed
+				if (item.machinetype == "Lidder" || item.machinetype == "iPack") {
+					continue;
+				}
+
 				const line = item.line.toString();
 				const machinetype = item.machinetype;
 				const fault = item.fault;
@@ -70,18 +118,17 @@ const CartonClosingPage: React.FC = () => {
 				if (!parsedData[line][machinetype]) {
 					parsedData[line][machinetype] = {
 						faults: [],
-						timeStamp: new Date(0),
+						connected: false,
 					};
 				}
 
 				parsedData[line][machinetype].faults.push({ fault, count });
+				//do we have any data in the last x minutes
+				const timeDifference =
+					new Date().getTime() - new Date(timestamp).getTime();
 
-				if (
-					!parsedData[line][machinetype].timeStamp ||
-					new Date(timestamp) >
-						new Date(parsedData[line][machinetype].timeStamp)
-				) {
-					parsedData[line][machinetype].timeStamp = timestamp;
+				if (timeDifference < 5 * 60 * 1000) {
+					parsedData[line][machinetype].connected = true;
 				}
 			}
 
@@ -106,7 +153,7 @@ const CartonClosingPage: React.FC = () => {
 		}) {
 			const parsedData: {
 				[line: string]: {
-					[machineType: string]: { faults: any[]; timeStamp: Date };
+					[machineType: string]: { faults: any[]; connected: boolean };
 				};
 			} = {};
 
@@ -124,7 +171,7 @@ const CartonClosingPage: React.FC = () => {
 				if (!parsedData[line][machinetype]) {
 					parsedData[line][machinetype] = {
 						faults: [],
-						timeStamp: new Date(0),
+						connected: false,
 					};
 				}
 
@@ -139,15 +186,13 @@ const CartonClosingPage: React.FC = () => {
 					parsedData[line][machinetype].faults.push({ fault, count: 1 });
 				}
 
-				//parsedData[line][machinetype].faults.push({ fault, count: 1 });
+				//check each item and if we have any data in the last 2 minutes then we set connected to true
+				const timeDifference =
+					new Date().getTime() - new Date(timestamp).getTime();
 
-				// if (
-				// 	!parsedData[line][machinetype].timeStamp ||
-				// 	new Date(timestamp) >
-				// 		new Date(parsedData[line][machinetype].timeStamp)
-				// ) {
-				// 	parsedData[line][machinetype].timeStamp = timestamp;
-				// }
+				if (timeDifference < allowedWatchdogTime) {
+					parsedData[line][machinetype].connected = true;
+				}
 			}
 
 			return parsedData;
@@ -155,11 +200,10 @@ const CartonClosingPage: React.FC = () => {
 
 		fetchData();
 
-		//every 60 seconds we need to refetch the data
-		const interval = setInterval(() => {
-			fetchData();
-		}, 5000);
-	}, []);
+		const intervalId = setInterval(fetchData, 10000);
+
+		return () => clearInterval(intervalId);
+	}, [totalTime]);
 
 	if (loading) {
 		return <div>Loading...</div>;
@@ -227,6 +271,41 @@ const CartonClosingPage: React.FC = () => {
 					haslabeler={true}
 					lineNumber={"6"}
 				/>
+			</div>
+			<div style={{ marginTop: "20px", textAlign: "center" }}>
+				<label htmlFor="totalTime">Select Total Search Time: </label>
+				<select
+					id="totalTime"
+					value={totalTime}
+					onChange={(e) => {
+						setTotalTime(Number(e.target.value));
+						setLoading(true);
+					}}
+				>
+					<option value={5}>5 minutes</option>
+					<option value={10}>10 minutes</option>
+					<option value={15}>15 minutes</option>
+					<option value={30}>30 minutes</option>
+					<option value={60}>1 hour</option>
+					<option value={120}>2 hours</option>
+					<option value={180}>3 hours</option>
+					<option value={360}>6 hours</option>
+					<option value={720}>12 hours</option>
+					<option value={1440}>1 day</option>
+					<option value={2880}>2 days</option>
+					<option value={4320}>3 days</option>
+					<option value={5760}>4 days</option>
+					<option value={7200}>5 days</option>
+					<option value={8640}>6 days</option>
+					<option value={10080}>1 week</option>
+					<option value={20160}>2 weeks</option>
+					<option value={43200}>1 month</option>
+					<option value={86400}>2 months</option>
+					<option value={129600}>3 months</option>
+					<option value={172800}>4 months</option>
+					<option value={216000}>5 months</option>
+					<option value={259200}>6 months</option>
+				</select>
 			</div>
 		</>
 	);

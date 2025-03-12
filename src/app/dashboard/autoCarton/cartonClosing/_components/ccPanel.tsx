@@ -9,7 +9,7 @@ import HoverPopup from "@/components/visual/hoverPopupFloat";
 interface CCPanelProps {
 	accentColor: string;
 	name: string;
-	faults: { faults: any[]; timeStamp: Date };
+	faults: { faults: any[]; connected: boolean };
 	onClickLink?: string;
 }
 
@@ -21,16 +21,7 @@ const CCPanel: React.FC<CCPanelProps> = ({
 }) => {
 	//console.log(name, faults);
 
-	const timeStamp = new Date(faults.timeStamp);
-
 	const aFaults = faults.faults;
-
-	let connectionStatusConnected = false;
-
-	//if the timestamp is within the last 2 minutes, we are connected
-	if (timeStamp.getTime() < Date.now() - 2 * 60 * 1000) {
-		connectionStatusConnected = true;
-	}
 
 	const TotalBoxes = aFaults.reduce((count: number, fault: any) => {
 		if (fault.fault === "box") {
@@ -47,6 +38,8 @@ const CCPanel: React.FC<CCPanelProps> = ({
 		"EmptyCartonsCounter",
 		"box",
 		"Spare6",
+		"D1EmergencyStop",
+		"D3OpenedDoor",
 	];
 
 	const TotalFaults = aFaults
@@ -78,8 +71,44 @@ const CCPanel: React.FC<CCPanelProps> = ({
 		boxTextNumber = parseFloat((TotalBoxes / TotalFaults).toFixed(2));
 	}
 
+	//work out the color of the box
+	//if faults are higher than boxes, then the box is red
+	//if no faults, then the box is green
+	//else make a gradient between green and red though yellow and orange based on the ratio of faults to boxes
+	let boxColor = "#000000";
+
+	const green = [0, 240, 30]; // RGB for green
+	const red = [240, 33, 30]; // RGB for red
+
+	const redHex = `rgb(${red[0]}, ${red[1]}, ${red[2]})`;
+	const greenHex = `rgb(${green[0]}, ${green[1]}, ${green[2]})`;
+
+	if (faultsHigher) {
+		boxColor = redHex; // red
+	} else if (TotalFaults === 0) {
+		boxColor = greenHex; // green
+	} else {
+		const percent = (TotalFaults / TotalBoxes) * 100;
+
+		const interpolate = (start: number, end: number, factor: number) => {
+			return start + (end - start) * factor;
+		};
+
+		const factor = Math.min(percent / 5, 1); // Cap the factor at 1 for percent >= 5
+
+		const r = Math.round(interpolate(green[0], red[0], factor));
+		const g = Math.round(interpolate(green[1], red[1], factor));
+		const b = Math.round(interpolate(green[2], red[2], factor));
+
+		boxColor = `rgb(${r}, ${g}, ${b})`;
+	}
+
+	if (!faults.connected) {
+		boxColor = "#808080"; // grey
+	}
+
 	const itemToHover = (
-		<PanelSmall accentColor={accentColor}>
+		<PanelSmall accentColor={boxColor}>
 			<Link href={onClickLink || ""}>
 				<div className="flex gap-x-5">
 					<div>
@@ -88,7 +117,7 @@ const CCPanel: React.FC<CCPanelProps> = ({
 						>
 							<div
 								className={`flex h-28 w-28 items-center justify-center rounded-full text-white`}
-								style={{ backgroundColor: accentColor }}
+								style={{ backgroundColor: boxColor }}
 							>
 								<FaArrowsDownToLine className={`size-14 text-white`} />
 							</div>
@@ -104,7 +133,7 @@ const CCPanel: React.FC<CCPanelProps> = ({
 							<div className="ml-4 mt-0.5 h-5 w-5 rounded-full bg-gray-500">
 								<div
 									className={`ml-0.5 mt-0.5 h-4 w-4 rounded-full ${
-										connectionStatusConnected ? "bg-green-500" : "bg-red-500"
+										faults.connected ? "bg-green-500" : "bg-grey-500"
 									}`}
 								/>
 							</div>
@@ -124,6 +153,7 @@ const CCPanel: React.FC<CCPanelProps> = ({
 				<div>Total Boxes {TotalBoxes}</div>
 
 				<div>Total Faults {TotalFaults}</div>
+				<div>Ratio {(TotalFaults / TotalBoxes) * 100}</div>
 
 				{aFaults
 					.filter((fault) => !excludedFaults.includes(fault.fault))
