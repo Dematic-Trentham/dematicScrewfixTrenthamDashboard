@@ -9,9 +9,6 @@ import SidebarParentComponentGroup from "../sidebarParentComponentGroup";
 import HorizontalBar from "@/components/visual/horizontalBar";
 
 const SidebarAutoCarton = () => {
-	//todo remove
-	return <> </>;
-
 	return (
 		<>
 			<HorizontalBar />
@@ -20,11 +17,6 @@ const SidebarAutoCarton = () => {
 				link="/dashboard/autoCarton"
 				text="Auto Carton"
 			>
-				<SidebarParentComponent
-					icon={<BsBox />}
-					link="/dashboard/autoCarton/orderStart"
-					text="Order Start"
-				/>
 				<SidebarParentComponent
 					icon={<BsBoxes />}
 					link="/dashboard/autoCarton/cartonClosing"
