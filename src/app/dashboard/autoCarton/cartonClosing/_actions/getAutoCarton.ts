@@ -1,7 +1,5 @@
 "use server";
 
-import { autoCartonFaults } from "@prisma/client";
-
 import db from "@/db/db";
 import { hasPermission } from "@/utils/getUser";
 
@@ -23,7 +21,7 @@ interface ResultObject {
 export const getCartonClosingAllTimed = async (
 	minutes: number
 ): Promise<ResultObject> => {
-	const result: autoCartonFaults[] = await db.autoCartonFaults.findMany({
+	const result: any[] = await db.autoCartonFaults.findMany({
 		where: {
 			timestamp: {
 				gte: new Date(Date.now() - minutes * 60 * 1000),
