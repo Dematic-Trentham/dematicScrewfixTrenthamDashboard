@@ -1,16 +1,15 @@
-import { machine } from "os";
-
 import React from "react";
 import { FaArrowsDownToLine } from "react-icons/fa6";
 import Link from "next/link";
 
 import HorizontalBar from "@/components/visual/horizontalBar";
 import PanelSmall from "@/components/panels/panelSmall";
+import HoverPopup from "@/components/visual/hoverPopupFloat";
 
 interface CCPanelProps {
 	accentColor: string;
 	name: string;
-	faults: any[];
+	faults: { faults: any[]; connected: boolean };
 	onClickLink?: string;
 }
 
@@ -20,32 +19,37 @@ const CCPanel: React.FC<CCPanelProps> = ({
 	faults,
 	onClickLink,
 }) => {
-	//connection status "any faults in last 5 minutes"
-	let connectionStatusConnected = false;
+	//console.log(name, faults);
 
-	for (let i = 0; i < faults.length; i++) {
-		if (faults[i].timestamp > Date.now() - 5 * 60 * 1000) {
-			connectionStatusConnected = true;
-			break;
+	const aFaults = faults.faults;
+
+	const TotalBoxes = aFaults.reduce((count: number, fault: any) => {
+		if (fault.fault === "box") {
+			return count + fault.count;
+		} else {
+			return count;
 		}
-	}
-
-	//total boxes fautlString = "box"
-	const TotalBoxes = faults.reduce((count: number, fault: any) => {
-		return fault.faultString === "box" ? count + 1 : count;
 	}, 0);
 
-	//total faults fautlString != "box" or "Watchdog timer expired"
-	const TotalFaults = faults.reduce((count: number, fault: any) => {
-		return fault.faultString !== "box" &&
-			fault.faultString !== "Watchdog timer expired"
-			? count + 1
-			: count;
-	}, 0);
+	const excludedFaults = [
+		"watchDog",
+		"EmptyCartonsHelpMark",
+		"EmptyCartonsHelpMark",
+		"EmptyCartonsCounter",
+		"box",
+		"Spare6",
+		"D1EmergencyStop",
+		"D3OpenedDoor",
+	];
+
+	const TotalFaults = aFaults
+		.filter((fault) => !excludedFaults.includes(fault.fault))
+		.reduce((count: number, fault: any) => {
+			return count + fault.count;
+		}, 0);
 
 	let faultsHigher = false;
 
-	//which is greater, total faults or total boxes
 	if (TotalFaults > TotalBoxes) {
 		faultsHigher = true;
 	}
@@ -53,7 +57,6 @@ const CCPanel: React.FC<CCPanelProps> = ({
 	let boxTextNumber = 0;
 	let boxText = "";
 
-	//do we have no boxes but we have faults
 	if (TotalBoxes === 0 && TotalFaults > 0) {
 		boxText = "Faults";
 		boxTextNumber = TotalFaults;
@@ -68,8 +71,44 @@ const CCPanel: React.FC<CCPanelProps> = ({
 		boxTextNumber = parseFloat((TotalBoxes / TotalFaults).toFixed(2));
 	}
 
-	return (
-		<PanelSmall accentColor={accentColor}>
+	//work out the color of the box
+	//if faults are higher than boxes, then the box is red
+	//if no faults, then the box is green
+	//else make a gradient between green and red though yellow and orange based on the ratio of faults to boxes
+	let boxColor = "#000000";
+
+	const green = [0, 240, 30]; // RGB for green
+	const red = [240, 33, 30]; // RGB for red
+
+	const redHex = `rgb(${red[0]}, ${red[1]}, ${red[2]})`;
+	const greenHex = `rgb(${green[0]}, ${green[1]}, ${green[2]})`;
+
+	if (faultsHigher) {
+		boxColor = redHex; // red
+	} else if (TotalFaults === 0) {
+		boxColor = greenHex; // green
+	} else {
+		const percent = (TotalFaults / TotalBoxes) * 100;
+
+		const interpolate = (start: number, end: number, factor: number) => {
+			return start + (end - start) * factor;
+		};
+
+		const factor = Math.min(percent / 5, 1); // Cap the factor at 1 for percent >= 5
+
+		const r = Math.round(interpolate(green[0], red[0], factor));
+		const g = Math.round(interpolate(green[1], red[1], factor));
+		const b = Math.round(interpolate(green[2], red[2], factor));
+
+		boxColor = `rgb(${r}, ${g}, ${b})`;
+	}
+
+	if (!faults.connected) {
+		boxColor = "#808080"; // grey
+	}
+
+	const itemToHover = (
+		<PanelSmall accentColor={boxColor}>
 			<Link href={onClickLink || ""}>
 				<div className="flex gap-x-5">
 					<div>
@@ -78,7 +117,7 @@ const CCPanel: React.FC<CCPanelProps> = ({
 						>
 							<div
 								className={`flex h-28 w-28 items-center justify-center rounded-full text-white`}
-								style={{ backgroundColor: accentColor }}
+								style={{ backgroundColor: boxColor }}
 							>
 								<FaArrowsDownToLine className={`size-14 text-white`} />
 							</div>
@@ -86,14 +125,16 @@ const CCPanel: React.FC<CCPanelProps> = ({
 					</div>
 					<div className="flex flex-col">
 						<p className="text-2xl">{name}</p>
-						<p className="text-3xl">{boxTextNumber}</p>
+						<p className="text-3xl">{boxTextNumber || 0}</p>
 						<p>{boxText}</p>
 						<HorizontalBar styles={""} />
 						<div className="flex">
 							<p>Connection</p>
 							<div className="ml-4 mt-0.5 h-5 w-5 rounded-full bg-gray-500">
 								<div
-									className={`ml-0.5 mt-0.5 h-4 w-4 rounded-full ${connectionStatusConnected ? "bg-green-500" : "bg-red-500"}`}
+									className={`ml-0.5 mt-0.5 h-4 w-4 rounded-full ${
+										faults.connected ? "bg-green-500" : "bg-grey-500"
+									}`}
 								/>
 							</div>
 						</div>
@@ -102,6 +143,38 @@ const CCPanel: React.FC<CCPanelProps> = ({
 			</Link>
 		</PanelSmall>
 	);
+
+	const itemToPopUp = (
+		<PanelSmall
+			accentColor={"border-gray-500"}
+			className="border-2 border-gray-500"
+		>
+			<div className="flex flex-col gap-y-2 rounded-md bg-gray-100 p-4">
+				<div>Total Boxes {TotalBoxes}</div>
+
+				<div>Total Faults {TotalFaults}</div>
+				<div>Ratio {(TotalFaults / TotalBoxes) * 100}</div>
+
+				{aFaults
+					.filter((fault) => !excludedFaults.includes(fault.fault))
+					.map((fault, index) => {
+						let string = fault.faultString;
+
+						if (string === "box") string = "Boxes";
+
+						return (
+							<div key={index} className="flex justify-between">
+								<p>{fault.fault}</p>
+								<p> : </p>
+								<p>{fault.count}</p>
+							</div>
+						);
+					})}
+			</div>
+		</PanelSmall>
+	);
+
+	return <HoverPopup itemToHover={itemToHover} itemToPopUp={itemToPopUp} />;
 };
 
 export default CCPanel;
