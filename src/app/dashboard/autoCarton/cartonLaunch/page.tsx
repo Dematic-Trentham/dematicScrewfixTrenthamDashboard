@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 
-import CartonClosingComponent from "./_components/cartonClosing";
-import { getCartonClosingAllTimed } from "./_actions/getAutoCarton";
+import CartonLaunchComponent from "./_components/cartonLaunch";
+import { getCartonClosingAllTimed } from "./../cartonClosing/_actions/getAutoCarton";
 
+import Spinner from "@/components/visual/spinner";
 import Loading from "@/components/visual/loading";
 
 const CartonClosingPage: React.FC = () => {
@@ -216,58 +217,40 @@ const CartonClosingPage: React.FC = () => {
 			<div
 				style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}
 			>
-				<CartonClosingComponent
+				<CartonLaunchComponent
 					data={data}
 					dataold={dataold}
-					hasLidder={true}
-					hasiPack={true}
-					haslabeler={true}
+					hasBarcoder={true}
+					hasErector={true}
 					lineNumber={"1"}
 				/>
-
-				<CartonClosingComponent
+				<CartonLaunchComponent
 					data={data}
 					dataold={dataold}
-					hasLidder={true}
-					hasiPack={true}
-					haslabeler={true}
+					hasBarcoder={true}
+					hasErector={true}
 					lineNumber={"2"}
 				/>
-
-				<CartonClosingComponent
+				<CartonLaunchComponent
 					data={data}
 					dataold={dataold}
-					hasLidder={true}
-					hasiPack={true}
-					haslabeler={true}
+					hasBarcoder={true}
+					hasErector={true}
 					lineNumber={"3"}
 				/>
-
-				<CartonClosingComponent
+				<CartonLaunchComponent
 					data={data}
 					dataold={dataold}
-					hasLidder={true}
-					hasiPack={true}
-					haslabeler={true}
+					hasBarcoder={true}
+					hasErector={true}
 					lineNumber={"4"}
 				/>
-
-				<CartonClosingComponent
+				<CartonLaunchComponent
 					data={data}
 					dataold={dataold}
-					hasLidder={false}
-					hasiPack={true}
-					haslabeler={true}
+					hasBarcoder={true}
+					hasErector={true}
 					lineNumber={"5"}
-				/>
-
-				<CartonClosingComponent
-					data={data}
-					dataold={dataold}
-					hasLidder={false}
-					hasiPack={true}
-					haslabeler={true}
-					lineNumber={"6"}
 				/>
 			</div>
 			<div style={{ marginTop: "20px", textAlign: "center" }}>

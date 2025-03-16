@@ -13,6 +13,7 @@ import { getAllCounts } from "./[macAddress]/parts/_actions";
 import PanelTop from "@/components/panels/panelTop";
 import VerticalBar from "@/components/visual/verticalBar";
 import { updateUrlParams } from "@/utils/url/params";
+import Loading from "@/components/visual/loading";
 
 export default function Home() {
 	const router = useRouter();
@@ -279,7 +280,7 @@ export default function Home() {
 		return (
 			<PanelTop className="h-fit w-full" title="Shuttle Locations">
 				<div className="flex w-full flex-col items-center justify-center">
-					<p>Loading...</p>
+					<Loading />
 				</div>
 			</PanelTop>
 		);

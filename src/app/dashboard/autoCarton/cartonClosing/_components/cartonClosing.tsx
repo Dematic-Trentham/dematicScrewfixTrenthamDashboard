@@ -51,7 +51,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 						accentColor="green"
 						faults={data[lineNumber]["iPack"] || []}
 						name="iPack"
-						onClickLink={`/dashboard/autoCarton/cartonClosing/iPack${lineNumber}`}
+						onClickLink={`/dashboard/autoCarton/details/iPack${lineNumber}`}
 					/>
 				)}
 				{hasLidder && (
@@ -59,7 +59,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 						accentColor="red"
 						faults={data[lineNumber]["Lidder"] || []}
 						name="Lidder"
-						onClickLink={`/dashboard/autoCarton/cartonClosing/lidder${lineNumber}`}
+						onClickLink={`/dashboard/autoCarton/details/lidder${lineNumber}`}
 					/>
 				)}
 				{haslabeler && (
@@ -67,7 +67,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 						accentColor="blue"
 						faults={dataold[lineNumber]["Labeler"] || []}
 						name="Labeler"
-						onClickLink={`/dashboard/autoCarton/cartonClosing/labeler${lineNumber}`}
+						onClickLink={`/dashboard/autoCarton/details/labeler${lineNumber}`}
 					/>
 				)}
 			</div>
