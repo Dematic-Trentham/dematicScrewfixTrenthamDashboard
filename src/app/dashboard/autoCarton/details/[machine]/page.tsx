@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useSearchParams } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { Pie } from "react-chartjs-2";
@@ -14,9 +14,11 @@ import PanelTop from "@/components/panels/panelTop";
 import "react-tabs/style/react-tabs.css";
 import { changeDateToReadable } from "@/utils/changeDateToReadable";
 import { makeReadableFaultCode } from "@/utils/faultCodemaker";
+import { updateUrlParams } from "@/utils/url/params";
 
 const MachineDetailsPage = () => {
 	const params = useParams<{ machine: string }>();
+	const router = useRouter();
 
 	//get returnURL form the url
 	const searchParams = useSearchParams();
@@ -64,6 +66,12 @@ const MachineDetailsPage = () => {
 				machineType = "Lidder";
 			} else if (machineTypeString === "iPack") {
 				machineType = "iPack";
+			} else {
+				//if we can't find the machine type, we will return an error
+				setError("Machine type not found");
+				setLoading(false);
+
+				return;
 			}
 
 			//parse the number from the machine
@@ -103,7 +111,27 @@ const MachineDetailsPage = () => {
 	}
 
 	if (error) {
-		return <PanelTop title={title}>{error}</PanelTop>;
+		return (
+			<PanelTop
+				title={title}
+				topRight={
+					<button
+						className="rounded-lg bg-blue-400 p-2 text-white"
+						onClick={() => {
+							window.location.href =
+								"/dashboard/autoCarton/" +
+								returnURL +
+								"?timeRange=" +
+								totalTime;
+						}}
+					>
+						Back
+					</button>
+				}
+			>
+				{error}
+			</PanelTop>
+		);
 	}
 
 	return (
@@ -142,9 +170,15 @@ const MachineDetailsPage = () => {
 					className={"border bg-white text-black"}
 					id="totalTime"
 					value={totalTime}
-					onChange={(e) => {
-						setTotalTime(Number(e.target.value));
+					onChange={async (e) => {
+						await updateUrlParams(
+							searchParams,
+							router,
+							"timeRange",
+							e.target.value
+						);
 						setLoading(true);
+						setTotalTime(parseInt(e.target.value));
 					}}
 				>
 					<option value={5}>5 minutes</option>
@@ -204,7 +238,7 @@ const MachineDetailsPage = () => {
 		let chartData = groupBy(data);
 
 		//remove faults that are "box"
-		chartData.filter((item: any) => item.faultCode != "box");
+		chartData;
 
 		return (
 			<div>
@@ -230,7 +264,11 @@ const MachineDetailsPage = () => {
 
 	//function to group the data by fault code
 	function groupBy(data: any) {
-		const groupedData = data.reduce((acc: any, item: any) => {
+		const data2 = data.filter(
+			(item: any) => !excludedFaults2.includes(item.faultCode)
+		);
+
+		const groupedData = data2.reduce((acc: any, item: any) => {
 			const faultCode = makeReadableFaultCode(item.faultCode);
 			//const faultCode = item.faultCode;
 

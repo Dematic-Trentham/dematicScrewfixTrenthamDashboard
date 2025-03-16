@@ -1,13 +1,21 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 
 import CartonLaunchComponent from "./_components/cartonLaunch";
 import { getCartonClosingAllTimed } from "./../cartonClosing/_actions/getAutoCarton";
 
 import Spinner from "@/components/visual/spinner";
 import Loading from "@/components/visual/loading";
+import { updateUrlParams } from "@/utils/url/params";
 
 const CartonClosingPage: React.FC = () => {
+	const params = useParams<{ machine: string }>();
+	const router = useRouter();
+
+	//get returnURL form the url
+	const searchParams = useSearchParams();
+
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 	const [data, setData] = useState<any | null>(null);
@@ -263,9 +271,15 @@ const CartonClosingPage: React.FC = () => {
 				<select
 					id="totalTime"
 					value={totalTime}
-					onChange={(e) => {
-						setTotalTime(Number(e.target.value));
+					onChange={async (e) => {
 						setLoading(true);
+						await updateUrlParams(
+							searchParams,
+							router,
+							"timeRange",
+							e.target.value
+						);
+						setTotalTime(parseInt(e.target.value));
 					}}
 				>
 					<option value={5}>5 minutes</option>
