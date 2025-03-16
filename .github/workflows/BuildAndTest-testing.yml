@@ -120,7 +120,7 @@ jobs:
 
   Update_permissions:
     runs-on: self-hosted
-    needs: Coverage
+    needs: Build_Image
 
     steps:
       - name: Checkout repository
@@ -141,7 +141,7 @@ jobs:
 
   Build_Image:
     runs-on: self-hosted
-    needs: Coverage
+    needs: Analyze
 
     steps:
       - uses: actions/checkout@v2
