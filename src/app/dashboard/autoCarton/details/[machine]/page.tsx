@@ -9,6 +9,7 @@ import { getAutoCartonFaults } from "./_actions/actions";
 import Loading from "@/components/visual/loading";
 import PanelTop from "@/components/panels/panelTop";
 import "react-tabs/style/react-tabs.css";
+import { changeDateToReadable } from "@/utils/changeDateToReadable";
 
 const MachineDetailsPage = () => {
 	const params = useParams<{ machine: string }>();
@@ -60,32 +61,21 @@ const MachineDetailsPage = () => {
 
 	function tabFormattedData(data: any) {
 		return (
-			<table className="min-w-full divide-y divide-gray-200">
-				<thead className="bg-gray-50">
+			<table className="dematicTable ce">
+				<thead>
 					<tr>
-						<th
-							className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-							scope="col"
-						>
-							Time Stamp
-						</th>
-						<th
-							className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-							scope="col"
-						>
-							Fault Code
-						</th>
+						<th>Time</th>
+
+						<th>Fault Code</th>
 					</tr>
 				</thead>
-				<tbody className="divide-y divide-gray-200 bg-white">
-					{data.map((fault: any) => (
-						<tr key={fault.id}>
-							<td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-								{fault.timeStamp}
-							</td>
-							<td className="whitespace-nowrap px-6 py-4 text-sm text-gray-500">
-								{fault.fit}
-							</td>
+
+				<tbody>
+					{data.map((item: any, index: number) => (
+						<tr key={index}>
+							<td>{changeDateToReadable(item.timestamp)}</td>
+
+							<td>{item.faultCode}</td>
 						</tr>
 					))}
 				</tbody>
