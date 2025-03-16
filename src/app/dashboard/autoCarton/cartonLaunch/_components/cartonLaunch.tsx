@@ -8,6 +8,7 @@ interface CartonClosingComponentProps {
 	hasBarcoder: boolean;
 	dataold: any;
 	data: any;
+	timeRange: string;
 }
 
 const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
@@ -16,6 +17,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 	hasBarcoder,
 	dataold,
 	data,
+	timeRange,
 }) => {
 	//if we dont have the line number in the data, we need to set it to an empty object
 	if (!data[lineNumber]) {
@@ -39,7 +41,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 						accentColor="green"
 						faults={data[lineNumber]["erector"] || []}
 						name="Erector"
-						onClickLink={`/dashboard/autoCarton/details/erector${lineNumber}`}
+						onClickLink={`/dashboard/autoCarton/details/erector${lineNumber}?returnURL=cartonLaunch&timeRange=${timeRange}`}
 					/>
 				)}
 				{hasBarcoder && (
@@ -47,7 +49,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 						accentColor="red"
 						faults={dataold[lineNumber]["barcoder"] || []}
 						name="Barcoder"
-						onClickLink={`/dashboard/autoCarton/details/barcoder${lineNumber}`}
+						onClickLink={`/dashboard/autoCarton/details/barcoder${lineNumber}?returnURL=cartonLaunch&timeRange=${timeRange}`}
 					/>
 				)}
 			</div>

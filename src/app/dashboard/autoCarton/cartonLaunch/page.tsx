@@ -223,6 +223,7 @@ const CartonClosingPage: React.FC = () => {
 					hasBarcoder={true}
 					hasErector={true}
 					lineNumber={"1"}
+					timeRange={totalTime.toString()}
 				/>
 				<CartonLaunchComponent
 					data={data}
@@ -230,6 +231,7 @@ const CartonClosingPage: React.FC = () => {
 					hasBarcoder={true}
 					hasErector={true}
 					lineNumber={"2"}
+					timeRange={totalTime.toString()}
 				/>
 				<CartonLaunchComponent
 					data={data}
@@ -237,6 +239,7 @@ const CartonClosingPage: React.FC = () => {
 					hasBarcoder={true}
 					hasErector={true}
 					lineNumber={"3"}
+					timeRange={totalTime.toString()}
 				/>
 				<CartonLaunchComponent
 					data={data}
@@ -244,6 +247,7 @@ const CartonClosingPage: React.FC = () => {
 					hasBarcoder={true}
 					hasErector={true}
 					lineNumber={"4"}
+					timeRange={totalTime.toString()}
 				/>
 				<CartonLaunchComponent
 					data={data}
@@ -251,6 +255,7 @@ const CartonClosingPage: React.FC = () => {
 					hasBarcoder={true}
 					hasErector={true}
 					lineNumber={"5"}
+					timeRange={totalTime.toString()}
 				/>
 			</div>
 			<div style={{ marginTop: "20px", textAlign: "center" }}>

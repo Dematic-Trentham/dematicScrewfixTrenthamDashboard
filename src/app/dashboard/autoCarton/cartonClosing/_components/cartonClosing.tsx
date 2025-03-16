@@ -15,6 +15,7 @@ interface CartonClosingComponentProps {
 	haslabeler: boolean;
 	dataold: any;
 	data: any;
+	timeRange: string;
 }
 
 const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
@@ -24,6 +25,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 	haslabeler,
 	dataold,
 	data,
+	timeRange,
 }) => {
 	//if we dont have the line number in the data, we need to set it to an empty object
 	if (!data[lineNumber]) {
@@ -51,7 +53,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 						accentColor="green"
 						faults={data[lineNumber]["iPack"] || []}
 						name="iPack"
-						onClickLink={`/dashboard/autoCarton/details/iPack${lineNumber}`}
+						onClickLink={`/dashboard/autoCarton/details/iPack${lineNumber}?returnURL=cartonClosing&timeRange=${timeRange}`}
 					/>
 				)}
 				{hasLidder && (
@@ -59,7 +61,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 						accentColor="red"
 						faults={data[lineNumber]["Lidder"] || []}
 						name="Lidder"
-						onClickLink={`/dashboard/autoCarton/details/lidder${lineNumber}`}
+						onClickLink={`/dashboard/autoCarton/details/lidder${lineNumber}?returnURL=cartonClosing&timeRange=${timeRange}`}
 					/>
 				)}
 				{haslabeler && (
@@ -67,7 +69,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 						accentColor="blue"
 						faults={dataold[lineNumber]["Labeler"] || []}
 						name="Labeler"
-						onClickLink={`/dashboard/autoCarton/details/labeler${lineNumber}`}
+						onClickLink={`/dashboard/autoCarton/details/labeler${lineNumber}?returnURL=/cartonClosing&timeRange=${timeRange}`}
 					/>
 				)}
 			</div>

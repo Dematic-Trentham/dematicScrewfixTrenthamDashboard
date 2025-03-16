@@ -223,6 +223,7 @@ const CartonClosingPage: React.FC = () => {
 					hasiPack={true}
 					haslabeler={true}
 					lineNumber={"1"}
+					timeRange={totalTime.toString()}
 				/>
 
 				<CartonClosingComponent
@@ -232,6 +233,7 @@ const CartonClosingPage: React.FC = () => {
 					hasiPack={true}
 					haslabeler={true}
 					lineNumber={"2"}
+					timeRange={totalTime.toString()}
 				/>
 
 				<CartonClosingComponent
@@ -241,6 +243,7 @@ const CartonClosingPage: React.FC = () => {
 					hasiPack={true}
 					haslabeler={true}
 					lineNumber={"3"}
+					timeRange={totalTime.toString()}
 				/>
 
 				<CartonClosingComponent
@@ -250,6 +253,7 @@ const CartonClosingPage: React.FC = () => {
 					hasiPack={true}
 					haslabeler={true}
 					lineNumber={"4"}
+					timeRange={totalTime.toString()}
 				/>
 
 				<CartonClosingComponent
@@ -259,6 +263,7 @@ const CartonClosingPage: React.FC = () => {
 					hasiPack={true}
 					haslabeler={true}
 					lineNumber={"5"}
+					timeRange={totalTime.toString()}
 				/>
 
 				<CartonClosingComponent
@@ -268,6 +273,7 @@ const CartonClosingPage: React.FC = () => {
 					hasiPack={true}
 					haslabeler={true}
 					lineNumber={"6"}
+					timeRange={totalTime.toString()}
 				/>
 			</div>
 			<div style={{ marginTop: "20px", textAlign: "center" }}>

@@ -1,5 +1,7 @@
 "use server";
 
+import { excludedFaults2 } from "../../../excludedFaults";
+
 import db from "@/db/db";
 import { hasPermission } from "@/utils/getUser";
 
@@ -10,6 +12,8 @@ export async function getAutoCartonFaults(
 	machineType: autoCartonMachineType,
 	line: number
 ) {
+	const faultCodes = await db.autoCartonFaultCodeLookup.findMany();
+
 	const data = await db.autoCartonFaults.findMany({
 		where: {
 			timestamp: {
@@ -19,8 +23,6 @@ export async function getAutoCartonFaults(
 			line: line,
 		},
 	});
-
-	const faultCodes = await db.autoCartonFaultCodeLookup.findMany();
 
 	// if no data is found, return an error
 	if (!data) {

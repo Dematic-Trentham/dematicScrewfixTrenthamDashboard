@@ -2,6 +2,8 @@ import React from "react";
 import { FaArrowsDownToLine } from "react-icons/fa6";
 import Link from "next/link";
 
+import { excludedFaults } from "./../../excludedFaults";
+
 import HorizontalBar from "@/components/visual/horizontalBar";
 import PanelSmall from "@/components/panels/panelSmall";
 import HoverPopup from "@/components/visual/hoverPopupFloat";
@@ -30,17 +32,6 @@ const CCPanel: React.FC<CCPanelProps> = ({
 			return count;
 		}
 	}, 0);
-
-	const excludedFaults = [
-		"watchDog",
-		"EmptyCartonsHelpMark",
-		"EmptyCartonsHelpMark",
-		"EmptyCartonsCounter",
-		"box",
-		"Spare6",
-		"D1EmergencyStop",
-		"D3OpenedDoor",
-	];
 
 	const TotalFaults = aFaults
 		.filter((fault) => !excludedFaults.includes(fault.fault))
