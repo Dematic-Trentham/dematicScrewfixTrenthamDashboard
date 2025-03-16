@@ -1,7 +1,6 @@
 export const excludedFaults = [
 	"watchDog",
 	"EmptyCartonsHelpMark",
-	"EmptyCartonsHelpMark",
 	"EmptyCartonsCounter",
 	"box",
 	"Spare6",
@@ -11,7 +10,6 @@ export const excludedFaults = [
 
 export const excludedFaults2 = [
 	"watchDog",
-	"EmptyCartonsHelpMark",
 	"EmptyCartonsHelpMark",
 	"EmptyCartonsCounter",
 	"box",
