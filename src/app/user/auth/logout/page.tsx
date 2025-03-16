@@ -6,6 +6,7 @@ import { deleteCookie, setCookie } from "cookies-next";
 
 import Spinner from "@/components/visual/spinner";
 import Panel from "@/components/panels/panelMiddle";
+import Loading from "@/components/visual/loading";
 
 const LogoutPage: React.FC = () => {
 	const router = useRouter();
@@ -32,9 +33,7 @@ const LogoutPage: React.FC = () => {
 	return (
 		<div>
 			<Panel>
-				<Spinner>
-					<span className="visually-hidden">Loading...</span>
-				</Spinner>
+				<Loading />
 			</Panel>
 		</div>
 	);

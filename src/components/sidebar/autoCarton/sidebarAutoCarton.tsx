@@ -19,6 +19,11 @@ const SidebarAutoCarton = () => {
 			>
 				<SidebarParentComponent
 					icon={<BsBoxes />}
+					link="/dashboard/autoCarton/cartonLaunch"
+					text="Carton Launch"
+				/>
+				<SidebarParentComponent
+					icon={<BsBoxes />}
 					link="/dashboard/autoCarton/cartonClosing"
 					text="Carton Closing"
 				/>

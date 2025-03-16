@@ -9,5 +9,7 @@ export const changeDateToReadable = (date: Date) => {
 	const month = newDate.getMonth() + 1;
 	const year = newDate.getFullYear();
 
-	return `${day}/${month}/${year} - ${hours}:${minutes}`;
+	const formattedHours = hours.toString().padStart(2, '0');
+	const formattedMinutes = minutes.toString().padStart(2, '0');
+	return `${day}/${month}/${year} - ${formattedHours}:${formattedMinutes}`;
 };

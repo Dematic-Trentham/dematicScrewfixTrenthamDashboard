@@ -2,9 +2,10 @@
 import React, { useEffect, useState } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
 
-import CartonClosingComponent from "./_components/cartonClosing";
-import { getCartonClosingAllTimed } from "./_actions/getAutoCarton";
+import CartonLaunchComponent from "./_components/cartonLaunch";
+import { getCartonClosingAllTimed } from "./../cartonClosing/_actions/getAutoCarton";
 
+import Spinner from "@/components/visual/spinner";
 import Loading from "@/components/visual/loading";
 import { updateUrlParams } from "@/utils/url/params";
 
@@ -224,14 +225,13 @@ const CartonClosingPage: React.FC = () => {
 			<div
 				style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}
 			>
-				{[1, 2, 3, 4, 5, 6].map((lineNumber) => (
-					<CartonClosingComponent
+				{[1, 2, 3, 4, 5].map((lineNumber) => (
+					<CartonLaunchComponent
 						key={lineNumber}
 						data={data}
 						dataold={dataold}
-						hasLidder={lineNumber <= 4}
-						hasiPack={true}
-						haslabeler={true}
+						hasBarcoder={true}
+						hasErector={true}
 						lineNumber={lineNumber.toString()}
 						timeRange={totalTime.toString()}
 					/>
@@ -243,14 +243,14 @@ const CartonClosingPage: React.FC = () => {
 					id="totalTime"
 					value={totalTime}
 					onChange={async (e) => {
+						setLoading(true);
 						await updateUrlParams(
 							searchParams,
 							router,
 							"timeRange",
 							e.target.value
 						);
-						setTotalTime(Number(e.target.value));
-						setLoading(true);
+						setTotalTime(parseInt(e.target.value));
 					}}
 				>
 					<option value={5}>5 minutes</option>
