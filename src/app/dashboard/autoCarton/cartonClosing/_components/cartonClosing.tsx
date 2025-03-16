@@ -69,7 +69,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 						accentColor="blue"
 						faults={dataold[lineNumber]["Labeler"] || []}
 						name="Labeler"
-						onClickLink={`/dashboard/autoCarton/details/labeler${lineNumber}?returnURL=/cartonClosing&timeRange=${timeRange}`}
+						onClickLink={`/dashboard/autoCarton/details/labeler${lineNumber}?returnURL=cartonClosing&timeRange=${timeRange}`}
 					/>
 				)}
 			</div>
