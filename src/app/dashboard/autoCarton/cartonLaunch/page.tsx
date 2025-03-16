@@ -225,46 +225,17 @@ const CartonClosingPage: React.FC = () => {
 			<div
 				style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}
 			>
-				<CartonLaunchComponent
-					data={data}
-					dataold={dataold}
-					hasBarcoder={true}
-					hasErector={true}
-					lineNumber={"1"}
-					timeRange={totalTime.toString()}
-				/>
-				<CartonLaunchComponent
-					data={data}
-					dataold={dataold}
-					hasBarcoder={true}
-					hasErector={true}
-					lineNumber={"2"}
-					timeRange={totalTime.toString()}
-				/>
-				<CartonLaunchComponent
-					data={data}
-					dataold={dataold}
-					hasBarcoder={true}
-					hasErector={true}
-					lineNumber={"3"}
-					timeRange={totalTime.toString()}
-				/>
-				<CartonLaunchComponent
-					data={data}
-					dataold={dataold}
-					hasBarcoder={true}
-					hasErector={true}
-					lineNumber={"4"}
-					timeRange={totalTime.toString()}
-				/>
-				<CartonLaunchComponent
-					data={data}
-					dataold={dataold}
-					hasBarcoder={true}
-					hasErector={true}
-					lineNumber={"5"}
-					timeRange={totalTime.toString()}
-				/>
+				{[1, 2, 3, 4, 5].map((lineNumber) => (
+					<CartonLaunchComponent
+						key={lineNumber}
+						data={data}
+						dataold={dataold}
+						hasBarcoder={true}
+						hasErector={true}
+						lineNumber={lineNumber.toString()}
+						timeRange={totalTime.toString()}
+					/>
+				))}
 			</div>
 			<div style={{ marginTop: "20px", textAlign: "center" }}>
 				<label htmlFor="totalTime">Select Total Search Time: </label>

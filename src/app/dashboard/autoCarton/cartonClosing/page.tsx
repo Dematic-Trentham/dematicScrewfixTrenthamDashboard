@@ -224,65 +224,18 @@ const CartonClosingPage: React.FC = () => {
 			<div
 				style={{ display: "flex", justifyContent: "center", flexWrap: "wrap" }}
 			>
-				<CartonClosingComponent
-					data={data}
-					dataold={dataold}
-					hasLidder={true}
-					hasiPack={true}
-					haslabeler={true}
-					lineNumber={"1"}
-					timeRange={totalTime.toString()}
-				/>
-
-				<CartonClosingComponent
-					data={data}
-					dataold={dataold}
-					hasLidder={true}
-					hasiPack={true}
-					haslabeler={true}
-					lineNumber={"2"}
-					timeRange={totalTime.toString()}
-				/>
-
-				<CartonClosingComponent
-					data={data}
-					dataold={dataold}
-					hasLidder={true}
-					hasiPack={true}
-					haslabeler={true}
-					lineNumber={"3"}
-					timeRange={totalTime.toString()}
-				/>
-
-				<CartonClosingComponent
-					data={data}
-					dataold={dataold}
-					hasLidder={true}
-					hasiPack={true}
-					haslabeler={true}
-					lineNumber={"4"}
-					timeRange={totalTime.toString()}
-				/>
-
-				<CartonClosingComponent
-					data={data}
-					dataold={dataold}
-					hasLidder={false}
-					hasiPack={true}
-					haslabeler={true}
-					lineNumber={"5"}
-					timeRange={totalTime.toString()}
-				/>
-
-				<CartonClosingComponent
-					data={data}
-					dataold={dataold}
-					hasLidder={false}
-					hasiPack={true}
-					haslabeler={true}
-					lineNumber={"6"}
-					timeRange={totalTime.toString()}
-				/>
+				{[1, 2, 3, 4, 5, 6].map((lineNumber) => (
+					<CartonClosingComponent
+						key={lineNumber}
+						data={data}
+						dataold={dataold}
+						hasLidder={lineNumber <= 4}
+						hasiPack={true}
+						haslabeler={true}
+						lineNumber={lineNumber.toString()}
+						timeRange={totalTime.toString()}
+					/>
+				))}
 			</div>
 			<div style={{ marginTop: "20px", textAlign: "center" }}>
 				<label htmlFor="totalTime">Select Total Search Time: </label>
