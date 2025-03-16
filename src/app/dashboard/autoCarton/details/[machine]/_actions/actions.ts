@@ -25,12 +25,12 @@ export async function getAutoCartonFaults(
 	});
 
 	// if no data is found, return an error
-	if (!data) {
+	if (data.length === 0) {
 		return { error: "No data found" };
 	}
 
 	// if no fault codes are found, return an error
-	if (!faultCodes) {
+	if (faultCodes.length === 0) {
 		return { error: "No fault codes found" };
 	}
 
