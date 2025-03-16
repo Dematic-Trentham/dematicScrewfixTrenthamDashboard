@@ -35,7 +35,7 @@ export async function getAutoCartonFaults(
 	}
 
 	// merge the fault codes with the data
-	const mergedData = data.map((item) => {
+	const mergedData = data.map((item: { faultCode: number }) => {
 		const faultCode = faultCodes.find((code) => code.ID === item.faultCode);
 
 		return {
