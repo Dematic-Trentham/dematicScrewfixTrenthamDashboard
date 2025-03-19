@@ -162,6 +162,7 @@ export const connections: Connection[] = [
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
+		fromLabel: "EMS3_Zone4->PLC11",
 	},
 
 	{
