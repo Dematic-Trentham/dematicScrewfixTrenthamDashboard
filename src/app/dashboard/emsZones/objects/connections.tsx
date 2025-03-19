@@ -21,6 +21,8 @@ export type Connection = {
 	rightAngle?: boolean;
 	toAngle?: number;
 	fromAngle?: number;
+	fromLabel?: string;
+	toLabel?: string;
 };
 
 export const connections: Connection[] = [
@@ -29,8 +31,8 @@ export const connections: Connection[] = [
 		to: "EMS 1 - Zone 1",
 		fromDirection: "bottom",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		toOffset: { x: 0, y: -160 },
 		rightAngle: true,
@@ -40,8 +42,8 @@ export const connections: Connection[] = [
 		to: "EMS 1 - Zone 1",
 		fromDirection: "bottom",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		toOffset: { x: 0, y: -120 },
 		rightAngle: true,
@@ -51,8 +53,8 @@ export const connections: Connection[] = [
 		to: "EMS 1 - Zone 1",
 		fromDirection: "bottom",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		toOffset: { x: 0, y: -80 },
 		rightAngle: true,
@@ -62,8 +64,8 @@ export const connections: Connection[] = [
 		to: "EMS 1 - Zone 1",
 		fromDirection: "bottom",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		toOffset: { x: 0, y: -40 },
 		rightAngle: true,
@@ -73,8 +75,8 @@ export const connections: Connection[] = [
 		to: "EMS 1 - Zone 1",
 		fromDirection: "bottom",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		toOffset: { x: 0, y: 0 },
 		rightAngle: true,
@@ -84,8 +86,8 @@ export const connections: Connection[] = [
 		to: "EMS 1 - Zone 1",
 		fromDirection: "bottom",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		toOffset: { x: 0, y: 40 },
 		rightAngle: true,
@@ -95,8 +97,8 @@ export const connections: Connection[] = [
 		to: "EMS 1 - Zone 1",
 		fromDirection: "bottom",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		toOffset: { x: 0, y: 80 },
 		rightAngle: true,
@@ -106,8 +108,8 @@ export const connections: Connection[] = [
 		to: "EMS 1 - Zone 1",
 		fromDirection: "bottom",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		toOffset: { x: 0, y: 120 },
 		rightAngle: true,
@@ -117,30 +119,34 @@ export const connections: Connection[] = [
 		to: "EMS 1 - Zone 1",
 		fromDirection: "top",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		toOffset: { x: 0, y: 160 },
 		rightAngle: true,
+		toLabel: "PLC2_Zone1->EMS1_Zone1",
+		fromLabel: "EMS1_Zone1->PLC2",
 	},
 	{
 		from: "PLC 1",
 		to: "EMS 1 - Zone 1",
 		fromDirection: "top",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		rightAngle: true,
 		toOffset: { x: 0, y: 200 },
+		fromLabel: "EMS1_Zone1->PLC1",
+		toLabel: "PLC1_Zone2->EMS1_Zone2",
 	},
 	{
 		from: "Wrapper",
 		to: "EMS 1 - Zone 2",
 		fromDirection: "right",
 		toDirection: "top",
-		status1: "okay",
-		status2: "okay",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		rightAngle: true,
 		toOffset: { x: -20, y: 0 },
@@ -151,8 +157,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "okay",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -163,8 +169,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -175,8 +181,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -186,8 +192,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -197,8 +203,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -208,8 +214,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -219,8 +225,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -230,8 +236,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -241,8 +247,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -252,8 +258,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -263,8 +269,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -274,8 +280,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -285,8 +291,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -296,8 +302,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		verticalFrom: true,
 		verticalTo: true,
@@ -307,8 +313,8 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 4",
 		fromDirection: "left",
 		toDirection: "right",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		horizontalFrom: true,
 		horizontalTo: true,
@@ -320,8 +326,8 @@ export const connections: Connection[] = [
 		to: "PLC 31",
 		fromDirection: "bottom",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		rightAngle: true,
 		fromOffset: { x: -20, y: 0 },
@@ -332,8 +338,8 @@ export const connections: Connection[] = [
 		to: "PLC 31",
 		fromDirection: "bottom",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		rightAngle: true,
 		fromOffset: { x: -20, y: 0 },
@@ -344,8 +350,8 @@ export const connections: Connection[] = [
 		to: "PLC 32",
 		fromDirection: "bottom",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		rightAngle: true,
 		fromOffset: { x: +20, y: 0 },
@@ -356,8 +362,8 @@ export const connections: Connection[] = [
 		to: "PLC 32",
 		fromDirection: "bottom",
 		toDirection: "left",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		rightAngle: true,
 		fromOffset: { x: +20, y: 0 },
@@ -368,8 +374,8 @@ export const connections: Connection[] = [
 		to: "PLC 31",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		fromOffset: { x: -500, y: 0 },
 		verticalTo: true,
@@ -380,8 +386,8 @@ export const connections: Connection[] = [
 		to: "PLC 32",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		fromOffset: { x: -150, y: 0 },
 		verticalTo: true,
@@ -392,8 +398,8 @@ export const connections: Connection[] = [
 		to: "Sorter",
 		fromDirection: "bottom",
 		toDirection: "top",
-		status1: "okay",
-		status2: "tripped",
+		status1: "unknown",
+		status2: "unknown",
 		middleLineType: cableTypes.cableType,
 		fromOffset: { x: -330, y: 0 },
 		verticalTo: true,
@@ -404,22 +410,27 @@ export const connections: Connection[] = [
 		to: "EMS 3 - Zone 2",
 		fromDirection: "top",
 		toDirection: "left",
-		status1: "okay",
 		bendVia: [{ x: 780, y: 800 }],
 		middleLineType: cableTypes.cableType,
 		fromOffset: { x: +40, y: 0 },
+		rightAngle: true,
 	},
 	{
 		from: "EMS 3 - Zone 4",
 		to: "EMS 1 - Zone 4",
 		fromDirection: "left",
 		toDirection: "top",
-		status1: "okay",
+
 		bendVia: [{ x: 895, y: 720 }],
 		middleLineType: cableTypes.cableType,
+		rightAngle: true,
 	},
 ];
-export function makeConnections(connections: Connection[], nodes: Node[]) {
+export function makeConnections(
+	connections: Connection[],
+	nodes: Node[],
+	data: any
+) {
 	//check each connection if it is valid
 	connections.forEach((conn) => {
 		const fromNode = nodes.find((n) => n.label === conn.from);
@@ -430,6 +441,26 @@ export function makeConnections(connections: Connection[], nodes: Node[]) {
 			alert("Connection is invalid");
 		}
 	});
+
+	//console.log(data);
+
+	//look thought data and check against connections
+
+	for (const key in data) {
+		if (data.hasOwnProperty(key)) {
+			const element = data[key].name;
+			const value = data[key].value;
+
+			for (let i = 0; i < connections.length; i++) {
+				if (connections[i].fromLabel === element) {
+					connections[i].status1 = value === "1" ? "okay" : "tripped";
+				}
+				if (connections[i].toLabel === element) {
+					connections[i].status2 = value === "1" ? "okay" : "tripped";
+				}
+			}
+		}
+	}
 
 	return (
 		<svg style={{ position: "absolute", width: "2420px", height: "1800px" }}>
@@ -515,13 +546,43 @@ export function makeConnections(connections: Connection[], nodes: Node[]) {
 						{ x: Ax2, y: Ay2 },
 					];
 
-					if (conn.rightAngle) {
+					if (conn.rightAngle && conn.fromDirection === "bottom") {
 						points = [
 							{ x: Ax1, y: Ay1 },
 							{ x: Ax1, y: Ay2 - 10 },
 
 							{ x: Ax1, y: Ay2 },
 							{ x: Ax1 + 10, y: Ay2 },
+
+							{ x: Ax2, y: Ay2 },
+						];
+					} else if (conn.rightAngle && conn.fromDirection === "top") {
+						points = [
+							{ x: Ax1, y: Ay1 },
+							{ x: Ax1, y: Ay1 - 20 },
+
+							{ x: Ax1, y: Ay2 },
+							{ x: Ax2 - 20, y: Ay2 },
+
+							{ x: Ax2, y: Ay2 },
+						];
+					} else if (conn.rightAngle && conn.fromDirection === "right") {
+						points = [
+							{ x: Ax1, y: Ay1 },
+							{ x: Ax1 + 20, y: Ay1 },
+
+							{ x: Ax1 + 20, y: Ay2 },
+							{ x: Ax2, y: Ay2 },
+
+							{ x: Ax2, y: Ay2 },
+						];
+					} else if (conn.rightAngle && conn.fromDirection === "left") {
+						points = [
+							{ x: Ax1, y: Ay1 },
+							{ x: Ax1 - 20, y: Ay1 },
+							{ x: Ax2, y: Ay1 },
+
+							{ x: Ax2, y: Ay2 - 20 },
 
 							{ x: Ax2, y: Ay2 },
 						];
@@ -558,21 +619,19 @@ export function makeConnections(connections: Connection[], nodes: Node[]) {
 					}
 
 					return [
-						makeLineSegment(
-							points,
-							conn,
-							conn.status1 === "okay" ? "#00ff00" : "#ff0000"
-						),
+						makeLineSegment(points, conn, determineColour(conn.status1)),
 
 						// eslint-disable-next-line react/jsx-key
 						<polygon
-							fill={conn.status1 === "okay" ? "#00ff00" : "#ff0000"}
+							key={fromNode.label + toNode.label + "arrow1"}
+							fill={determineColour(conn.status1)}
 							points={`${Ax1 - 10},${Ay1 - 10} ${Ax1 + 10},${Ay1} ${Ax1 - 10},${Ay1 + 10}`}
 							transform={`rotate(${angleA}, ${Ax1}, ${Ay1})`}
 						/>,
 						// eslint-disable-next-line react/jsx-key
 						<polygon
-							fill={conn.status1 === "okay" ? "#00ff00" : "#ff0000"}
+							key={fromNode.label + toNode.label + "arrow2"}
+							fill={determineColour(conn.status1)}
 							points={`${Ax2 - 10},${Ay2 - 10} ${Ax2 + 10},${Ay2} ${Ax2 - 10},${Ay2 + 10}`}
 							transform={`rotate(${angleB}, ${Ax2}, ${Ay2})`}
 						/>,
@@ -888,16 +947,8 @@ export function makeConnections(connections: Connection[], nodes: Node[]) {
 					}
 
 					return [
-						makeLineSegment(
-							pointsA,
-							conn,
-							conn.status1 === "okay" ? "#00ff00" : "red"
-						),
-						makeLineSegment(
-							pointsB,
-							conn,
-							conn.status2 === "okay" ? "#00ff00" : "red"
-						),
+						makeLineSegment(pointsA, conn, determineColour(conn.status1)),
+						makeLineSegment(pointsB, conn, determineColour(conn.status2)),
 						addLabel(
 							(conn.fromDirection === "top" ||
 								conn.fromDirection === "bottom") &&
@@ -908,26 +959,30 @@ export function makeConnections(connections: Connection[], nodes: Node[]) {
 
 						// eslint-disable-next-line react/jsx-key
 						<polygon
-							fill={conn.status1 === "okay" ? "#00ff00" : "red"}
+							key={`${conn.from + conn.to}-arrow1`}
+							fill={determineColour(conn.status1)}
 							points={`${Ax1 - 10},${Ay1 - 10} ${Ax1 + 10},${Ay1} ${Ax1 - 10},${Ay1 + 10}`}
 							transform={`rotate(${angleA}, ${Ax1}, ${Ay1})`}
 						/>,
 
 						// eslint-disable-next-line react/jsx-key
 						<polygon
-							fill={conn.status2 === "okay" ? "#00ff00" : "red"}
+							key={`${conn.from + conn.to}-arrow2`}
+							fill={determineColour(conn.status2)}
 							points={`${Bx2 - 10},${By2 - 10} ${Bx2 + 10},${By2} ${Bx2 - 10},${By2 + 10}`}
 							transform={`rotate(${angleB}, ${Bx2}, ${By2})`}
 						/>,
 						// eslint-disable-next-line react/jsx-key
 						<polygon
-							fill={conn.status2 === "okay" ? "#00ff00" : "red"}
+							key={`${conn.from + conn.to}-arrow3`}
+							fill={determineColour(conn.status2)}
 							points={`${Bx1 - 10},${By1 - 10} ${Bx1 + 10},${By1} ${Bx1 - 10},${By1 + 10}`}
 							transform={`rotate(${angleA - 180}, ${Bx1}, ${By1})`}
 						/>,
 						// eslint-disable-next-line react/jsx-key
 						<polygon
-							fill={conn.status1 === "okay" ? "#00ff00" : "red"}
+							key={`${conn.from + conn.to}-arrow4`}
+							fill={determineColour(conn.status1)}
 							points={`${Ax2 - 10},${Ay2 - 10} ${Ax2 + 10},${Ay2} ${Ax2 - 10},${Ay2 + 10}`}
 							transform={`rotate(${angleB - 180}, ${Ax2}, ${Ay2})`}
 						/>,
@@ -964,8 +1019,6 @@ function makeLineSegment(
 			);
 		}
 
-		console.log(conn.middleLineType);
-
 		return (
 			<line
 				key={`${conn.from + conn.to}-${i}`}
@@ -990,7 +1043,7 @@ function addLabel(
 
 	return (
 		<text
-			key="label"
+			key={"label" + label}
 			dy={vertical ? "-1em" : "1em"}
 			fontSize="20"
 			textAnchor="middle"
@@ -1000,4 +1053,14 @@ function addLabel(
 			{label}
 		</text>
 	);
+}
+
+function determineColour(status: string | undefined): string {
+	if (!status) return "black";
+
+	if (status === "okay") return "#00ff00";
+	if (status === "tripped") return "#ff0000";
+	if (status === "unknown") return "grey";
+
+	return "#000000";
 }

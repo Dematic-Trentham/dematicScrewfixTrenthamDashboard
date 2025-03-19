@@ -11,6 +11,7 @@ import SidebarShuttles from "./shuttles/sidebarShuttles";
 import SidebarSorter from "./sorter/sidebarSorter";
 import SidebarOrderStart from "./orderStart/sidebarOrderStart";
 import SidebarAutoCarton from "./autoCarton/sidebarAutoCarton";
+import SidebarEMS from "./ems/sidebarEMS";
 
 const Sidebar = () => {
 	const sideBar = (
@@ -29,6 +30,7 @@ const Sidebar = () => {
 						<SidebarShuttles />
 
 						<SidebarSorter />
+						<SidebarEMS />
 
 						<SidebarAdmin />
 					</nav>
