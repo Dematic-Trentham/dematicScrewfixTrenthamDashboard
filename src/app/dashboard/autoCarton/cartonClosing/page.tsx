@@ -25,6 +25,8 @@ const CartonClosingPage: React.FC = () => {
 	const [totalTime, setTotalTime] = useState(60);
 
 	useEffect(() => {
+		console.log("CartonClosingPage useEffect");
+
 		const url =
 			"http://10.4.5.227:8080/json/mysqlGrouped?totalTime=" +
 			totalTime.toString();
@@ -42,6 +44,7 @@ const CartonClosingPage: React.FC = () => {
 		}
 
 		async function fetchData() {
+			console.log("CartonClosingPage fetch");
 			const tasks = [
 				{ name: "fetchOldData", task: timePromise(fetchOldData()) },
 				{ name: "fetchNewData", task: timePromise(fetchNewData()) },
@@ -251,6 +254,13 @@ const CartonClosingPage: React.FC = () => {
 						);
 						setTotalTime(Number(e.target.value));
 						setLoading(true);
+
+						//clear data
+						setData(null);
+						setDataold(null);
+
+						//clear error
+						setError(null);
 					}}
 				>
 					<option value={5}>5 minutes</option>
