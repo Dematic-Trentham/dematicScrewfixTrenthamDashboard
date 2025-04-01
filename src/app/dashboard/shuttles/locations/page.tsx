@@ -14,6 +14,7 @@ import PanelTop from "@/components/panels/panelTop";
 import VerticalBar from "@/components/visual/verticalBar";
 import { updateUrlParams } from "@/utils/url/params";
 import Loading from "@/components/visual/loading";
+import config from "@/config";
 
 export default function Home() {
 	const router = useRouter();
@@ -268,12 +269,12 @@ export default function Home() {
 		const intervalId = setInterval(() => {
 			fetchLocations();
 			fetchFaults();
-		}, 5000);
+		}, config.refreshTime); // 10 seconds
 
-		fetchFaults();
-		fetchLocations();
+		fetchFaults(); // Initial fetch
+		fetchLocations(); // Initial fetch
 
-		//return () => clearInterval(intervalId);
+		return () => clearInterval(intervalId); // Cleanup on unmount
 	}, [timeToSearch]);
 
 	if (isLoading) {
