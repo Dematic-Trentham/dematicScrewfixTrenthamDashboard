@@ -9,6 +9,7 @@ interface CartonClosingComponentProps {
 	dataold: any;
 	data: any;
 	timeRange: string;
+	onlyBoxes?: boolean;
 }
 
 const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
@@ -18,6 +19,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 	dataold,
 	data,
 	timeRange,
+	onlyBoxes,
 }) => {
 	//if we dont have the line number in the data, we need to set it to an empty object
 	if (!data[lineNumber]) {
@@ -40,6 +42,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 					<CCPanel
 						faults={data[lineNumber]["erector"] || []}
 						name="Erector"
+						onlyBoxes={onlyBoxes}
 						onClickLink={`/dashboard/autoCarton/details/erector${lineNumber}?returnURL=cartonLaunch&timeRange=${timeRange}`}
 					/>
 				)}
@@ -47,6 +50,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 					<CCPanel
 						faults={dataold[lineNumber]["barcoder"] || []}
 						name="Barcoder"
+						onlyBoxes={onlyBoxes}
 						onClickLink={`/dashboard/autoCarton/details/barcoder${lineNumber}?returnURL=cartonLaunch&timeRange=${timeRange}`}
 					/>
 				)}
