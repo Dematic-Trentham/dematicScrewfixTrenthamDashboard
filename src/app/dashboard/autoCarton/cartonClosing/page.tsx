@@ -25,6 +25,7 @@ const CartonClosingPage: React.FC = () => {
 	const [totalTime, setTotalTime] = useState(60);
 
 	useEffect(() => {
+
 		function lFetchData() {
 			fetchData(totalTime, setLoading, setError, setDataold, setData); // Fetch data every 10 seconds
 		}
@@ -63,7 +64,6 @@ const CartonClosingPage: React.FC = () => {
 					/>
 				))}
 			</div>
-
 			{totalTimeSelector(
 				totalTime,
 				searchParams,

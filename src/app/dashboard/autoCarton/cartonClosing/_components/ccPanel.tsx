@@ -25,6 +25,46 @@ const CCPanel: React.FC<CCPanelProps> = ({
 
 	const aFaults = faults.faults;
 
+	//check if aFaults is empty
+	if (aFaults === undefined || aFaults.length === 0) {
+		return (
+			<PanelSmall accentColor={accentColor}>
+				<Link href={onClickLink || ""}>
+					<div className="flex gap-x-5">
+						<div>
+							<div
+								className={`flex h-32 w-32 items-center justify-center rounded-full bg-gray-500 text-white`}
+							>
+								<div
+									className={`flex h-28 w-28 items-center justify-center rounded-full text-white`}
+									style={{ backgroundColor: accentColor }}
+								>
+									<FaArrowsDownToLine className={`size-14 text-white`} />
+								</div>
+							</div>
+						</div>
+						<div className="flex flex-col">
+							<p className="text-2xl">{name}</p>
+							<p className="text-3xl">0</p>
+							<p>Boxes</p>
+							<HorizontalBar styles={""} />
+							<div className="flex">
+								<p>Connection</p>
+								<div className="ml-4 mt-0.5 h-5 w-5 rounded-full bg-gray-500">
+									<div
+										className={`ml-0.5 mt-0.5 h-4 w-4 rounded-full ${
+											faults.connected ? "bg-green-500" : "bg-grey-500"
+										}`}
+									/>
+								</div>
+							</div>
+						</div>
+					</div>
+				</Link>
+			</PanelSmall>
+		);
+	}
+
 	const TotalBoxes = aFaults.reduce((count: number, fault: any) => {
 		if (fault.fault === "box") {
 			return count + fault.count;

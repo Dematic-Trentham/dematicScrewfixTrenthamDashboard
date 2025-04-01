@@ -35,6 +35,8 @@ const MachineDetailsPage = () => {
 	const [totalTime, setTotalTime] = useState(60);
 
 	useEffect(() => {
+		console.log("MachineDetailsPage useEffect");
+
 		//set title will come in as "erector5" and we want to display "Erector 5
 		setTitle(
 			params.machine.charAt(0).toUpperCase() +
@@ -45,10 +47,10 @@ const MachineDetailsPage = () => {
 
 		//if we have a timeRange, we need to set the timeToSearch to the timeRange
 		if (timeRange && !isNaN(Number(timeRange))) {
-			setTotalTime(Number(timeRange));
+			setTotalTime(Number(timeRange) || 60);
 		}
 
-		setTotalTime(parseInt(totalTime.toString()) || 60);
+		const totalTimeSelect = searchParams.get("totalTimeSelect");
 
 		//get data from server
 		async function fetchData() {
@@ -103,6 +105,7 @@ const MachineDetailsPage = () => {
 
 			setLoading(false);
 		}
+
 
 		fetchData(); // Initial fetch
 
