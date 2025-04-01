@@ -1,14 +1,15 @@
 import { getCartonClosingAllTimed } from "./../../cartonClosing/_actions/getAutoCarton";
 
+import { TypeParsedData } from "@/app/dashboard/autoCarton/cartonClosing/_actions/clientActions";
 import { TimePromise } from "@/utils/timePromise";
 import config from "@/config";
 
 export async function fetchData(
 	totalTime: number,
-	setLoading: any,
-	setError: any,
-	setDataold: any,
-	setData: any
+	setLoading: (loading: boolean) => void,
+	setError: (error: string) => void,
+	setDataold: (data: TypeParsedData) => void,
+	setData: (data: TypeParsedData) => void
 ) {
 	const tasks = [
 		{
@@ -61,7 +62,9 @@ async function fetchNewData(totalTime: number, setData: any) {
 
 		//if empty data then return
 		if (!newData) {
-			return { error: "No data found" };
+			return {
+				error: "No carton closing data found for the specified time period",
+			};
 		}
 
 		const parsedData2 = await parseData(newData);
@@ -122,7 +125,7 @@ function parseDataOld(data: any) {
 	return parsedData;
 }
 
-async function parseData(data: {
+function parseData(data: {
 	[key: string]: {
 		ID: number;
 		line: number;
@@ -169,6 +172,7 @@ async function parseData(data: {
 		//check each item and if we have any data in the last 2 minutes then we set connected to true
 		const timeDifference = new Date().getTime() - new Date(timestamp).getTime();
 
+		// Use configured timeout threshold to determine connection status
 		if (timeDifference < config.allowedWatchdogTimeCartonClosing) {
 			parsedData[line][machinetype].connected = true;
 		}

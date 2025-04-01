@@ -3,12 +3,19 @@ import { getCartonClosingAllTimed } from "./getAutoCarton";
 import config from "@/config";
 import { TimePromise } from "@/utils/timePromise";
 
+// Define or import ParsedData type
+export type TypeParsedData = {
+	[line: string]: {
+		[machineType: string]: { faults: any[]; connected: boolean };
+	};
+};
+
 export async function fetchData(
 	totalTime: number,
-	setLoading: any,
-	setError: any,
-	setDataold: any,
-	setData: any
+	setLoading: (loading: boolean) => void,
+	setError: (error: string) => void,
+	setDataold: (data: TypeParsedData) => void,
+	setData: (data: TypeParsedData) => void
 ) {
 	const tasks = [
 		{
@@ -109,7 +116,9 @@ async function fetchNewData(totalTime: number, setData: any) {
 
 		//if empty data then return
 		if (!newData) {
-			return { error: "No data found" };
+			return {
+				error: "No carton closing data found for the specified time period",
+			};
 		}
 
 		const parsedData2 = await parseData(newData);
@@ -122,7 +131,7 @@ async function fetchNewData(totalTime: number, setData: any) {
 	}
 }
 
-async function parseData(data: {
+function parseData(data: {
 	[key: string]: {
 		ID: number;
 		line: number;
