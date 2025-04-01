@@ -1,7 +1,7 @@
 import { getCartonClosingAllTimed } from "./getAutoCarton";
 
 import config from "@/config";
-import { timePromise } from "@/utils/timePromise";
+import { TimePromise } from "@/utils/timePromise";
 
 export async function fetchData(
 	totalTime: number,
@@ -13,11 +13,11 @@ export async function fetchData(
 	const tasks = [
 		{
 			name: "fetchOldData",
-			task: timePromise(fetchOldData(totalTime, setDataold)),
+			task: TimePromise(fetchOldData(totalTime, setDataold)),
 		},
 		{
 			name: "fetchNewData",
-			task: timePromise(fetchNewData(totalTime, setData)),
+			task: TimePromise(fetchNewData(totalTime, setData)),
 		},
 	];
 

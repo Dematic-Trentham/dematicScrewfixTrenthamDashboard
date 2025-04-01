@@ -59,7 +59,7 @@ export default function CellsPage() {
 
 		const intervalId = setInterval(() => {
 			fetchCells();
-		}, config.refreshTime); // 10 seconds
+		}, config.refreshTime); //refresh interval
 
 		return () => clearInterval(intervalId); // Cleanup on unmount
 	}, []);

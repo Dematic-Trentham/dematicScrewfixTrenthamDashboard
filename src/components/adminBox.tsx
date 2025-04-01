@@ -10,7 +10,7 @@ interface PanelSmallProps {
 	}[];
 }
 
-const PanelSmall: React.FC<PanelSmallProps> = ({ checkBoxes }) => {
+const AdminBox: React.FC<PanelSmallProps> = ({ checkBoxes }) => {
 	const [userIsAdmin, setUserIsAdmin] = useState(false);
 
 	useEffect(() => {
@@ -49,4 +49,4 @@ const PanelSmall: React.FC<PanelSmallProps> = ({ checkBoxes }) => {
 	);
 };
 
-export default PanelSmall;
+export default AdminBox;

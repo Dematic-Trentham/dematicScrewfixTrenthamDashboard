@@ -10,11 +10,11 @@ import ShuttlePanel from "./_components/shuttlePanel";
 import { colorByTypeType } from "./_components/shuttlePanel";
 import { getAllCounts } from "./[macAddress]/parts/_actions";
 
+import config from "@/config";
 import PanelTop from "@/components/panels/panelTop";
 import VerticalBar from "@/components/visual/verticalBar";
 import { updateUrlParams } from "@/utils/url/params";
 import Loading from "@/components/visual/loading";
-import config from "@/config";
 
 export default function Home() {
 	const router = useRouter();
@@ -269,7 +269,7 @@ export default function Home() {
 		const intervalId = setInterval(() => {
 			fetchLocations();
 			fetchFaults();
-		}, config.refreshTime); // 10 seconds
+		}, config.refreshTime); // refresh interval
 
 		fetchFaults(); // Initial fetch
 		fetchLocations(); // Initial fetch

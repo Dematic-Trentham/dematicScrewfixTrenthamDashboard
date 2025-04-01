@@ -1,4 +1,4 @@
-export async function timePromise<T>(
+export async function TimePromise<T>(
 	promise: Promise<T>
 ): Promise<{ time: number; result: T }> {
 	const start = performance.now();
