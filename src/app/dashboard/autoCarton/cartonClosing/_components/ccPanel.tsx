@@ -23,6 +23,8 @@ const CCPanel: React.FC<CCPanelProps> = ({
 }) => {
 	//console.log(name, faults);
 
+	const accentColor = faults.connected ? "#4ade80" : "#808080"; // green or grey
+
 	const aFaults = faults.faults;
 
 	//check if aFaults is empty
