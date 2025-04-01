@@ -3,31 +3,53 @@ import React, { useEffect, useState } from "react";
 import PanelTop from "./panels/panelTop";
 
 import { hasPermission } from "@/utils/getUser";
-interface PanelSmallProps {
+interface AdminBoxProps {
 	checkBoxes: {
 		label: string;
-		callback: React.Dispatch<React.SetStateAction<boolean>>;
+		callback: (checked: boolean) => void;
 	}[];
 }
 
-const AdminBox: React.FC<PanelSmallProps> = ({ checkBoxes }) => {
-	const [userIsAdmin, setUserIsAdmin] = useState(false);
+const AdminBox: React.FC<AdminBoxProps> = ({ checkBoxes }) => {
+	const [userIsAdmin, setUserIsAdmin] = useState<boolean | null>(null); //  userIsAdmin is null until we check if the user is admin ,
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		//check if we have permission to view this page
 		async function checkPermission() {
-			if (await hasPermission("admin")) {
-				setUserIsAdmin(true);
+			//check if we have permission to view this page
+			//if we have permission, set userIsAdmin to true
+			try {
+				//
+				if (await hasPermission("admin")) {
+					setUserIsAdmin(true);
+				} else {
+					setUserIsAdmin(false);
+				}
+				//
+			} catch (error) {
+				//if there is an error, set userIsAdmin to false and set error message
+				setError(error instanceof Error ? error.message : String(error));
 			}
 		}
 		checkPermission();
 	}, []);
 
-	//check if we have permission to view this page
-	if (!userIsAdmin) {
-		return <div />;
+	//if there is an error, return the error message
+	if (error) {
+		return <div className="text-red-500">{error}</div>;
 	}
 
+	//if user is not admin, return null
+	if (userIsAdmin === null) {
+		return null;
+	}
+	//if user is not admin, return null
+	if (userIsAdmin === false) {
+		return null;
+	}
+
+	//if user is admin, return the admin panel
 	return (
 		<>
 			<br />
