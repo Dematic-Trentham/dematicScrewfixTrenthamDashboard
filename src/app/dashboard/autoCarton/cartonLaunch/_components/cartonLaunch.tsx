@@ -38,7 +38,6 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 			<div className="flex flex-col">
 				{hasErector && (
 					<CCPanel
-						accentColor="green"
 						faults={data[lineNumber]["erector"] || []}
 						name="Erector"
 						onClickLink={`/dashboard/autoCarton/details/erector${lineNumber}?returnURL=cartonLaunch&timeRange=${timeRange}`}
@@ -46,7 +45,6 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 				)}
 				{hasBarcoder && (
 					<CCPanel
-						accentColor="red"
 						faults={dataold[lineNumber]["barcoder"] || []}
 						name="Barcoder"
 						onClickLink={`/dashboard/autoCarton/details/barcoder${lineNumber}?returnURL=cartonLaunch&timeRange=${timeRange}`}

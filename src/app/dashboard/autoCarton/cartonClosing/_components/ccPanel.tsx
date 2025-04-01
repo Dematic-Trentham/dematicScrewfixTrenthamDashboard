@@ -9,7 +9,6 @@ import PanelSmall from "@/components/panels/panelSmall";
 import HoverPopup from "@/components/visual/hoverPopupFloat";
 
 interface CCPanelProps {
-	accentColor: string;
 	name: string;
 	faults: { faults: any[]; connected: boolean };
 	onClickLink?: string;
@@ -17,7 +16,6 @@ interface CCPanelProps {
 }
 
 const CCPanel: React.FC<CCPanelProps> = ({
-	accentColor,
 	name,
 	faults,
 	onClickLink,

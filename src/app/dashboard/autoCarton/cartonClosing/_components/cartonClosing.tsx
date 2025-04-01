@@ -1,12 +1,6 @@
 import React from "react";
-import { FaArrowsDownToLine } from "react-icons/fa6";
-import { compareSync } from "bcrypt";
 
-import ccPanel from "./ccPanel";
 import CCPanel from "./ccPanel";
-
-import HorizontalBar from "@/components/visual/horizontalBar";
-import PanelSmall from "@/components/panels/panelSmall";
 
 interface CartonClosingComponentProps {
 	lineNumber: string;
@@ -52,7 +46,6 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 			<div className="flex flex-col">
 				{hasiPack && (
 					<CCPanel
-						accentColor="green"
 						faults={data[lineNumber]["iPack"] || []}
 						name="iPack"
 						onlyBoxes={onlyBoxes}
@@ -61,7 +54,6 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 				)}
 				{hasLidder && (
 					<CCPanel
-						accentColor="red"
 						faults={data[lineNumber]["Lidder"] || []}
 						name="Lidder"
 						onlyBoxes={onlyBoxes}
@@ -70,7 +62,6 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 				)}
 				{haslabeler && (
 					<CCPanel
-						accentColor="blue"
 						faults={dataold[lineNumber]["Labeler"] || []}
 						name="Labeler"
 						onlyBoxes={onlyBoxes}

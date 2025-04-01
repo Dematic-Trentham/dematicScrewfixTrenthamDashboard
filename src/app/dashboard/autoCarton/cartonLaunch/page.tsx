@@ -1,16 +1,14 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter, useParams, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import CartonLaunchComponent from "./_components/cartonLaunch";
 import { getCartonClosingAllTimed } from "./../cartonClosing/_actions/getAutoCarton";
 
-import Spinner from "@/components/visual/spinner";
 import Loading from "@/components/visual/loading";
 import { updateUrlParams } from "@/utils/url/params";
 
 const CartonClosingPage: React.FC = () => {
-	const params = useParams<{ machine: string }>();
 	const router = useRouter();
 
 	//get returnURL form the url
@@ -30,8 +28,6 @@ const CartonClosingPage: React.FC = () => {
 			"http://10.4.5.227:8080/json/mysqlGrouped?totalTime=" +
 			totalTime.toString();
 
-		console.log(url);
-
 		async function timePromise<T>(
 			promise: Promise<T>
 		): Promise<{ time: number; result: T }> {
@@ -48,17 +44,16 @@ const CartonClosingPage: React.FC = () => {
 				{ name: "fetchNewData", task: timePromise(fetchNewData()) },
 			];
 
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const results = await Promise.all(
 				tasks.map(({ name, task }) =>
 					task.catch((error) => {
+						// eslint-disable-next-line no-console
 						console.error(`Error in function ${name}:`, error);
 						setError(error);
 					})
 				)
 			);
-
-			console.log("Tasks done");
-			console.log(results);
 
 			setLoading(false);
 		}
@@ -103,8 +98,6 @@ const CartonClosingPage: React.FC = () => {
 			const parsedData: {
 				[key: string]: { [key: string]: { faults: any[]; connected: boolean } };
 			} = {};
-
-			console.log(data.rows);
 
 			for (const item of data.rows) {
 				//strip out machine types that are not needed
