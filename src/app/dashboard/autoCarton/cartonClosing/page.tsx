@@ -1,15 +1,16 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter, useParams, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+
+import { totalTimeSelector } from "../../../../components/pickers/totalTimeSelector";
 
 import CartonClosingComponent from "./_components/cartonClosing";
 import { getCartonClosingAllTimed } from "./_actions/getAutoCarton";
 
 import Loading from "@/components/visual/loading";
-import { updateUrlParams } from "@/utils/url/params";
+import AdminBox from "@/components/adminBox";
 
 const CartonClosingPage: React.FC = () => {
-	const params = useParams<{ machine: string }>();
 	const router = useRouter();
 
 	//get returnURL form the url
@@ -22,14 +23,14 @@ const CartonClosingPage: React.FC = () => {
 
 	const allowedWatchdogTime = 2 * 60 * 1000; //2 minutes
 
+	const [onlyShowBoxes, setOnlyShowBoxes] = useState(false);
+
 	const [totalTime, setTotalTime] = useState(60);
 
 	useEffect(() => {
 		const url =
 			"http://10.4.5.227:8080/json/mysqlGrouped?totalTime=" +
 			totalTime.toString();
-
-		console.log(url);
 
 		async function timePromise<T>(
 			promise: Promise<T>
@@ -47,17 +48,16 @@ const CartonClosingPage: React.FC = () => {
 				{ name: "fetchNewData", task: timePromise(fetchNewData()) },
 			];
 
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			const results = await Promise.all(
 				tasks.map(({ name, task }) =>
 					task.catch((error) => {
+						// eslint-disable-next-line no-console
 						console.error(`Error in function ${name}:`, error);
 						setError(error);
 					})
 				)
 			);
-
-			console.log("Tasks done");
-			console.log(results);
 
 			setLoading(false);
 		}
@@ -102,8 +102,6 @@ const CartonClosingPage: React.FC = () => {
 			const parsedData: {
 				[key: string]: { [key: string]: { faults: any[]; connected: boolean } };
 			} = {};
-
-			console.log(data.rows);
 
 			for (const item of data.rows) {
 				//strip out machine types that are not needed
@@ -209,7 +207,7 @@ const CartonClosingPage: React.FC = () => {
 		const intervalId = setInterval(fetchData, 10000);
 
 		return () => clearInterval(intervalId);
-	}, [totalTime]);
+	}, [totalTime, onlyShowBoxes]);
 
 	if (loading) {
 		return <Loading />;
@@ -233,51 +231,28 @@ const CartonClosingPage: React.FC = () => {
 						hasiPack={true}
 						haslabeler={true}
 						lineNumber={lineNumber.toString()}
+						onlyBoxes={onlyShowBoxes}
 						timeRange={totalTime.toString()}
 					/>
 				))}
 			</div>
-			<div style={{ marginTop: "20px", textAlign: "center" }}>
-				<label htmlFor="totalTime">Select Total Search Time: </label>
-				<select
-					id="totalTime"
-					value={totalTime}
-					onChange={async (e) => {
-						await updateUrlParams(
-							searchParams,
-							router,
-							"timeRange",
-							e.target.value
-						);
-						setTotalTime(Number(e.target.value));
-						setLoading(true);
-					}}
-				>
-					<option value={5}>5 minutes</option>
-					<option value={10}>10 minutes</option>
-					<option value={15}>15 minutes</option>
-					<option value={30}>30 minutes</option>
-					<option value={60}>1 hour</option>
-					<option value={120}>2 hours</option>
-					<option value={180}>3 hours</option>
-					<option value={360}>6 hours</option>
-					<option value={720}>12 hours</option>
-					<option value={1440}>1 day</option>
-					<option value={2880}>2 days</option>
-					<option value={4320}>3 days</option>
-					<option value={5760}>4 days</option>
-					<option value={7200}>5 days</option>
-					<option value={8640}>6 days</option>
-					<option value={10080}>1 week</option>
-					<option value={20160}>2 weeks</option>
-					<option value={43200}>1 month</option>
-					<option value={86400}>2 months</option>
-					<option value={129600}>3 months</option>
-					<option value={172800}>4 months</option>
-					<option value={216000}>5 months</option>
-					<option value={259200}>6 months</option>
-				</select>
-			</div>
+
+			{totalTimeSelector(
+				totalTime,
+				searchParams,
+				router,
+				setTotalTime,
+				setLoading
+			)}
+
+			<AdminBox
+				checkBoxes={[
+					{
+						label: "Show Only Boxes",
+						callback: setOnlyShowBoxes,
+					},
+				]}
+			/>
 		</>
 	);
 };
