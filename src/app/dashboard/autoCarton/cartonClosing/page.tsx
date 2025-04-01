@@ -9,7 +9,7 @@ import { fetchData } from "./_actions/clientActions";
 
 import Loading from "@/components/visual/loading";
 import AdminBox from "@/components/adminBox";
-
+import config from "@/config";
 const CartonClosingPage: React.FC = () => {
 	const router = useRouter();
 
@@ -29,7 +29,7 @@ const CartonClosingPage: React.FC = () => {
 			fetchData(totalTime, setLoading, setError, setDataold, setData); // Fetch data every 10 seconds
 		}
 
-		const intervalId = setInterval(lFetchData, 10000); // 10 seconds
+		const intervalId = setInterval(lFetchData, config.refreshTime); // 10 seconds
 
 		lFetchData(); // Initial fetch
 
