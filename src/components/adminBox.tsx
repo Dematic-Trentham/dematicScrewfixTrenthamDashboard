@@ -40,12 +40,8 @@ const AdminBox: React.FC<AdminBoxProps> = ({ checkBoxes }) => {
 		return <div className="text-red-500">{error}</div>;
 	}
 
-	//if user is not admin, return null
-	if (userIsAdmin === null) {
-		return null;
-	}
-	//if user is not admin, return null
-	if (userIsAdmin === false) {
+	// Only render the admin panel if the user is confirmed as an admin
+	if (userIsAdmin !== true) {
 		return null;
 	}
 
