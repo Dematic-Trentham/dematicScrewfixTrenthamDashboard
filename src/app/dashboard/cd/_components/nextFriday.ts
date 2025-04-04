@@ -22,7 +22,3 @@ export function getNextFinishDay(): { date: Date; time: string } {
 
 // Example usage
 const nextFinish = getNextFinishDay();
-
-console.log(
-	`Next finish day: ${nextFinish.date.toDateString()} at ${nextFinish.time}`
-);
