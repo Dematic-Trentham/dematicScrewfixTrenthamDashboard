@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { set } from "zod";
 
 import {
 	getOrderStartStats,
@@ -14,6 +13,7 @@ import {
 } from "./_actions";
 
 import PanelTop from "@/components/panels/panelTop";
+import config from "@/config";
 import { hasPermission } from "@/utils/getUser";
 
 const boarderStyle = "border border-gray-400 p-2";
@@ -67,7 +67,10 @@ export default function OrderStartStats() {
 
 		fetchOrderStartStats();
 
-		setInterval(() => fetchOrderStartStats(), 5000);
+		const interval = setInterval(
+			() => fetchOrderStartStats(),
+			config.refreshTimeFaster
+		); // 10 seconds
 
 		const permissionCheck = async () => {
 			const RestartOrderStartStatsResult = await hasPermission(
@@ -78,6 +81,10 @@ export default function OrderStartStats() {
 		};
 
 		permissionCheck();
+
+		return () => {
+			clearInterval(interval); // Cleanup on unmount
+		};
 	}, []);
 
 	if (isLoading) {

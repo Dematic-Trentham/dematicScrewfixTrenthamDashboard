@@ -15,6 +15,7 @@ import "react-tabs/style/react-tabs.css";
 import { changeDateToReadable } from "@/utils/changeDateToReadable";
 import { makeReadableFaultCode } from "@/utils/faultCodemaker";
 import { updateUrlParams } from "@/utils/url/params";
+import config from "@/config";
 
 const MachineDetailsPage = () => {
 	const params = useParams<{ machine: string }>();
@@ -105,8 +106,15 @@ const MachineDetailsPage = () => {
 			setLoading(false);
 		}
 
-		fetchData();
-	}, [totalTime, searchParams]);
+
+		fetchData(); // Initial fetch
+
+		const intervalId = setInterval(() => {
+			fetchData();
+		}, config.refreshTime); // 10 seconds
+
+		return () => clearInterval(intervalId); // Cleanup on unmount
+	}, [totalTime]);
 
 	if (loading) {
 		return <Loading />;

@@ -2,11 +2,13 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { set } from "zod";
 
 import { getAllCells } from "./_actions/actions";
 
 import PanelTop from "@/components/panels/panelTop";
 import { updateUrlParams } from "@/utils/url/params";
+import config from "@/config";
 
 export default function CellsPage() {
 	const [cells, setCells] = useState<
@@ -53,7 +55,13 @@ export default function CellsPage() {
 				setLoading(false);
 			}
 		}
-		fetchCells();
+		fetchCells(); // Initial fetch
+
+		const intervalId = setInterval(() => {
+			fetchCells();
+		}, config.refreshTime); //refresh interval
+
+		return () => clearInterval(intervalId); // Cleanup on unmount
 	}, []);
 
 	function ShowOnlyDisabled(value: boolean) {

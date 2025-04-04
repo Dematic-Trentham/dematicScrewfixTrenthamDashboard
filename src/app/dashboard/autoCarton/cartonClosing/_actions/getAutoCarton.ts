@@ -1,7 +1,6 @@
 "use server";
 
 import db from "@/db/db";
-import { hasPermission } from "@/utils/getUser";
 
 interface FaultCodeLookup {
 	ID: number;

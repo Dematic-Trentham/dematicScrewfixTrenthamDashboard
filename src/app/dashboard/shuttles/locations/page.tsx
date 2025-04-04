@@ -10,6 +10,7 @@ import ShuttlePanel from "./_components/shuttlePanel";
 import { colorByTypeType } from "./_components/shuttlePanel";
 import { getAllCounts } from "./[macAddress]/parts/_actions";
 
+import config from "@/config";
 import PanelTop from "@/components/panels/panelTop";
 import VerticalBar from "@/components/visual/verticalBar";
 import { updateUrlParams } from "@/utils/url/params";
@@ -268,12 +269,12 @@ export default function Home() {
 		const intervalId = setInterval(() => {
 			fetchLocations();
 			fetchFaults();
-		}, 5000);
+		}, config.refreshTime); // refresh interval
 
-		fetchFaults();
-		fetchLocations();
+		fetchFaults(); // Initial fetch
+		fetchLocations(); // Initial fetch
 
-		//return () => clearInterval(intervalId);
+		return () => clearInterval(intervalId); // Cleanup on unmount
 	}, [timeToSearch]);
 
 	if (isLoading) {

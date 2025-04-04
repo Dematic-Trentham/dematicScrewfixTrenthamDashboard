@@ -9,19 +9,21 @@ import PanelSmall from "@/components/panels/panelSmall";
 import HoverPopup from "@/components/visual/hoverPopupFloat";
 
 interface CCPanelProps {
-	accentColor: string;
 	name: string;
 	faults: { faults: any[]; connected: boolean };
 	onClickLink?: string;
+	onlyBoxes?: boolean;
 }
 
 const CCPanel: React.FC<CCPanelProps> = ({
-	accentColor,
 	name,
 	faults,
 	onClickLink,
+	onlyBoxes,
 }) => {
 	//console.log(name, faults);
+
+	const accentColor = faults.connected ? "#4ade80" : "#808080"; // green or grey
 
 	const aFaults = faults.faults;
 
@@ -73,11 +75,16 @@ const CCPanel: React.FC<CCPanelProps> = ({
 		}
 	}, 0);
 
-	const TotalFaults = aFaults
+	let TotalFaults = aFaults
 		.filter((fault) => !excludedFaults.includes(fault.fault))
 		.reduce((count: number, fault: any) => {
 			return count + fault.count;
 		}, 0);
+
+	//if we are only showing boxes, then we need to set the faults to 0
+	if (onlyBoxes) {
+		TotalFaults = 0;
+	}
 
 	let faultsHigher = false;
 

@@ -1,12 +1,6 @@
 import React from "react";
-import { FaArrowsDownToLine } from "react-icons/fa6";
-import { compareSync } from "bcrypt";
 
-import ccPanel from "./ccPanel";
 import CCPanel from "./ccPanel";
-
-import HorizontalBar from "@/components/visual/horizontalBar";
-import PanelSmall from "@/components/panels/panelSmall";
 
 interface CartonClosingComponentProps {
 	lineNumber: string;
@@ -16,6 +10,7 @@ interface CartonClosingComponentProps {
 	dataold: any;
 	data: any;
 	timeRange: string;
+	onlyBoxes?: boolean;
 }
 
 const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
@@ -26,6 +21,7 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 	dataold,
 	data,
 	timeRange,
+	onlyBoxes,
 }) => {
 	//if we dont have the line number in the data, we need to set it to an empty object
 	if (!data[lineNumber]) {
@@ -50,25 +46,25 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 			<div className="flex flex-col">
 				{hasiPack && (
 					<CCPanel
-						accentColor="green"
 						faults={data[lineNumber]["iPack"] || []}
 						name="iPack"
+						onlyBoxes={onlyBoxes}
 						onClickLink={`/dashboard/autoCarton/details/iPack${lineNumber}?returnURL=cartonClosing&timeRange=${timeRange}`}
 					/>
 				)}
 				{hasLidder && (
 					<CCPanel
-						accentColor="red"
 						faults={data[lineNumber]["Lidder"] || []}
 						name="Lidder"
+						onlyBoxes={onlyBoxes}
 						onClickLink={`/dashboard/autoCarton/details/lidder${lineNumber}?returnURL=cartonClosing&timeRange=${timeRange}`}
 					/>
 				)}
 				{haslabeler && (
 					<CCPanel
-						accentColor="blue"
 						faults={dataold[lineNumber]["Labeler"] || []}
 						name="Labeler"
+						onlyBoxes={onlyBoxes}
 						onClickLink={`/dashboard/autoCarton/details/labeler${lineNumber}?returnURL=cartonClosing&timeRange=${timeRange}`}
 					/>
 				)}
