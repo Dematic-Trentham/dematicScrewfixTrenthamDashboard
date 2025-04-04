@@ -66,6 +66,19 @@ const Page = () => {
 								src={gif}
 								width={800}
 							/>
+
+							{new Date().getDay() === 5 && (
+								<div
+									className="mt-4 flex animate-bounce items-center justify-center bg-black text-center text-6xl font-extrabold text-blue-600"
+									style={{
+										height: "100px",
+										width: "100%",
+										animation: "bounce 2s infinite",
+									}}
+								>
+									SUPER FRIDAY
+								</div>
+							)}
 						</div>
 					)}
 				</div>
