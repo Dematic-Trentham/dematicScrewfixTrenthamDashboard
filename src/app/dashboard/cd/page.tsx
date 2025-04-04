@@ -1,7 +1,9 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 
 import { getNextFinishDay } from "./_components/nextFriday";
+import gif from "./astra-departure.gif";
 
 const Page = () => {
 	const [nextFridayDay, setNextFridayDay] = React.useState<{
@@ -53,14 +55,16 @@ const Page = () => {
 						h {Math.floor((timeToNextFinish % (1000 * 60 * 60)) / (1000 * 60))}m{" "}
 						{Math.floor((timeToNextFinish % (1000 * 60)) / 1000)}s
 					</p>
-
 					{timeToNextFinish > 0 && timeToNextFinish < 30 * 60 * 1000 && (
 						<div className="mt-2 flex flex-col items-center text-center text-red-500">
 							<p>Less than 30 minutes remaining!</p>
-							<img
-								alt="Rocket taking off and exploding"
-								className="mx-auto"
-								src="https://media.giphy.com/media/3o7abKhOpu0NwenH3O/giphy.gif"
+
+							<Image
+								alt="Astra GIF"
+								className="rounded-lg"
+								height={200}
+								src={gif}
+								width={800}
 							/>
 						</div>
 					)}
