@@ -18,9 +18,8 @@ const SidebarAdmin = () => {
 				icon={
 					<Image
 						alt="Shuttle"
-						height={20}
 						src={shuttleIcon}
-						style={{ width: "20", height: "20" }}
+						style={{ height: "auto" }}
 						width={20}
 					/>
 				}
