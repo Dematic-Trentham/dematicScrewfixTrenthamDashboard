@@ -1,14 +1,16 @@
 "use client";
-import { updateUrlParams } from "@/utils/url/params";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import React from "react";
+
+import { updateUrlParams } from "@/utils/url/params";
 
 export function totalTimeSelector(
 	totalTime: number,
 	searchParams: URLSearchParams,
 	router: AppRouterInstance,
 	setTotalTime: React.Dispatch<React.SetStateAction<number>>,
-	setLoading: React.Dispatch<React.SetStateAction<boolean>>) {
+	setLoading: React.Dispatch<React.SetStateAction<boolean>>
+) {
 	return (
 		<div style={{ marginTop: "20px", textAlign: "center" }}>
 			<label htmlFor="totalTime">Select Total Search Time: </label>
@@ -16,13 +18,15 @@ export function totalTimeSelector(
 				id="totalTime"
 				value={totalTime}
 				onChange={async (e) => {
+					await setTotalTime(Number(e.target.value));
+
 					await updateUrlParams(
 						searchParams,
 						router,
 						"timeRange",
 						e.target.value
 					);
-					setTotalTime(Number(e.target.value));
+
 					setLoading(true);
 				}}
 			>
