@@ -25,6 +25,16 @@ const CartonClosingPage: React.FC = () => {
 
 	const [totalTime, setTotalTime] = useState(60);
 
+	//get the timeRange from the url, if not found, set to 60 minutes
+	const timeRange = searchParams.get("timeRange");
+
+	useEffect(() => {
+		console.log("timeRange", timeRange);
+		if (timeRange) {
+			setTotalTime(Number(timeRange));
+		}
+	}, [timeRange]);
+
 	useEffect(() => {
 		function lFetchData() {
 			fetchData(totalTime, setLoading, setError, setDataold, setData); // Fetch data every 10 seconds
