@@ -63,7 +63,7 @@ async function fetchNewData(totalTime: number, setData: any) {
 		//if empty data then return
 		if (!newData) {
 			return {
-				error: "No carton closing data found for the specified time period",
+				error: " No carton closing data found for the specified time period",
 			};
 		}
 

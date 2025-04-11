@@ -1,3 +1,4 @@
+# syntax=docker/dockerfile:1.4
 FROM node:18-alpine AS base
 
 # Stage 1: tester
@@ -11,10 +12,13 @@ RUN apk add --no-cache git
 # Copy package.json and package-lock.json
 COPY package.json ./
 
-RUN npm set cache /opt/hostedtoolcache
+# Use a cache mount for npm
+RUN --mount=type=cache,target=/opt/hostedtoolcache \
+    npm set cache /opt/hostedtoolcache
 
-# Install dependencies
-RUN npm install --legacy-peer-deps
+# Cache node_modules to speed up builds
+RUN --mount=type=cache,target=/app/node_modules \
+    npm install --legacy-peer-deps
 
 RUN npm run prisma-merge
 

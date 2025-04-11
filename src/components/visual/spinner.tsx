@@ -1,4 +1,3 @@
-import { MdOutlineSatelliteAlt } from "react-icons/md";
 import React from "react";
 import Image from "next/image";
 
@@ -25,8 +24,7 @@ const Spinner: React.FC = () => {
 				<div className="flex h-full flex-col items-center justify-center space-x-4 space-y-4">
 					<div className="animate-spin" style={{ animationDuration: "5s" }}>
 						<div className="h-36 w-36">
-							{/* <MdOutlineSatelliteAlt size={50} /> */}
-							<Image alt="" height={50} src={sat} width={50} />
+							<Image alt="" src={sat} style={{ height: "auto" }} width={50} />
 						</div>
 					</div>
 				</div>

@@ -24,6 +24,17 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # Cache node_modules
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            .next/cache
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
+
       - name: Set up node
         uses: actions/setup-node@v3
         with:
@@ -118,26 +129,26 @@ jobs:
           comment-id: ${{ steps.fc.outputs.comment-id }}
           edit-mode: replace
 
-  Update_permissions:
-    runs-on: self-hosted
-    needs: Build_Image
+  # Update_permissions:
+  #   runs-on: self-hosted
+  #   needs: Build_Image
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v4
 
-      - name: Install dependencies
-        run: npm install
+  #     - name: Install dependencies
+  #       run: npm install
 
-      - name: make env file
-        run: echo "DATABASE_URL=mysql://node:nodenode@10.4.5.227:3306/dematicScrewfixTrenthamDashboard" > .env
+  #     - name: make env file
+  #       run: echo "DATABASE_URL=mysql://node:nodenode@10.4.5.227:3306/dematicScrewfixTrenthamDashboard" > .env
 
-      - name: Generate Prisma
-        run: npm run prisma-merge
+  #     - name: Generate Prisma
+  #       run: npm run prisma-merge
 
-      - name: Update Permissions
-        run: |
-          npm run make-permissions
+  #     - name: Update Permissions
+  #       run: |
+  #         npm run make-permissions
 
   Build_Image:
     runs-on: self-hosted
@@ -145,6 +156,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      # Cache node_modules
+      - name: Cache node_modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            node_modules
+            .next/cache
+          key: node-modules-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+          restore-keys: |
+            node-modules-${{ runner.os }}-
 
       - name: Docker metadata
         id: metadata
