@@ -29,10 +29,21 @@ const MachineDetailsPage = () => {
 	const [data, setData] = useState<any>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [totalBoxes, setTotalBoxes] = useState<number>(0);
 
 	type autoCartonMachineType = "erector" | "Lidder" | "iPack";
 
 	const [totalTime, setTotalTime] = useState(60);
+
+	//get the timeRange from the url, if not found, set to 60 minutes
+	const timeRange = searchParams.get("timeRange");
+
+	useEffect(() => {
+		console.log("timeRange", timeRange);
+		if (timeRange) {
+			setTotalTime(Number(timeRange));
+		}
+	}, [timeRange]);
 
 	useEffect(() => {
 		console.log("MachineDetailsPage useEffect");
@@ -42,15 +53,6 @@ const MachineDetailsPage = () => {
 			params.machine.charAt(0).toUpperCase() +
 				params.machine.slice(1).replace(/([0-9]+)/g, " $1")
 		);
-		//do we have timeRange in the url
-		const timeRange = searchParams.get("timeRange");
-
-		//if we have a timeRange, we need to set the timeToSearch to the timeRange
-		if (timeRange && !isNaN(Number(timeRange))) {
-			setTotalTime(Number(timeRange) || 60);
-		}
-
-		const totalTimeSelect = searchParams.get("totalTimeSelect");
 
 		//get data from server
 		async function fetchData() {
@@ -100,12 +102,11 @@ const MachineDetailsPage = () => {
 
 				setData(array);
 
-				console.log(data);
+				//lets make a count of the faults and add them to the data
 			}
 
 			setLoading(false);
 		}
-
 
 		fetchData(); // Initial fetch
 
@@ -220,27 +221,60 @@ const MachineDetailsPage = () => {
 	);
 
 	function tabFormattedData(data: any) {
+		let chartData = groupBy(data);
+
+		//remove faults that are "box"
+		chartData;
+
+		//total boxes
+		const totalBoxes = data.reduce((acc: any, item: any) => {
+			if (item.faultCode === "box") {
+				acc += 1;
+			}
+
+			return acc;
+		}, 0);
+
+		let pieChartData = groupBy(data);
+
+		//remove faults that are "Box"
+		pieChartData = pieChartData.filter((item: any) => item.faultCode != "Box");
+
+		//total number of faults
+		const totalFaults = pieChartData.reduce((acc: any, item: any) => {
+			acc += item.count;
+
+			return acc;
+		}, 0);
+
 		return (
-			<table className="dematicTable dematicTableStriped dematicTableHoverable">
-				<thead>
-					<tr>
-						<th>Time</th>
+			<div>
+				<div className="flex flex-col items-center">
+					<div>Total Boxes: {totalBoxes}</div>
+					<div>Total Faults: {totalFaults}</div>
+				</div>
 
-						<th>Fault Code</th>
-					</tr>
-				</thead>
+				<table className="dematicTable dematicTableStriped dematicTableHoverable">
+					<thead>
+						<tr>
+							<th>Time</th>
 
-				<tbody>
-					{data
-						.filter((item: any) => !excludedFaults2.includes(item.faultCode))
-						.map((item: any, index: number) => (
-							<tr key={index}>
-								<td>{changeDateToReadable(item.timestamp)}</td>
-								<td>{makeReadableFaultCode(item.faultCode)}</td>
-							</tr>
-						))}
-				</tbody>
-			</table>
+							<th>Fault Code</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{data
+							.filter((item: any) => !excludedFaults2.includes(item.faultCode))
+							.map((item: any, index: number) => (
+								<tr key={index}>
+									<td>{changeDateToReadable(item.timestamp)}</td>
+									<td>{makeReadableFaultCode(item.faultCode)}</td>
+								</tr>
+							))}
+					</tbody>
+				</table>
+			</div>
 		);
 	}
 
@@ -250,8 +284,33 @@ const MachineDetailsPage = () => {
 		//remove faults that are "box"
 		chartData;
 
+		//total boxes
+		const totalBoxes = data.reduce((acc: any, item: any) => {
+			if (item.faultCode === "box") {
+				acc += 1;
+			}
+
+			return acc;
+		}, 0);
+
+		let pieChartData = groupBy(data);
+
+		//remove faults that are "Box"
+		pieChartData = pieChartData.filter((item: any) => item.faultCode != "Box");
+
+		//total number of faults
+		const totalFaults = pieChartData.reduce((acc: any, item: any) => {
+			acc += item.count;
+
+			return acc;
+		}, 0);
+
 		return (
 			<div>
+				<div className="flex flex-col items-center">
+					<div>Total Boxes: {totalBoxes}</div>
+					<div>Total Faults: {totalFaults}</div>
+				</div>
 				<table className="dematicTable dematicTableStriped dematicTableHoverable">
 					<thead>
 						<tr>
@@ -305,11 +364,10 @@ const MachineDetailsPage = () => {
 		ChartJS.register(ArcElement, Tooltip, Legend);
 
 		let pieChartData = groupBy(data);
-
 		//get total number of boxes   item.faultCode = "Box"
-		const totalBoxes = pieChartData.reduce((acc: any, item: any) => {
+		const totalBoxes = data.reduce((acc: any, item: any) => {
 			if (item.faultCode === "box") {
-				acc += item.count;
+				acc += 1;
 			}
 
 			return acc;
