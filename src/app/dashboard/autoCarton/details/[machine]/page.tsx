@@ -53,6 +53,23 @@ const MachineDetailsPage = () => {
 	}, [timeRange]);
 
 	useEffect(() => {
+		// Check if "tab" exists in the URL and set the active tab accordingly
+		const tab = searchParams.get("tab");
+
+		if (tab) {
+			const tabIndex = ["chart", "grouped", "faults"].indexOf(tab);
+
+			if (tabIndex !== -1) {
+				(
+					document.querySelectorAll(".react-tabs__tab")[tabIndex] as HTMLElement
+				)?.click();
+			}
+
+			console.log("tab", tab);
+		}
+	}, [loading]);
+
+	useEffect(() => {
 		console.log("MachineDetailsPage useEffect");
 
 		//set title will come in as "erector5" and we want to display "Erector 5
@@ -192,10 +209,27 @@ const MachineDetailsPage = () => {
 		>
 			<Tabs>
 				<TabList>
-					{" "}
-					<Tab>Chart</Tab>
-					<Tab>Grouped</Tab>
-					<Tab>Faults</Tab>
+					<Tab
+						onClick={async () => {
+							await updateUrlParams(searchParams, router, "tab", "chart");
+						}}
+					>
+						Chart
+					</Tab>
+					<Tab
+						onClick={async () => {
+							await updateUrlParams(searchParams, router, "tab", "grouped");
+						}}
+					>
+						Grouped
+					</Tab>
+					<Tab
+						onClick={async () => {
+							await updateUrlParams(searchParams, router, "tab", "faults");
+						}}
+					>
+						Faults
+					</Tab>
 				</TabList>
 				<TabPanel>{pieChart(data)}</TabPanel>
 				<TabPanel>{tabGrouped(data)}</TabPanel>
