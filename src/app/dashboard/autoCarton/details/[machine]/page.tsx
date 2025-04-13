@@ -31,7 +31,14 @@ const MachineDetailsPage = () => {
 	const [error, setError] = useState<string | null>(null);
 	const [totalBoxes, setTotalBoxes] = useState<number>(0);
 
-	type autoCartonMachineType = "erector" | "Lidder" | "iPack";
+	const [oldDB, setOldDB] = useState<boolean>(false);
+
+	type autoCartonMachineType =
+		| "erector"
+		| "Lidder"
+		| "iPack"
+		| "labeler"
+		| "barcoder";
 
 	const [totalTime, setTotalTime] = useState(60);
 
@@ -67,10 +74,19 @@ const MachineDetailsPage = () => {
 
 			if (machineTypeString === "erector") {
 				machineType = "erector";
+				setOldDB(false);
 			} else if (machineTypeString === "lidder") {
 				machineType = "Lidder";
+				setOldDB(false);
 			} else if (machineTypeString === "iPack") {
 				machineType = "iPack";
+				setOldDB(false);
+			} else if (machineTypeString === "labeler") {
+				machineType = "labeler";
+				setOldDB(true);
+			} else if (machineTypeString === "barcoder") {
+				machineType = "barcoder";
+				setOldDB(true);
 			} else {
 				//if we can't find the machine type, we will return an error
 				setError("Machine type not found");
@@ -82,11 +98,24 @@ const MachineDetailsPage = () => {
 			//parse the number from the machine
 			const machineNumber = Number(machineNumberString);
 
-			const data = await getAutoCartonFaults(
-				parseInt(totalTime.toString()),
-				machineType,
-				machineNumber
-			);
+			let data: { faultCode: string }[] | { error: string } = [];
+
+			if (oldDB == false) {
+				data = await getAutoCartonFaults(
+					parseInt(totalTime.toString()),
+					machineType,
+					machineNumber
+				);
+				console.log("data", data);
+			} else {
+				//if the machine is old, we will use the old db
+				data = await getAutoCartonFaultsOLD(
+					parseInt(totalTime.toString()),
+					machineType,
+					machineNumber
+				);
+				console.log("data", data);
+			}
 
 			if ("error" in data) {
 				setError(data.error);
@@ -429,6 +458,112 @@ const MachineDetailsPage = () => {
 				<Pie data={chartData} />
 			</div>
 		);
+	}
+
+	async function getAutoCartonFaultsOLD(
+		minutes: number,
+		machineType: autoCartonMachineType,
+		machineNumber: number
+	) {
+		const data = await fetchOldData(minutes, setOldDB);
+
+		if (data.error) {
+			return { error: String(data.error) };
+		}
+
+		const parsedData = data.data;
+
+		//if we have no data then return an error
+		if (!parsedData) {
+			return { error: "No data found" };
+		}
+		let machineTypeString = machineType.toString().toLowerCase();
+
+		if (machineTypeString == "labeler") {
+			machineTypeString = "Labeler";
+		}
+
+		const filteredData =
+			parsedData[machineNumber.toString()][machineTypeString];
+
+		const faults = filteredData.faults;
+		const connected = filteredData.connected;
+		const faultCodes = faults.map((fault: any) => fault.fault);
+		const counts = faults.map((fault: any) => fault.count);
+		const faultData = faultCodes.map((faultCode: any, index: number) => {
+			return {
+				faultCode: faultCode,
+				count: counts[index],
+				timestamp: new Date().toISOString(),
+			};
+		});
+
+		return faultData;
+	}
+
+	async function fetchOldData(totalTime: number, setDataold: any) {
+		const url =
+			"http://10.4.5.227:8080/json/mysqlGrouped?totalTime=" +
+			totalTime.toString();
+
+		try {
+			const response = await fetch(url);
+			const data = await response.json();
+			const parsedData = await parseDataOld(data);
+
+			return { status: "success", data: parsedData };
+		} catch (err) {
+			return { error: String(err) };
+		}
+	}
+
+	//parse data
+	function parseDataOld(data: any) {
+		const parsedData: {
+			[key: string]: { [key: string]: { faults: any[]; connected: boolean } };
+		} = {};
+
+		for (const item of data.rows) {
+			//strip out machine types that are not needed
+			if (item.machinetype == "Lidder" || item.machinetype == "iPack") {
+				continue;
+			}
+
+			const line = item.line.toString();
+			const machinetype = item.machinetype;
+			const fault = item.fault;
+			const count = item.count;
+			const timestamp = item.timestamp;
+
+			if (!parsedData[line]) {
+				parsedData[line] = {};
+			}
+
+			if (!parsedData[line][machinetype]) {
+				parsedData[line][machinetype] = {
+					faults: [],
+					connected: false,
+				};
+			}
+
+			parsedData[line][machinetype].faults.push({ fault, count });
+			//do we have any data in the last x minutes
+			const timeDifference =
+				new Date().getTime() - new Date(timestamp).getTime();
+
+			if (timeDifference < 5 * 60 * 1000) {
+				parsedData[line][machinetype].connected = true;
+			}
+		}
+
+		//if we dont have a line then we need to set it to an empty object
+		for (let i = 1; i <= 6; i++) {
+			if (!parsedData[i.toString()]) {
+				parsedData[i.toString()] = {};
+			}
+		}
+
+		return parsedData;
 	}
 };
 
