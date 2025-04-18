@@ -5,7 +5,12 @@ import { excludedFaults2 } from "../../../excludedFaults";
 import db from "@/db/db";
 import { hasPermission } from "@/utils/getUser";
 
-type autoCartonMachineType = "erector" | "Lidder" | "iPack";
+type autoCartonMachineType =
+	| "erector"
+	| "Lidder"
+	| "iPack"
+	| "labeler"
+	| "barcoder";
 
 export async function getAutoCartonFaults(
 	minutes: number,

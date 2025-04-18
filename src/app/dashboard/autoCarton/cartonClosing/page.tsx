@@ -32,10 +32,17 @@ const CartonClosingPage: React.FC = () => {
 			setTotalTime(Number(timeRange));
 		}
 	}, [timeRange]);
-
 	useEffect(() => {
 		function lFetchData() {
-			fetchData(totalTime, setLoading, setError, setDataold, setData); // Fetch data every 10 seconds
+			const startTime = performance.now();
+
+			fetchData(totalTime, setLoading, setError, setDataold, setData).finally(
+				() => {
+					const endTime = performance.now();
+
+					console.log(`Fetch data took ${endTime - startTime} milliseconds.`);
+				}
+			);
 		}
 
 		const intervalId = setInterval(lFetchData, config.refreshTime); // 10 seconds

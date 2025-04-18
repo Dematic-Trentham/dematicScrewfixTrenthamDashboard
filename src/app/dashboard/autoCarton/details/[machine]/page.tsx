@@ -29,10 +29,45 @@ const MachineDetailsPage = () => {
 	const [data, setData] = useState<any>(null);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [totalBoxes, setTotalBoxes] = useState<number>(0);
 
-	type autoCartonMachineType = "erector" | "Lidder" | "iPack";
+	const [oldDB, setOldDB] = useState<boolean>(false);
+
+	type autoCartonMachineType =
+		| "erector"
+		| "Lidder"
+		| "iPack"
+		| "labeler"
+		| "barcoder";
 
 	const [totalTime, setTotalTime] = useState(60);
+
+	//get the timeRange from the url, if not found, set to 60 minutes
+	const timeRange = searchParams.get("timeRange");
+
+	useEffect(() => {
+		console.log("timeRange", timeRange);
+		if (timeRange) {
+			setTotalTime(Number(timeRange));
+		}
+	}, [timeRange]);
+
+	useEffect(() => {
+		// Check if "tab" exists in the URL and set the active tab accordingly
+		const tab = searchParams.get("tab");
+
+		if (tab) {
+			const tabIndex = ["chart", "grouped", "faults"].indexOf(tab);
+
+			if (tabIndex !== -1) {
+				(
+					document.querySelectorAll(".react-tabs__tab")[tabIndex] as HTMLElement
+				)?.click();
+			}
+
+			console.log("tab", tab);
+		}
+	}, [loading]);
 
 	useEffect(() => {
 		console.log("MachineDetailsPage useEffect");
@@ -42,15 +77,6 @@ const MachineDetailsPage = () => {
 			params.machine.charAt(0).toUpperCase() +
 				params.machine.slice(1).replace(/([0-9]+)/g, " $1")
 		);
-		//do we have timeRange in the url
-		const timeRange = searchParams.get("timeRange");
-
-		//if we have a timeRange, we need to set the timeToSearch to the timeRange
-		if (timeRange && !isNaN(Number(timeRange))) {
-			setTotalTime(Number(timeRange) || 60);
-		}
-
-		const totalTimeSelect = searchParams.get("totalTimeSelect");
 
 		//get data from server
 		async function fetchData() {
@@ -65,10 +91,19 @@ const MachineDetailsPage = () => {
 
 			if (machineTypeString === "erector") {
 				machineType = "erector";
+				setOldDB(false);
 			} else if (machineTypeString === "lidder") {
 				machineType = "Lidder";
+				setOldDB(false);
 			} else if (machineTypeString === "iPack") {
 				machineType = "iPack";
+				setOldDB(false);
+			} else if (machineTypeString === "labeler") {
+				machineType = "labeler";
+				setOldDB(true);
+			} else if (machineTypeString === "barcoder") {
+				machineType = "barcoder";
+				setOldDB(true);
 			} else {
 				//if we can't find the machine type, we will return an error
 				setError("Machine type not found");
@@ -80,11 +115,24 @@ const MachineDetailsPage = () => {
 			//parse the number from the machine
 			const machineNumber = Number(machineNumberString);
 
-			const data = await getAutoCartonFaults(
-				parseInt(totalTime.toString()),
-				machineType,
-				machineNumber
-			);
+			let data: { faultCode: string }[] | { error: string } = [];
+
+			if (oldDB == false) {
+				data = await getAutoCartonFaults(
+					parseInt(totalTime.toString()),
+					machineType,
+					machineNumber
+				);
+				console.log("data", data);
+			} else {
+				//if the machine is old, we will use the old db
+				data = await getAutoCartonFaultsOLD(
+					parseInt(totalTime.toString()),
+					machineType,
+					machineNumber
+				);
+				console.log("data", data);
+			}
 
 			if ("error" in data) {
 				setError(data.error);
@@ -100,12 +148,11 @@ const MachineDetailsPage = () => {
 
 				setData(array);
 
-				console.log(data);
+				//lets make a count of the faults and add them to the data
 			}
 
 			setLoading(false);
 		}
-
 
 		fetchData(); // Initial fetch
 
@@ -162,10 +209,27 @@ const MachineDetailsPage = () => {
 		>
 			<Tabs>
 				<TabList>
-					{" "}
-					<Tab>Chart</Tab>
-					<Tab>Grouped</Tab>
-					<Tab>Faults</Tab>
+					<Tab
+						onClick={async () => {
+							await updateUrlParams(searchParams, router, "tab", "chart");
+						}}
+					>
+						Chart
+					</Tab>
+					<Tab
+						onClick={async () => {
+							await updateUrlParams(searchParams, router, "tab", "grouped");
+						}}
+					>
+						Grouped
+					</Tab>
+					<Tab
+						onClick={async () => {
+							await updateUrlParams(searchParams, router, "tab", "faults");
+						}}
+					>
+						Faults
+					</Tab>
 				</TabList>
 				<TabPanel>{pieChart(data)}</TabPanel>
 				<TabPanel>{tabGrouped(data)}</TabPanel>
@@ -220,27 +284,60 @@ const MachineDetailsPage = () => {
 	);
 
 	function tabFormattedData(data: any) {
+		let chartData = groupBy(data);
+
+		//remove faults that are "box"
+		chartData;
+
+		//total boxes
+		const totalBoxes = data.reduce((acc: any, item: any) => {
+			if (item.faultCode === "box") {
+				acc += 1;
+			}
+
+			return acc;
+		}, 0);
+
+		let pieChartData = groupBy(data);
+
+		//remove faults that are "Box"
+		pieChartData = pieChartData.filter((item: any) => item.faultCode != "Box");
+
+		//total number of faults
+		const totalFaults = pieChartData.reduce((acc: any, item: any) => {
+			acc += item.count;
+
+			return acc;
+		}, 0);
+
 		return (
-			<table className="dematicTable dematicTableStriped dematicTableHoverable">
-				<thead>
-					<tr>
-						<th>Time</th>
+			<div>
+				<div className="flex flex-col items-center">
+					<div>Total Boxes: {totalBoxes}</div>
+					<div>Total Faults: {totalFaults}</div>
+				</div>
 
-						<th>Fault Code</th>
-					</tr>
-				</thead>
+				<table className="dematicTable dematicTableStriped dematicTableHoverable">
+					<thead>
+						<tr>
+							<th>Time</th>
 
-				<tbody>
-					{data
-						.filter((item: any) => !excludedFaults2.includes(item.faultCode))
-						.map((item: any, index: number) => (
-							<tr key={index}>
-								<td>{changeDateToReadable(item.timestamp)}</td>
-								<td>{makeReadableFaultCode(item.faultCode)}</td>
-							</tr>
-						))}
-				</tbody>
-			</table>
+							<th>Fault Code</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{data
+							.filter((item: any) => !excludedFaults2.includes(item.faultCode))
+							.map((item: any, index: number) => (
+								<tr key={index}>
+									<td>{changeDateToReadable(item.timestamp)}</td>
+									<td>{makeReadableFaultCode(item.faultCode)}</td>
+								</tr>
+							))}
+					</tbody>
+				</table>
+			</div>
 		);
 	}
 
@@ -250,8 +347,33 @@ const MachineDetailsPage = () => {
 		//remove faults that are "box"
 		chartData;
 
+		//total boxes
+		const totalBoxes = data.reduce((acc: any, item: any) => {
+			if (item.faultCode === "box") {
+				acc += 1;
+			}
+
+			return acc;
+		}, 0);
+
+		let pieChartData = groupBy(data);
+
+		//remove faults that are "Box"
+		pieChartData = pieChartData.filter((item: any) => item.faultCode != "Box");
+
+		//total number of faults
+		const totalFaults = pieChartData.reduce((acc: any, item: any) => {
+			acc += item.count;
+
+			return acc;
+		}, 0);
+
 		return (
 			<div>
+				<div className="flex flex-col items-center">
+					<div>Total Boxes: {totalBoxes}</div>
+					<div>Total Faults: {totalFaults}</div>
+				</div>
 				<table className="dematicTable dematicTableStriped dematicTableHoverable">
 					<thead>
 						<tr>
@@ -305,11 +427,10 @@ const MachineDetailsPage = () => {
 		ChartJS.register(ArcElement, Tooltip, Legend);
 
 		let pieChartData = groupBy(data);
-
 		//get total number of boxes   item.faultCode = "Box"
-		const totalBoxes = pieChartData.reduce((acc: any, item: any) => {
+		const totalBoxes = data.reduce((acc: any, item: any) => {
 			if (item.faultCode === "box") {
-				acc += item.count;
+				acc += 1;
 			}
 
 			return acc;
@@ -371,6 +492,112 @@ const MachineDetailsPage = () => {
 				<Pie data={chartData} />
 			</div>
 		);
+	}
+
+	async function getAutoCartonFaultsOLD(
+		minutes: number,
+		machineType: autoCartonMachineType,
+		machineNumber: number
+	) {
+		const data = await fetchOldData(minutes, setOldDB);
+
+		if (data.error) {
+			return { error: String(data.error) };
+		}
+
+		const parsedData = data.data;
+
+		//if we have no data then return an error
+		if (!parsedData) {
+			return { error: "No data found" };
+		}
+		let machineTypeString = machineType.toString().toLowerCase();
+
+		if (machineTypeString == "labeler") {
+			machineTypeString = "Labeler";
+		}
+
+		const filteredData =
+			parsedData[machineNumber.toString()][machineTypeString];
+
+		const faults = filteredData.faults;
+		const connected = filteredData.connected;
+		const faultCodes = faults.map((fault: any) => fault.fault);
+		const counts = faults.map((fault: any) => fault.count);
+		const faultData = faultCodes.map((faultCode: any, index: number) => {
+			return {
+				faultCode: faultCode,
+				count: counts[index],
+				timestamp: new Date().toISOString(),
+			};
+		});
+
+		return faultData;
+	}
+
+	async function fetchOldData(totalTime: number, setDataold: any) {
+		const url =
+			"http://10.4.5.227:8080/json/mysqlGrouped?totalTime=" +
+			totalTime.toString();
+
+		try {
+			const response = await fetch(url);
+			const data = await response.json();
+			const parsedData = await parseDataOld(data);
+
+			return { status: "success", data: parsedData };
+		} catch (err) {
+			return { error: String(err) };
+		}
+	}
+
+	//parse data
+	function parseDataOld(data: any) {
+		const parsedData: {
+			[key: string]: { [key: string]: { faults: any[]; connected: boolean } };
+		} = {};
+
+		for (const item of data.rows) {
+			//strip out machine types that are not needed
+			if (item.machinetype == "Lidder" || item.machinetype == "iPack") {
+				continue;
+			}
+
+			const line = item.line.toString();
+			const machinetype = item.machinetype;
+			const fault = item.fault;
+			const count = item.count;
+			const timestamp = item.timestamp;
+
+			if (!parsedData[line]) {
+				parsedData[line] = {};
+			}
+
+			if (!parsedData[line][machinetype]) {
+				parsedData[line][machinetype] = {
+					faults: [],
+					connected: false,
+				};
+			}
+
+			parsedData[line][machinetype].faults.push({ fault, count });
+			//do we have any data in the last x minutes
+			const timeDifference =
+				new Date().getTime() - new Date(timestamp).getTime();
+
+			if (timeDifference < 5 * 60 * 1000) {
+				parsedData[line][machinetype].connected = true;
+			}
+		}
+
+		//if we dont have a line then we need to set it to an empty object
+		for (let i = 1; i <= 6; i++) {
+			if (!parsedData[i.toString()]) {
+				parsedData[i.toString()] = {};
+			}
+		}
+
+		return parsedData;
 	}
 };
 
