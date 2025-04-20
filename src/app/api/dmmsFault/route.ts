@@ -9,10 +9,20 @@ export async function GET() {
 export async function POST(request: Request) {
 	const { faultId, complete } = await request.json();
 
-	const data = await db.controlRoomFaults.updateMany({
-		where: { faultID: faultId },
-		data: { DMMSDONE: complete },
+	let data = await db.controlRoomFaults.findUnique({
+		where: { id: faultId },
 	});
+
+	if (data) {
+		data = await db.controlRoomFaults.update({
+			where: { id: faultId },
+			data: { DMMSDONE: complete },
+		});
+	} else {
+		data = await db.controlRoomFaults.create({
+			data: { faultID: faultId, DMMSDONE: complete },
+		});
+	}
 
 	return Response.json({ data });
 }
