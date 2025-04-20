@@ -17,7 +17,7 @@ export async function POST(request: Request) {
 
 	if (data) {
 		data = await db.controlRoomFaults.update({
-			where: { id: faultId },
+			where: { id: data.id },
 			data: { DMMSDONE: complete },
 		});
 	} else {
