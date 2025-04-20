@@ -9,9 +9,11 @@ export async function GET() {
 export async function POST(request: Request) {
 	const { faultId, complete } = await request.json();
 
-	let data = await db.controlRoomFaults.findUnique({
-		where: { id: faultId },
+	let data = await db.controlRoomFaults.findFirst({
+		where: { faultID: faultId },
 	});
+
+	console.log("data", data);
 
 	if (data) {
 		data = await db.controlRoomFaults.update({
