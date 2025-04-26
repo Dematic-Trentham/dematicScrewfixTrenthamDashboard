@@ -79,6 +79,7 @@ const PingPage = () => {
 						<th>IP Address</th>
 						<th>Ping Status</th>
 						<th>PLC Status</th>
+						<th>Ping Time (ms)</th>
 						<th>Last Updated</th>
 						<th>Details</th>
 					</tr>
@@ -106,6 +107,7 @@ const PingPage = () => {
 							>
 								{item.plc ? (item.plcStatus ? "Online" : "Offline") : ""}
 							</td>
+							<td>{item.pingTimeMS} ms</td>
 							<td>{changeDateToReadable(item.lastUpdated)}</td>
 
 							<td>
