@@ -12,7 +12,7 @@ import SidebarSorter from "./sorter/sidebarSorter";
 import SidebarOrderStart from "./orderStart/sidebarOrderStart";
 import SidebarAutoCarton from "./autoCarton/sidebarAutoCarton";
 import SidebarEMS from "./ems/sidebarEMS";
-import SidebarSitePing from "./Site/sidebarSite";
+import SidebarSitePing from "./site/sidebarSite";
 
 const Sidebar = () => {
 	const sideBar = (
