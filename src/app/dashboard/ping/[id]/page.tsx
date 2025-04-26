@@ -16,9 +16,9 @@ import PanelTop from "@/components/panels/panelTop";
 import { changeDateToReadable } from "@/utils/changeDateToReadable";
 import EditPage from "@/app/faults/edit/page";
 interface PingPageProps {
-	params: {
+	params: Promise<{
 		id: string;
-	};
+	}>;
 }
 
 const PingPage: React.FC<PingPageProps> = ({ params }) => {
