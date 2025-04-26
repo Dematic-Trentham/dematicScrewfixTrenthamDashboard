@@ -12,6 +12,7 @@ import SidebarSorter from "./sorter/sidebarSorter";
 import SidebarOrderStart from "./orderStart/sidebarOrderStart";
 import SidebarAutoCarton from "./autoCarton/sidebarAutoCarton";
 import SidebarEMS from "./ems/sidebarEMS";
+import SidebarSitePing from "./Site/sidebarSite";
 
 const Sidebar = () => {
 	const sideBar = (
@@ -31,6 +32,7 @@ const Sidebar = () => {
 
 						<SidebarSorter />
 						<SidebarEMS />
+						<SidebarSitePing />
 
 						<SidebarAdmin />
 					</nav>
