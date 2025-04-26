@@ -149,7 +149,7 @@ export const HistoryChart: React.FC<historyChartProps> = (props) => {
 							.reverse(),
 						datasets: [
 							{
-								label: "Ping Status",
+								label: "Ping Time (ms)",
 								data: props.history.map((item) => item.pingTimeMS).reverse(),
 								borderColor: "rgb(53, 162, 235)",
 								backgroundColor: "rgba(53, 162, 235, 0.5)",
@@ -181,30 +181,22 @@ export const HistoryChart: React.FC<historyChartProps> = (props) => {
 						plugins: {
 							...options.plugins,
 							tooltip: {
+								mode: "index",
 								callbacks: {
 									label: function (context) {
-										const label = context.dataset.label || "";
-										const value = context.raw;
-										const time =
-											props.history[
-												props.history.length - 1 - context.dataIndex
-											].createdAt;
-
-										if (label === "PLC Status" || label === "Ping Status") {
-											const status = value === 1 ? "Online" : "Offline";
-
-											return `${label}: ${status} at ${new Date(
-												time
-											).toLocaleDateString()} ${new Date(
-												time
-											).toLocaleTimeString()}`;
+										if (context.dataset.label === "Ping Status") {
+											return `Ping Status: ${
+												context.raw ? "Online" : "Offline"
+											}`;
+										} else if (context.dataset.label === "Ping Time (ms)") {
+											return `Ping Time: ${context.raw} ms`;
+										} else if (context.dataset.label === "PLC Status") {
+											return `PLC Status: ${
+												context.raw ? "Online" : "Offline"
+											}`;
+										} else {
+											return `${context.dataset.label}: ${context.raw} :()`;
 										}
-
-										return `${label}: ${value} at ${new Date(
-											time
-										).toLocaleDateString()} ${new Date(
-											time
-										).toLocaleTimeString()}`;
 									},
 								},
 							},
