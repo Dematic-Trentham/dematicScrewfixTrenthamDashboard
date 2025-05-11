@@ -181,6 +181,43 @@ export default function Home() {
 				});
 			});
 
+			//we have x levels make sure we have x levels in each aisle add the missing levels in the correct order
+			//loop through the aisles and add the missing levels
+			aisles.forEach((aisle, aisleIndex) => {
+				const levels = aisle.map((location: any) =>
+					parseInt(location.currentLocation.substring(8, 10))
+				);
+
+				const maxLevel = Math.max(...levels);
+
+				for (let level = 1; level <= maxLevel; level++) {
+					if (
+						!aisle.some(
+							(location: any) =>
+								parseInt(location.currentLocation.substring(8, 10)) === level
+						)
+					) {
+						aisle.push({
+							currentLocation: `MSAI${padWithZero(aisleIndex)}LV${padWithZero(level)}SH01`,
+							aisle: aisleIndex,
+							level: level,
+						});
+
+						function padWithZero(value: number): string {
+							return value.toString().padStart(2, "0");
+						}
+					}
+				}
+
+				aisle.sort((a: any, b: any) => {
+					const aLevel = parseInt(a.currentLocation.substring(8, 10));
+
+					const bLevel = parseInt(b.currentLocation.substring(8, 10));
+
+					return bLevel - aLevel;
+				});
+			});
+
 			//the first aisle is the maintenance bay, this should be removed from the aisles array and added to its own array
 			const maintenanceBay = aisles.shift();
 

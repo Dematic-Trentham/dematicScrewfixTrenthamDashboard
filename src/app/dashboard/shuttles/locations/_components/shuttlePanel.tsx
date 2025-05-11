@@ -36,8 +36,6 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 	const [shuttleFaultsCount, setShuttleFaultsCount] = useState<number>(0);
 	const [aisleFaultsCount, setAisleFaultsCount] = useState<number>(0);
 
-	//console.log("shuttleFaultsByShuttle: ", shuttleFaultsByShuttle);
-
 	useEffect(() => {
 		const fetchShuttleFaults = async () => {
 			const localShuttleFaults =
@@ -156,37 +154,60 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 		);
 	}
 
-	const hover = (
-		<div className="rounded-md bg-slate-500 p-2 text-white">
-			<div>Shuttle ID: {props.locations.shuttleID}</div>
-			<div>Mac Address: {props.locations.macAddress}</div>
-			<div>Current Location: {props.locations.currentLocation}</div>
-			<div>Current Firmware: {props.locations.currentFirmwareVersion}</div>
-			<div>
-				Last Location Update:{" "}
-				{props.locations.locationLastUpdated.toLocaleString("en-UK")}
+	let hover = <></>;
+
+	if (props.locations.locationLastUpdated != null) {
+		hover = (
+			<div className="rounded-md bg-slate-500 p-2 text-white">
+				<div>Shuttle ID: {props.locations.shuttleID}</div>
+				<div>Mac Address: {props.locations.macAddress}</div>
+				<div>Current Location: {props.locations.currentLocation}</div>
+				<div>Current Firmware: {props.locations.currentFirmwareVersion}</div>
+				<div>
+					Last Location Update:{" "}
+					{props.locations.locationLastUpdated.toLocaleString("en-UK") ||
+						"Unknown"}
+				</div>
+				<div>Last firmware check: {props.locations.lastFirmwareUpdate}</div>
+
+				<div> </div>
+				<div>Faults with Shuttle: {shuttleFaultsCount}</div>
+				<div>Faults with Aisle: {aisleFaultsCount}</div>
 			</div>
-			<div>Last firmware check: {props.locations.lastFirmwareUpdate}</div>
+		);
+	} else {
+		hover = (
+			<div className="rounded-md bg-slate-500 p-2 text-white">
+				<div>Shuttle ID: {props.locations.shuttleID}</div>
+				<div>Current Location: {props.locations.currentLocation}</div>
+				<div> </div>
+				<div>Faults with Shuttle: {shuttleFaultsCount}</div>
+				<div>Faults with Aisle: {aisleFaultsCount}</div>
+			</div>
+		);
+	}
 
-			<div> </div>
-			<div>Faults with Shuttle: {shuttleFaultsCount}</div>
-			<div>Faults with Aisle: {aisleFaultsCount}</div>
-		</div>
-	);
-
-	return (
-		<Link
-			className="min-w-36 text-center"
-			href={
-				"/dashboard/shuttles/locations/" +
-					props.locations.macAddress.replaceAll(" ", "") +
-					"?currentSearchTime=" +
-					props.currentSearchTime || "1"
-			}
-		>
-			<HoverPopup itemToHover={displayLabel} itemToPopUp={hover} />
-		</Link>
-	);
+	if (props.locations.macAddress != null) {
+		return (
+			<Link
+				className="min-w-36 text-center"
+				href={
+					"/dashboard/shuttles/locations/" +
+						props.locations.macAddress.replaceAll(" ", "") +
+						"?currentSearchTime=" +
+						props.currentSearchTime || "1"
+				}
+			>
+				<HoverPopup itemToHover={displayLabel} itemToPopUp={hover} />
+			</Link>
+		);
+	} else {
+		return (
+			<div className="min-w-36 text-center">
+				<HoverPopup itemToHover={displayLabel} itemToPopUp={hover} />
+			</div>
+		);
+	}
 };
 
 export default ShuttlePanel;
