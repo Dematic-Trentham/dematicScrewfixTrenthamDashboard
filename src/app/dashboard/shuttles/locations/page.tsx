@@ -54,6 +54,24 @@ export default function Home() {
 		useState<number>(99999999);
 
 	useEffect(() => {
+		//get the ip address of the client
+
+		if (!isLoading) {
+			// Page load completed
+			// Scroll to put aisle 1 at the top of the page
+			const aisle1 = document.getElementById("aisle-1");
+
+			if (aisle1) {
+				aisle1.scrollIntoView({
+					behavior: "smooth",
+					block: "start",
+					inline: "nearest",
+				});
+			}
+		}
+	}, [isLoading]);
+
+	useEffect(() => {
 		const fetchLocations = async () => {
 			const localLocations = await getLocations();
 			const counts = await getAllCounts(timeToSearch);
@@ -397,32 +415,29 @@ export default function Home() {
 				</div>
 			}
 		>
-			<div>
-				<p>{`Total Faults ${totalFaults}`}</p>
-			</div>
-			<p className="text-center text-xl font-bold">In Aisle</p>
-
 			<div className="flex w-full flex-wrap content-center justify-center">
 				<div className="hidden min-w-56 flex-col space-x-1 space-y-1 self-center lg:flex">
-					<p className="text-center text-xl">Aisle</p>
+					<p className="text-end text-xs">Aisle</p>
 
 					{Array.from({ length: levelCount }, (_, index) => (
-						<div key={levelCount - index} className="text-center text-3xl">
+						<div key={levelCount - index} className="h-8 text-end text-3xl">
 							{<p>{levelCount - index}</p>}
 						</div>
 					))}
 				</div>
-				<div className="hidden items-center align-middle lg:flex">
-					<VerticalBar />
+				<div className="flex items-center p-1 align-middle">
+					<VerticalBar styles="align-middle " />
 				</div>
 
 				{locations.map((aisle, index) => (
 					<React.Fragment key={index}>
-						<div className="flex min-w-56 flex-col space-x-1 space-y-1 self-center">
-							<div className="text-center text-xl">Aisle {index + 1}</div>
+						<div className="flex min-w-56 flex-col space-y-1 self-center">
+							<div className="text-center text-xs" id={`aisle-${index + 1}`}>
+								Aisle {index + 1}
+							</div>
 
 							{aisle.map((location, index) => (
-								<div key={index}>
+								<div key={index} className="flex">
 									<ShuttlePanel
 										colorByType={colorByType}
 										currentLocation={location.currentLocation}
@@ -437,13 +452,14 @@ export default function Home() {
 							))}
 						</div>
 						{index < aisleCount - 1 && (
-							<div className="flex items-center align-middle">
-								<VerticalBar styles="align-middle" />
+							<div className="flex items-center p-1 align-middle">
+								<VerticalBar styles="align-middle " />
 							</div>
 						)}
 					</React.Fragment>
 				))}
 			</div>
+			<p>{`Total Faults ${totalFaults}`}</p>
 			<br />
 			<p className="text-medium font-bold">Maintenance Bay</p>
 			<div className="flex w-full flex-wrap content-center justify-center space-x-1 space-y-1">

@@ -140,15 +140,28 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 
 	let displayLabel = <></>;
 
-	if (props.colorByType === colorByTypeType.shuttle || props.inMaintenanceBay) {
+	if (props.locations.shuttleID.startsWith("Unknown")) {
+		//remove the Unknown from the shuttleID
+		const shuttleID = props.locations.shuttleID.replace("Unknown ", "");
+
 		displayLabel = (
-			<div className={`rounded-xl ${shuttleColor} text-3xl`}>
+			<div className={`rounded-xl ${shuttleColor} m-0 h-8 p-0`}>
+				<p className="text-small text-xs text-red-500">Unknown</p>
+				<p className="text-small text-red-500">{shuttleID}</p>
+			</div>
+		);
+	} else if (
+		props.colorByType === colorByTypeType.shuttle ||
+		props.inMaintenanceBay
+	) {
+		displayLabel = (
+			<div className={`rounded-xl ${shuttleColor} m-0 h-8 p-0 text-3xl`}>
 				{props.locations.shuttleID || "Unknown"}
 			</div>
 		);
 	} else {
 		displayLabel = (
-			<div className={`rounded-xl ${shuttleColor} text-3xl`}>
+			<div className={`rounded-xl ${shuttleColor} m-0 h-8 p-0 text-3xl`}>
 				{props.locations.currentLocation || "Unknown"}
 			</div>
 		);
@@ -190,7 +203,7 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 	if (props.locations.macAddress != null) {
 		return (
 			<Link
-				className="min-w-36 text-center"
+				className="h-8 w-60 text-center"
 				href={
 					"/dashboard/shuttles/locations/" +
 						props.locations.macAddress.replaceAll(" ", "") +
@@ -203,7 +216,7 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 		);
 	} else {
 		return (
-			<div className="min-w-36 text-center">
+			<div className="h-8 w-60 text-center">
 				<HoverPopup itemToHover={displayLabel} itemToPopUp={hover} />
 			</div>
 		);
