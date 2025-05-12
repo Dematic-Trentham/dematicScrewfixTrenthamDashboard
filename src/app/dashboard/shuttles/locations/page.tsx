@@ -99,7 +99,7 @@ export default function Home() {
 				setMaintenanceBay(maintenanceBay);
 
 				//most count
-				let mostCount = 0;
+				let mostCount = 25;
 
 				for (let count of counts) {
 					if (
