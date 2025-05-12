@@ -140,7 +140,10 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 
 	let displayLabel = <></>;
 
-	if (props.locations.shuttleID.startsWith("Unknown")) {
+	if (
+		props.locations.shuttleID != undefined &&
+		props.locations.shuttleID.startsWith("Unknown")
+	) {
 		//remove the Unknown from the shuttleID
 		const shuttleID = props.locations.shuttleID.replace("Unknown ", "");
 
