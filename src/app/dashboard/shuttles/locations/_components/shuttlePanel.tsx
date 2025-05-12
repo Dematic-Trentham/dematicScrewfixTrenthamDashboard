@@ -36,8 +36,6 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 	const [shuttleFaultsCount, setShuttleFaultsCount] = useState<number>(0);
 	const [aisleFaultsCount, setAisleFaultsCount] = useState<number>(0);
 
-	//console.log("shuttleFaultsByShuttle: ", shuttleFaultsByShuttle);
-
 	useEffect(() => {
 		const fetchShuttleFaults = async () => {
 			const localShuttleFaults =
@@ -142,51 +140,87 @@ const ShuttlePanel: React.FC<ShuttlePanelProps> = (props) => {
 
 	let displayLabel = <></>;
 
-	if (props.colorByType === colorByTypeType.shuttle || props.inMaintenanceBay) {
+	if (props.locations.shuttleID.startsWith("Unknown")) {
+		//remove the Unknown from the shuttleID
+		const shuttleID = props.locations.shuttleID.replace("Unknown ", "");
+
 		displayLabel = (
-			<div className={`rounded-xl ${shuttleColor} text-3xl`}>
+			<div className={`rounded-xl ${shuttleColor} m-0 h-8 p-0`}>
+				<p className="text-small text-xs text-red-500">Unknown</p>
+				<p className="text-small text-red-500">{shuttleID}</p>
+			</div>
+		);
+	} else if (
+		props.colorByType === colorByTypeType.shuttle ||
+		props.inMaintenanceBay
+	) {
+		displayLabel = (
+			<div className={`rounded-xl ${shuttleColor} m-0 h-8 p-0 text-3xl`}>
 				{props.locations.shuttleID || "Unknown"}
 			</div>
 		);
 	} else {
 		displayLabel = (
-			<div className={`rounded-xl ${shuttleColor} text-3xl`}>
+			<div className={`rounded-xl ${shuttleColor} m-0 h-8 p-0 text-3xl`}>
 				{props.locations.currentLocation || "Unknown"}
 			</div>
 		);
 	}
 
-	const hover = (
-		<div className="rounded-md bg-slate-500 p-2 text-white">
-			<div>Shuttle ID: {props.locations.shuttleID}</div>
-			<div>Mac Address: {props.locations.macAddress}</div>
-			<div>Current Location: {props.locations.currentLocation}</div>
-			<div>Current Firmware: {props.locations.currentFirmwareVersion}</div>
-			<div>
-				Last Location Update:{" "}
-				{props.locations.locationLastUpdated.toLocaleString("en-UK")}
+	let hover = <></>;
+
+	if (props.locations.locationLastUpdated != null) {
+		hover = (
+			<div className="rounded-md bg-slate-500 p-2 text-white">
+				<div>Shuttle ID: {props.locations.shuttleID}</div>
+				<div>Mac Address: {props.locations.macAddress}</div>
+				<div>Current Location: {props.locations.currentLocation}</div>
+				<div>Current Firmware: {props.locations.currentFirmwareVersion}</div>
+				<div>
+					Last Location Update:{" "}
+					{props.locations.locationLastUpdated.toLocaleString("en-UK") ||
+						"Unknown"}
+				</div>
+				<div>Last firmware check: {props.locations.lastFirmwareUpdate}</div>
+
+				<div> </div>
+				<div>Faults with Shuttle: {shuttleFaultsCount}</div>
+				<div>Faults with Aisle: {aisleFaultsCount}</div>
 			</div>
-			<div>Last firmware check: {props.locations.lastFirmwareUpdate}</div>
+		);
+	} else {
+		hover = (
+			<div className="rounded-md bg-slate-500 p-2 text-white">
+				<div>Shuttle ID: {props.locations.shuttleID}</div>
+				<div>Current Location: {props.locations.currentLocation}</div>
+				<div> </div>
+				<div>Faults with Shuttle: {shuttleFaultsCount}</div>
+				<div>Faults with Aisle: {aisleFaultsCount}</div>
+			</div>
+		);
+	}
 
-			<div> </div>
-			<div>Faults with Shuttle: {shuttleFaultsCount}</div>
-			<div>Faults with Aisle: {aisleFaultsCount}</div>
-		</div>
-	);
-
-	return (
-		<Link
-			className="min-w-36 text-center"
-			href={
-				"/dashboard/shuttles/locations/" +
-					props.locations.macAddress.replaceAll(" ", "") +
-					"?currentSearchTime=" +
-					props.currentSearchTime || "1"
-			}
-		>
-			<HoverPopup itemToHover={displayLabel} itemToPopUp={hover} />
-		</Link>
-	);
+	if (props.locations.macAddress != null) {
+		return (
+			<Link
+				className="h-8 w-60 text-center"
+				href={
+					"/dashboard/shuttles/locations/" +
+						props.locations.macAddress.replaceAll(" ", "") +
+						"?currentSearchTime=" +
+						props.currentSearchTime || "1"
+				}
+			>
+				<HoverPopup itemToHover={displayLabel} itemToPopUp={hover} />
+			</Link>
+		);
+	} else {
+		return (
+			<div className="h-8 w-60 text-center">
+				<HoverPopup itemToHover={displayLabel} itemToPopUp={hover} />
+			</div>
+		);
+	}
 };
 
 export default ShuttlePanel;
