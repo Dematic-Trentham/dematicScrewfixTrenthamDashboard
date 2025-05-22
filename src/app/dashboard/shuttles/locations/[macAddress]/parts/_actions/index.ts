@@ -22,10 +22,113 @@ export const getShuttleFromMac = async (macAddress: string) => {
 	return shuttle;
 };
 
+export const deleteShuttle = async (macAddress: string) => {
+	//check if macAddress is empty
+	if (macAddress === "") {
+		return {
+			error: "Mac Address cannot be empty",
+		};
+	}
+
+	//check shuttle id exists
+	let shuttle = await db.dmsShuttleLocations.findUnique({
+		where: {
+			macAddress: macAddress,
+		},
+	});
+
+	if (!shuttle) {
+		return {
+			error: "Shuttle ID does not exist",
+		};
+	}
+
+	console.log(shuttle);
+
+	// if shuttle is in a location then it cannot be deleted
+	if (shuttle.currentLocation !== "") {
+		return {
+			error: "Shuttle ID is in a location and cannot be deleted",
+		};
+	}
+
+	//delete shuttle
+	const result = await db.dmsShuttleLocations.delete({
+		where: {
+			macAddress: macAddress,
+		},
+	});
+
+	if (!result) {
+		return {
+			error: "Failed to delete shuttle",
+		};
+	}
+
+	return {
+		message: "Shuttle deleted successfully",
+	};
+};
+
 export const updateShuttleId = async (
 	macAddress: string,
 	newShuttleId: string
 ) => {
+	//check if shuttleID already exists
+	let shuttleExists = await db.dmsShuttleLocations.findFirst({
+		where: {
+			shuttleID: newShuttleId,
+		},
+	});
+
+	if (shuttleExists) {
+		return {
+			error: "Shuttle ID already exists",
+		};
+	}
+	//check if shuttleID is empty
+
+	if (newShuttleId === "") {
+		return {
+			error: "Shuttle ID cannot be empty",
+		};
+	}
+	//check if shuttleID is too long
+	if (newShuttleId.length > 20) {
+		return {
+			error: "Shuttle ID cannot be more than 20 characters",
+		};
+	}
+
+	//check if shuttleID is too short
+	if (newShuttleId.length < 3) {
+		return {
+			error: "Shuttle ID cannot be less than 3 characters",
+		};
+	}
+
+	//if should start with a F or S
+	if (!/^[FS]/.test(newShuttleId)) {
+		return {
+			error: "Shuttle ID should start with a F or S",
+		};
+	}
+
+	//then a -
+	if (!/^[FS]-/.test(newShuttleId)) {
+		return {
+			error: "Shuttle ID should start with a F or S followed by a -",
+		};
+	}
+
+	//then 3 numbers
+	if (!/^[FS]-\d{3}/.test(newShuttleId)) {
+		return {
+			error:
+				"Shuttle ID should start with a F or S followed by a - and 3 numbers",
+		};
+	}
+
 	let shuttle = await db.dmsShuttleLocations.update({
 		where: {
 			macAddress: macAddress,
