@@ -4,6 +4,7 @@ import Image from "next/image";
 
 import { getNextFinishDay } from "./_components/nextFriday";
 import gif from "./astra-departure.gif";
+import jpy from "./2.jpg";
 
 const Page = () => {
 	const [nextFridayDay, setNextFridayDay] = React.useState<{
@@ -63,7 +64,7 @@ const Page = () => {
 								alt="Astra GIF"
 								className="rounded-lg"
 								height={200}
-								src={gif}
+								src={jpg}
 								width={800}
 							/>
 
