@@ -4,7 +4,7 @@ import { Button } from "@nextui-org/button";
 import { toast } from "react-toastify";
 import { setCookie } from "cookies-next";
 
-import { getShuttleFromMac } from "./_actions";
+import { getShuttleFromMac, updateShuttleId } from "./_actions";
 
 import { hasPermission } from "@/utils/getUser";
 
@@ -55,22 +55,35 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 		setIsDirty(newShuttleId !== shuttleID);
 	};
 
-	const handleSave = () => {
+	const handleSave = async () => {
 		if (!newShuttleID) {
 			setError("Shuttle ID cannot be empty");
 
 			return;
 		}
 
-		//const error = updateShuttleId(props.macAddress, newShuttleID);
+		try {
+			const result = await updateShuttleId(props.macAddress, newShuttleID);
 
-		setNewShuttleID(newShuttleID);
-		setIsDirty(false);
+			// If updateShuttleId returns an error string, handle it here
+			if ((result as any)?.error) {
+				setError((result as any).error);
+				toast.error("Failed to update Shuttle ID");
 
-		toast.success("Shuttle ID updated successfully");
+				return;
+			}
 
-		//refresh the page
-		setCookie("reloadNeeded", "true");
+			setNewShuttleID(newShuttleID);
+			setIsDirty(false);
+
+			toast.success("Shuttle ID updated successfully");
+
+			//refresh the page
+			setCookie("reloadNeeded", "true");
+		} catch (err: any) {
+			setError("Failed to update Shuttle ID");
+			toast.error("Failed to update Shuttle ID");
+		}
 	};
 
 	if (isLoading) {
@@ -103,13 +116,9 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 				defaultValue={shuttleID || ""}
 				id="shuttleID"
 				label="Shuttle ID"
-				name="shuttleID"
-				placeholder="Enter a Shuttle ID"
-				type="text"
-				onChange={handleShuttleIdChange}
-				onKeyDown={(event: { key: string }) => {
+				onKeyDown={async (event: { key: string }) => {
 					if (event.key === "Enter") {
-						handleSave();
+						await handleSave();
 					}
 				}}
 			/>
