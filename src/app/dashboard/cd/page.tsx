@@ -64,7 +64,7 @@ const Page = () => {
 								alt="Astra GIF"
 								className="rounded-lg"
 								height={200}
-								src={jpg}
+								src={jpy}
 								width={800}
 							/>
 
