@@ -123,7 +123,8 @@ const MachineDetailsPage = () => {
 					machineType,
 					machineNumber
 				);
-				console.log("data", data);
+				//	console.log("data", data);
+				//setLoading(false);
 			} else {
 				//if the machine is old, we will use the old db
 				data = await getAutoCartonFaultsOLD(
@@ -131,7 +132,8 @@ const MachineDetailsPage = () => {
 					machineType,
 					machineNumber
 				);
-				console.log("data", data);
+				//console.log("data", data);
+				//setLoading(false);
 			}
 
 			if ("error" in data) {
@@ -147,11 +149,10 @@ const MachineDetailsPage = () => {
 				});
 
 				setData(array);
+				setLoading(false);
 
 				//lets make a count of the faults and add them to the data
 			}
-
-			setLoading(false);
 		}
 
 		fetchData(); // Initial fetch
@@ -172,18 +173,65 @@ const MachineDetailsPage = () => {
 			<PanelTop
 				title={title}
 				topRight={
-					<button
-						className="rounded-lg bg-blue-400 p-2 text-white"
-						onClick={() => {
-							window.location.href =
-								"/dashboard/autoCarton/" +
-								returnURL +
-								"?timeRange=" +
-								totalTime;
-						}}
-					>
-						Back
-					</button>
+					<>
+						<div
+							className={"bg-white text-black"}
+							style={{ marginTop: "20px", textAlign: "center" }}
+						>
+							<label htmlFor="totalTime">Select Total Search Time: </label>
+							<select
+								className={"border bg-white text-black"}
+								id="totalTime"
+								value={totalTime}
+								onChange={async (e) => {
+									await updateUrlParams(
+										searchParams,
+										router,
+										"timeRange",
+										e.target.value
+									);
+									setLoading(true);
+									setTotalTime(parseInt(e.target.value));
+								}}
+							>
+								<option value={5}>5 minutes</option>
+								<option value={10}>10 minutes</option>
+								<option value={15}>15 minutes</option>
+								<option value={30}>30 minutes</option>
+								<option value={60}>1 hour</option>
+								<option value={120}>2 hours</option>
+								<option value={180}>3 hours</option>
+								<option value={360}>6 hours</option>
+								<option value={720}>12 hours</option>
+								<option value={1440}>1 day</option>
+								<option value={2880}>2 days</option>
+								<option value={4320}>3 days</option>
+								<option value={5760}>4 days</option>
+								<option value={7200}>5 days</option>
+								<option value={8640}>6 days</option>
+								<option value={10080}>1 week</option>
+								<option value={20160}>2 weeks</option>
+								<option value={43200}>1 month</option>
+								<option value={86400}>2 months</option>
+								<option value={129600}>3 months</option>
+								<option value={172800}>4 months</option>
+								<option value={216000}>5 months</option>
+								<option value={259200}>6 months</option>
+							</select>
+						</div>
+						<button
+							className="rounded-lg bg-blue-400 p-2 text-white"
+							onClick={() => {
+								window.location.href =
+									"/dashboard/autoCarton/" +
+									returnURL +
+									"?timeRange=" +
+									totalTime;
+							}}
+						>
+							Back
+						</button>
+					</>
 				}
 			>
 				{error}
@@ -196,15 +244,65 @@ const MachineDetailsPage = () => {
 			className="h-fit w-full"
 			title={title}
 			topRight={
-				<button
-					className="rounded-lg bg-blue-400 p-2 text-white"
-					onClick={() => {
-						window.location.href =
-							"/dashboard/autoCarton/" + returnURL + "?timeRange=" + totalTime;
-					}}
-				>
-					Back
-				</button>
+				<div className="flex">
+					<div
+						className={"pr-2 text-black"}
+						style={{ marginTop: "20px", textAlign: "center" }}
+					>
+						<label htmlFor="totalTime">Select Total Search Time: </label>
+						<select
+							className={"border bg-white text-black"}
+							id="totalTime"
+							value={totalTime}
+							onChange={async (e) => {
+								await updateUrlParams(
+									searchParams,
+									router,
+									"timeRange",
+									e.target.value
+								);
+								setLoading(true);
+								setTotalTime(parseInt(e.target.value));
+							}}
+						>
+							<option value={5}>5 minutes</option>
+							<option value={10}>10 minutes</option>
+							<option value={15}>15 minutes</option>
+							<option value={30}>30 minutes</option>
+							<option value={60}>1 hour</option>
+							<option value={120}>2 hours</option>
+							<option value={180}>3 hours</option>
+							<option value={360}>6 hours</option>
+							<option value={720}>12 hours</option>
+							<option value={1440}>1 day</option>
+							<option value={2880}>2 days</option>
+							<option value={4320}>3 days</option>
+							<option value={5760}>4 days</option>
+							<option value={7200}>5 days</option>
+							<option value={8640}>6 days</option>
+							<option value={10080}>1 week</option>
+							<option value={20160}>2 weeks</option>
+							<option value={43200}>1 month</option>
+							<option value={86400}>2 months</option>
+							<option value={129600}>3 months</option>
+							<option value={172800}>4 months</option>
+							<option value={216000}>5 months</option>
+							<option value={259200}>6 months</option>
+						</select>
+					</div>
+					<button
+						className="rounded-lg bg-blue-400 p-2 text-white"
+						onClick={() => {
+							window.location.href =
+								"/dashboard/autoCarton/" +
+								returnURL +
+								"?timeRange=" +
+								totalTime;
+						}}
+					>
+						Back
+					</button>
+				</div>
 			}
 		>
 			<Tabs>
@@ -235,51 +333,6 @@ const MachineDetailsPage = () => {
 				<TabPanel>{tabGrouped(data)}</TabPanel>
 				<TabPanel>{tabFormattedData(data)}</TabPanel>
 			</Tabs>
-			<div
-				className={"bg-white text-black"}
-				style={{ marginTop: "20px", textAlign: "center" }}
-			>
-				<label htmlFor="totalTime">Select Total Search Time: </label>
-				<select
-					className={"border bg-white text-black"}
-					id="totalTime"
-					value={totalTime}
-					onChange={async (e) => {
-						await updateUrlParams(
-							searchParams,
-							router,
-							"timeRange",
-							e.target.value
-						);
-						setLoading(true);
-						setTotalTime(parseInt(e.target.value));
-					}}
-				>
-					<option value={5}>5 minutes</option>
-					<option value={10}>10 minutes</option>
-					<option value={15}>15 minutes</option>
-					<option value={30}>30 minutes</option>
-					<option value={60}>1 hour</option>
-					<option value={120}>2 hours</option>
-					<option value={180}>3 hours</option>
-					<option value={360}>6 hours</option>
-					<option value={720}>12 hours</option>
-					<option value={1440}>1 day</option>
-					<option value={2880}>2 days</option>
-					<option value={4320}>3 days</option>
-					<option value={5760}>4 days</option>
-					<option value={7200}>5 days</option>
-					<option value={8640}>6 days</option>
-					<option value={10080}>1 week</option>
-					<option value={20160}>2 weeks</option>
-					<option value={43200}>1 month</option>
-					<option value={86400}>2 months</option>
-					<option value={129600}>3 months</option>
-					<option value={172800}>4 months</option>
-					<option value={216000}>5 months</option>
-					<option value={259200}>6 months</option>
-				</select>
-			</div>
 		</PanelTop>
 	);
 
@@ -312,9 +365,50 @@ const MachineDetailsPage = () => {
 
 		return (
 			<div>
-				<div className="flex flex-col items-center">
+				<div className="flex items-center gap-5">
 					<div>Total Boxes: {totalBoxes}</div>
 					<div>Total Faults: {totalFaults}</div>
+					<button
+						className="ml-auto gap-2 rounded-lg bg-green-500 p-2 text-white"
+						onClick={() => {
+							const csvRows = [
+								["Date/Time", "Date", "Time", "Fault Code"],
+								...data
+									.filter(
+										(item: any) => !excludedFaults2.includes(item.faultCode)
+									)
+									.map((item: any) => [
+										changeDateToReadable(item.timestamp),
+										changeDateToReadable(item.timestamp).split(" ")[0],
+										changeDateToReadable(item.timestamp).split(" ")[2],
+										makeReadableFaultCode(item.faultCode),
+									]),
+							];
+							const csvContent =
+								"data:text/csv;charset=utf-8," +
+								csvRows.map((e) => e.join(",")).join("\n");
+							const encodedUri = encodeURI(csvContent);
+							const link = document.createElement("a");
+
+							link.setAttribute("href", encodedUri);
+							const now = new Date();
+							const dateStr = now.toISOString().split("T")[0];
+							const timeStr = now
+								.toTimeString()
+								.split(" ")[0]
+								.replace(/:/g, "-");
+
+							link.setAttribute(
+								"download",
+								`${title}_faults_${dateStr}_${timeStr}.csv`
+							);
+							document.body.appendChild(link);
+							link.click();
+							document.body.removeChild(link);
+						}}
+					>
+						Export
+					</button>
 				</div>
 
 				<table className="dematicTable dematicTableStriped dematicTableHoverable">

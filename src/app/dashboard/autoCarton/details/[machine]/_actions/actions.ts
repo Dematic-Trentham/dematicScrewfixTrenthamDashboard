@@ -19,13 +19,24 @@ export async function getAutoCartonFaults(
 ) {
 	const faultCodes = await db.autoCartonFaultCodeLookup.findMany();
 
+	// Fetch only relevant fault codes first to reduce data size
+	const faultCodeIds = faultCodes.map((fc) => fc.ID);
+
 	const data = await db.autoCartonFaults.findMany({
 		where: {
 			timestamp: {
 				gte: new Date(Date.now() - minutes * 60 * 1000),
 			},
-			machineType: machineType,
-			line: line,
+			machineType,
+			line,
+			faultCode: { in: faultCodeIds }, // filter to only known fault codes
+		},
+		select: {
+			// select only needed fields to reduce payload
+			faultCode: true,
+			// add other fields you actually use below
+			timestamp: true,
+			// ...etc
 		},
 	});
 
