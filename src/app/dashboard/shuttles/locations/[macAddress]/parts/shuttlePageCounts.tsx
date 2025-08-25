@@ -83,35 +83,48 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 			<button
 				className="mb-4 rounded bg-blue-500 p-2 text-white"
 				onClick={() => {
-					// const csvContent = [
-					// 	[
-					// 		"Timestamp Date",
-					// 		"Timestamp Time",
-					// 		"Resolve Time Date",
-					// 		"Resolve Time Time",
-					// 		"Time in Fault",
-					// 		"Fault Description",
-					// 		"W Location",
-					// 		"Z Location",
-					// 		"Aisle",
-					// 		"Level",
-					// 		"Shuttle ID",
-					// 		"X Location",
-					// 		"X Coordinate",
-					// 	],
-					// const blob = new Blob([csvContent], {
-					// 	type: "text/csv;charset=utf-8;",
-					// });
-					// const link = document.createElement("a");
-					// const url = URL.createObjectURL(blob);
-					// link.setAttribute("href", url);
-					// link.setAttribute("download", "shuttle_faults.csv");
-					// link.style.visibility = "hidden";
-					// document.body.appendChild(link);
-					// link.click();
-					// document.body.removeChild(link);
+					const csvContent = [
+						[
+							"Timestamp Date",
+							"Timestamp Time",
+							"Aisle",
+							"Level",
+							"Shuttle ID",
+							"Picks",
+							"Drops",
+							"IATs",
+							"Total Counts",
+						],
+						...counts.map((count) => [
+							new Date(count.timeStamp).toLocaleDateString(),
+							new Date(count.timeStamp).toLocaleTimeString(),
+
+							count.aisle,
+							count.level,
+							count.shuttleID,
+							count.totalPicks,
+							count.totalDrops,
+							count.totalIATs,
+							count.totalPicks + count.totalDrops + count.totalIATs,
+						]),
+					];
+					const csvString = csvContent.map((row) => row.join(",")).join("\n");
+					const blob = new Blob([csvString], {
+						type: "text/csv;charset=utf-8;",
+					});
+					const link = document.createElement("a");
+					const url = URL.createObjectURL(blob);
+
+					link.setAttribute("href", url);
+					link.setAttribute("download", "shuttle_faults.csv");
+					link.style.visibility = "hidden";
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link);
 				}}
-			/>
+			>
+				Export
+			</button>
 		</div>
 	);
 
