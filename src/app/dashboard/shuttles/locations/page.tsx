@@ -64,7 +64,7 @@ export default function Home() {
 		if (!isLoading) {
 			// Page load completed
 			// Scroll to put aisle 1 at the top of the page
-			const aisle1 = document.getElementById("aisle-1");
+			const aisle1 = document.getElementById("shuttle-levels");
 
 			if (aisle1) {
 				aisle1.scrollIntoView({
@@ -184,6 +184,8 @@ export default function Home() {
 					key2[1].padStart(2, "0") +
 					"SH01";
 
+				console.log(location + " " + key[1]);
+
 				//"MSAI02LV13SH01"
 				locations.forEach((loc) => {
 					if (loc.currentLocation === location) {
@@ -193,6 +195,7 @@ export default function Home() {
 			}
 
 			setTotalMissionsForShuttle(missionsForAisle);
+			console.log(missionsForAisle);
 
 			let worstMissionPerFault = {
 				amount: Infinity,
@@ -389,7 +392,10 @@ export default function Home() {
 				<div className="w-full text-center sm:w-1/2 lg:w-1/4">{`Missions Per Fault: ${totalMissionsPerFault}`}</div>
 				<div className="w-full text-center sm:w-1/2 lg:w-1/4">{`Worst Mission Per Fault: ${worstMissionPerFault.amount} (Location: ${worstMissionPerFault.location})`}</div>
 			</div>
-			<div className="flex w-full flex-wrap content-center justify-center">
+			<div
+				className="flex w-full flex-wrap content-center justify-center"
+				id="shuttle-levels"
+			>
 				<div className="hidden min-w-56 flex-col space-x-1 space-y-1 self-center lg:flex">
 					<p className="text-end text-xs">Aisle</p>
 

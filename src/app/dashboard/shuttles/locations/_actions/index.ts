@@ -59,16 +59,21 @@ export const getShuttleFaultsAndCountsNumbers = async (days: number) => {
 		{} as Record<string, number>
 	);
 
-	const missionCounts = counts.reduce(
-		(acc, count) => {
-			const key = count.aisle + "." + count.level;
+	//console.log(counts);
 
-			acc[key] = (acc[key] || 0) + 1;
+	let missionCounts: Record<string, number> = {};
 
-			return acc;
-		},
-		{} as Record<string, number>
-	);
+	for (const count of counts) {
+		const key = count.aisle.toString() + "." + count.level.toString();
+
+		missionCounts[key] =
+			(missionCounts[key] || 0) +
+			count.totalDrops +
+			count.totalPicks +
+			count.totalIATs;
+	}
+
+	console.log(missionCounts);
 
 	// Sort the keys alphabetically
 	const sortedFaultCounts = Object.fromEntries(

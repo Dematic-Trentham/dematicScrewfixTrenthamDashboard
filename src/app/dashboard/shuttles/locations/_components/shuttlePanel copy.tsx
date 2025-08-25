@@ -80,13 +80,23 @@ const ShuttlePanelNew: React.FC<ShuttlePanelProps> = (props) => {
 		shuttleColor = "bg-violet-500";
 	}
 
+	let Display = "";
+
+	if (props.colourType == colorByTypeType.missionsPerFault) {
+		Display = " - " + props.shuttleMissionPerFault.toFixed(2);
+	} else if (props.colourType == colorByTypeType.counts) {
+		Display = " - " + props.shuttleMissions;
+	} else if (props.colourType == colorByTypeType.faults) {
+		Display = " - " + props.shuttleFaults;
+	}
+
 	let displayLabel = <></>;
 
 	displayLabel = (
 		<div className={`rounded-xl ${shuttleColor} m-0 h-8 p-0 text-3xl`}>
 			<div className="flex h-full items-center justify-center text-black">
 				{/* Center content vertically and horizontally */}
-				{props.shuttleInfo.shuttleID || "No ID"}
+				{props.shuttleInfo.shuttleID + Display || "No ID"}
 			</div>
 		</div>
 	);
