@@ -12,6 +12,7 @@ export enum colorByTypeType {
 	shuttle,
 	counts,
 	missionsPerFault,
+	faults,
 }
 
 interface ShuttlePanelProps {
@@ -22,7 +23,7 @@ interface ShuttlePanelProps {
 		worstShuttleByAisle: number;
 		worstShuttleByShuttle: number;
 	} | null;
-	currentLocation: string;
+	currentLocation: string | null;
 	currentSearchTime: number;
 	colorByType: colorByTypeType;
 	inMaintenanceBay: boolean;
