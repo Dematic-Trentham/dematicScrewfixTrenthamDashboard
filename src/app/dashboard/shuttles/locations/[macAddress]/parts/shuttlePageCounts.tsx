@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { getShuttleCountsByLocation } from "./_actions";
+import ShuttlePageFaultsDailyCountsChart from "./shuttlePageFaultsDailyCountsChart";
 
 import { shuttleFaultCodeLookup } from "@/app/dashboard/shuttles/_types/shuttle";
 //import HoverPopup from "@/components/visual/hoverPopupFloat";
@@ -29,6 +30,8 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 	const [faultCodeLookup, setFaultCodeLookup] = useState<
 		shuttleFaultCodeLookup[]
 	>([]);
+
+	const [tab, setTab] = useState<"hourly" | "daily" | "dayGraph">("daily");
 
 	useEffect(() => {
 		const fetchShuttle = async () => {
@@ -80,71 +83,191 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 			<button
 				className="mb-4 rounded bg-blue-500 p-2 text-white"
 				onClick={() => {
-					// const csvContent = [
-					// 	[
-					// 		"Timestamp Date",
-					// 		"Timestamp Time",
-					// 		"Resolve Time Date",
-					// 		"Resolve Time Time",
-					// 		"Time in Fault",
-					// 		"Fault Description",
-					// 		"W Location",
-					// 		"Z Location",
-					// 		"Aisle",
-					// 		"Level",
-					// 		"Shuttle ID",
-					// 		"X Location",
-					// 		"X Coordinate",
-					// 	],
-					// const blob = new Blob([csvContent], {
-					// 	type: "text/csv;charset=utf-8;",
-					// });
-					// const link = document.createElement("a");
-					// const url = URL.createObjectURL(blob);
-					// link.setAttribute("href", url);
-					// link.setAttribute("download", "shuttle_faults.csv");
-					// link.style.visibility = "hidden";
-					// document.body.appendChild(link);
-					// link.click();
-					// document.body.removeChild(link);
+					const csvContent = [
+						[
+							"Timestamp Date",
+							"Timestamp Time",
+							"Aisle",
+							"Level",
+							"Shuttle ID",
+							"Picks",
+							"Drops",
+							"IATs",
+							"Total Counts",
+						],
+						...counts.map((count) => [
+							new Date(count.timeStamp).toLocaleDateString(),
+							new Date(count.timeStamp).toLocaleTimeString(),
+
+							count.aisle,
+							count.level,
+							count.shuttleID,
+							count.totalPicks,
+							count.totalDrops,
+							count.totalIATs,
+							count.totalPicks + count.totalDrops + count.totalIATs,
+						]),
+					];
+					const csvString = csvContent.map((row) => row.join(",")).join("\n");
+					const blob = new Blob([csvString], {
+						type: "text/csv;charset=utf-8;",
+					});
+					const link = document.createElement("a");
+					const url = URL.createObjectURL(blob);
+
+					link.setAttribute("href", url);
+					link.setAttribute("download", "shuttle_faults.csv");
+					link.style.visibility = "hidden";
+					document.body.appendChild(link);
+					link.click();
+					document.body.removeChild(link);
 				}}
-			/>
+			>
+				Export
+			</button>
 		</div>
 	);
 
 	return (
 		<div>
 			{exportButton}
-			<table className="w-full">
-				<thead className="border border-black bg-orange-400">
-					<tr>
-						<th style={{ width: "150px" }}>Timestamp</th>
-						<th style={{ width: "150px" }}>Total Picks</th>
-						<th style={{ width: "100px" }}>Total Drops</th>
-						<th style={{ width: "100px" }}>Total IATs</th>
-					</tr>
-				</thead>
+			<div>
+				<div className="mb-4 flex gap-2">
+					<button
+						className={`rounded px-4 py-2 ${tab === "hourly" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+						onClick={() => setTab("hourly")}
+					>
+						Hour by Hour
+					</button>
+					<button
+						className={`rounded px-4 py-2 ${tab === "daily" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+						onClick={() => setTab("daily")}
+					>
+						By Day
+					</button>
+					<button
+						className={`rounded px-4 py-2 ${tab === "dayGraph" ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+						onClick={() => setTab("dayGraph")}
+					>
+						Graph
+					</button>
+				</div>
+				{tab === "hourly" && (
+					<table className="w-full">
+						<thead className="border border-black bg-orange-400">
+							<tr>
+								<th style={{ width: "250px" }}>Timestamp</th>
+								<th style={{ width: "150px" }}>Total Picks</th>
+								<th style={{ width: "100px" }}>Total Drops</th>
+								<th style={{ width: "100px" }}>Total IATs</th>
+								<th style={{ width: "100px" }}>Total Counts</th>
+							</tr>
+						</thead>
+						<tbody>
+							{counts.map((count) => (
+								<tr
+									key={count.ID}
+									className="border border-black text-center hover:bg-yellow-200"
+								>
+									<td>
+										{new Date(count.timeStamp).toLocaleString() +
+											" - " +
+											new Date(
+												new Date(count.timeStamp).getTime() + 60 * 60 * 1000
+											).toLocaleString()}
+									</td>
+									<td>{count.totalPicks}</td>
+									<td>{count.totalDrops}</td>
+									<td>{count.totalIATs}</td>
+									<td>
+										{count.totalPicks + count.totalDrops + count.totalIATs}
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				)}
+				{tab === "daily" && (
+					<table className="w-full">
+						<thead className="border border-black bg-orange-400">
+							<tr>
+								<th style={{ width: "150px" }}>Date</th>
+								<th style={{ width: "150px" }}>Total Picks</th>
+								<th style={{ width: "100px" }}>Total Drops</th>
+								<th style={{ width: "100px" }}>Total IATs</th>
+								<th style={{ width: "100px" }}>Total Count</th>
+							</tr>
+						</thead>
+						<tbody>
+							{Object.entries(
+								counts.reduce<
+									Record<
+										string,
+										{
+											totalPicks: number;
+											totalDrops: number;
+											totalIATs: number;
+											totalCounts: number;
+										}
+									>
+								>((acc, count) => {
+									const dateStr = new Date(
+										count.timeStamp
+									).toLocaleDateString();
 
-				<tbody>
-					{counts.map((count) => (
-						<tr
-							key={count.ID}
-							className="border border-black text-center hover:bg-yellow-200"
-						>
-							<td>
-								{count.timeStamp.toLocaleString() +
-									" - " +
-									new Date(
-										count.timeStamp.getTime() + 60 * 60 * 1000
-									).toLocaleString()}
-							</td>
-							<td>{count.totalPicks}</td>
-							<td>{count.totalDrops}</td>
-							<td>{count.totalIATs}</td>
-						</tr>
-					))}
-				</tbody>
-			</table>
+									if (!acc[dateStr]) {
+										acc[dateStr] = {
+											totalPicks: 0,
+											totalDrops: 0,
+											totalIATs: 0,
+											totalCounts: 0,
+										};
+									}
+									acc[dateStr].totalPicks += count.totalPicks;
+									acc[dateStr].totalDrops += count.totalDrops;
+									acc[dateStr].totalIATs += count.totalIATs;
+									acc[dateStr].totalCounts +=
+										count.totalPicks + count.totalDrops + count.totalIATs;
+
+									return acc;
+								}, {})
+							).map(([date, totals]) => (
+								<tr
+									key={date}
+									className="border border-black text-center hover:bg-yellow-200"
+								>
+									<td>{date}</td>
+									<td>{totals.totalPicks}</td>
+									<td>{totals.totalDrops}</td>
+									<td>{totals.totalIATs}</td>
+									<td>{totals.totalCounts}</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				)}
+				{tab === "dayGraph" && (
+					<div className="mx-auto w-full max-w-2xl">
+						<ShuttlePageFaultsDailyCountsChart
+							data={Object.entries(
+								counts.reduce<Record<string, number>>((acc, count) => {
+									const dateStr = new Date(
+										count.timeStamp
+									).toLocaleDateString();
+
+									acc[dateStr] =
+										(acc[dateStr] || 0) +
+										count.totalPicks +
+										count.totalDrops +
+										count.totalIATs;
+
+									return acc;
+								}, {})
+							).map(([date, count]) => ({ date, count }))}
+						/>
+					</div>
+				)}
+			</div>
 		</div>
 	);
 };

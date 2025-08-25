@@ -30,25 +30,35 @@ const HoverPopup: React.FC<HoverPopupProps> = ({
 	const handleMouseLeave = () => {
 		setIsHovered(false);
 	};
+	const handleMouseMove = (e: { clientX: any; clientY: any }) => {
+		setIsHovered(true);
+	};
 
 	return (
-		<div className="" onMouseLeave={handleMouseLeave}>
+		<div
+			className=""
+			onMouseLeave={handleMouseLeave}
+			onMouseMove={handleMouseMove}
+		>
 			<div onMouseEnter={handleMouseEnter}>{itemToHover}</div>
 
 			<div
-				className={`transition-all duration-500 ${
+				className={`transition-all duration-500 placeholder:${
 					isHovered ? "fixed opacity-100" : "hidden opacity-0"
 				}`}
 			>
-				<div
-					style={{
-						position: "fixed",
-						left: `${mousePosition.x + xOffset - 2}px`,
-						top: `${mousePosition.y + yOffset - 2}px`,
-					}}
-				>
-					{itemToPopUp}
-				</div>
+				{isHovered && (
+					<div
+						style={{
+							position: "absolute",
+
+							left: `${mousePosition.x + xOffset - 2}px`,
+							top: `${mousePosition.y + yOffset - 2}px`,
+						}}
+					>
+						{itemToPopUp}
+					</div>
+				)}
 			</div>
 		</div>
 	);
