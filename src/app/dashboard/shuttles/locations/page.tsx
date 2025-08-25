@@ -14,8 +14,7 @@ import {
 	getShuttleFaultsAndCountsNumbersCache,
 	hasShuttleFaultsAndCountsNumbersCache,
 } from "./_actions";
-import ShuttlePanel from "./_components/shuttlePanel";
-import { colorByTypeType } from "./_components/shuttlePanel";
+import { colorByTypeType } from "./_components/shuttlePanel copy";
 import { getAllCounts } from "./[macAddress]/parts/_actions";
 import ShuttlePanelNew from "./_components/shuttlePanel copy";
 
