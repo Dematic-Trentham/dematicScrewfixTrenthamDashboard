@@ -38,9 +38,10 @@ const ShuttlePanelNew: React.FC<ShuttlePanelProps> = (props) => {
 		faultPercentage = 1 - props.shuttleMissions / props.mostMissions;
 	} else if (props.colourType === colorByTypeType.faults) {
 		faultPercentage = props.shuttleFaults / props.mostFaults;
-		if (props.shuttleFaults === 0) {
-			faultPercentage = 0;
-		}
+	}
+
+	if (props.shuttleFaults === 0) {
+		faultPercentage = 0;
 	}
 
 	faultPercentage = faultPercentage.toFixed(2) as unknown as number;
@@ -82,7 +83,11 @@ const ShuttlePanelNew: React.FC<ShuttlePanelProps> = (props) => {
 	let Display = "";
 
 	if (props.colourType == colorByTypeType.missionsPerFault) {
-		Display = props.shuttleMissionPerFault.toFixed(2);
+		if (props.shuttleMissionPerFault > 0) {
+			Display = props.shuttleMissionPerFault.toFixed(2);
+		} else {
+			Display = props.shuttleMissions.toString();
+		}
 	} else if (props.colourType == colorByTypeType.counts) {
 		Display = props.shuttleMissions.toFixed(0);
 	} else if (props.colourType == colorByTypeType.faults) {
