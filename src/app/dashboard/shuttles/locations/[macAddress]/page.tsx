@@ -160,9 +160,13 @@ export default function ShuttlePage(props: {}) {
 								);
 							}}
 						>
+							<option value={0.25}>6 hours</option>
+							<option value={0.5}>12 hours</option>
 							<option value={1}>1 day</option>
 							<option value={2}>2 days</option>
 							<option value={4}>4 days</option>
+							<option value={5}>5 days</option>
+							<option value={6}>6 days</option>
 							<option value={7}>1 week</option>
 							<option value={10}>10 days</option>
 							<option value={14}>2 weeks</option>
@@ -172,6 +176,10 @@ export default function ShuttlePage(props: {}) {
 							<option value={120}>4 months</option>
 							<option value={150}>5 months</option>
 							<option value={180}>6 months</option>
+							<option value={270}>9 months</option>
+							<option value={365}>12 months</option>
+							<option value={540}>18 months</option>
+							<option value={730}>24 months</option>
 						</select>
 						<button onClick={() => returnToPreviousPage()}>Back</button>
 					</div>
