@@ -27,7 +27,7 @@ const ShuttlePageFaultsDailyCountsChart: React.FC<Props> = ({ data }) => {
 		labels: data.map((d) => d.date),
 		datasets: [
 			{
-				label: "Faults",
+				label: "Missions",
 				data: data.map((d) => d.count),
 				fill: false,
 				borderColor: "rgb(75, 192, 192)",
