@@ -251,8 +251,6 @@ export default function Home() {
 			setBestMissions(mostMissions);
 			setMissionsPerFaults(missionsPerFaults);
 
-			console.log(mostMissions);
-
 			//Aisle Count and Level
 			const { amountOfAisles, amountOfLevels } = await aisleAndLevelAmount();
 
