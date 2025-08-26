@@ -35,7 +35,7 @@ const ShuttlePanelNew: React.FC<ShuttlePanelProps> = (props) => {
 	if (props.colourType === colorByTypeType.missionsPerFault) {
 		faultPercentage = props.worstMissionPerFault / props.shuttleMissionPerFault;
 	} else if (props.colourType === colorByTypeType.counts) {
-		faultPercentage = props.mostMissions / props.shuttleMissions - 1;
+		faultPercentage = 1 - props.shuttleMissions / props.mostMissions;
 	} else if (props.colourType === colorByTypeType.faults) {
 		faultPercentage = props.shuttleFaults / props.mostFaults;
 	}
@@ -83,20 +83,20 @@ const ShuttlePanelNew: React.FC<ShuttlePanelProps> = (props) => {
 	let Display = "";
 
 	if (props.colourType == colorByTypeType.missionsPerFault) {
-		Display = " - " + props.shuttleMissionPerFault.toFixed(2);
+		Display = props.shuttleMissionPerFault.toFixed(2);
 	} else if (props.colourType == colorByTypeType.counts) {
-		Display = " - " + props.shuttleMissions;
+		Display = props.shuttleMissions.toFixed(0);
 	} else if (props.colourType == colorByTypeType.faults) {
-		Display = " - " + props.shuttleFaults;
+		Display = props.shuttleFaults.toFixed(0);
 	}
 
 	let displayLabel = <></>;
 
 	displayLabel = (
 		<div className={`rounded-xl ${shuttleColor} m-0 h-8 p-0 text-3xl`}>
-			<div className="flex h-full items-center justify-center text-black">
-				{/* Center content vertically and horizontally */}
-				{props.shuttleInfo.shuttleID + Display || "No ID"}
+			<div className="flex h-full items-center justify-between px-2 text-black">
+				<div>{props.shuttleInfo.shuttleID || "No ID"}</div>
+				{Display && <div className="text-lg">{Display}</div>}
 			</div>
 		</div>
 	);

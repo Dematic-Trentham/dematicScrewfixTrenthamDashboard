@@ -42,7 +42,7 @@ export default function Home() {
 
 	const initalColorByType = searchParams.get("colorByType")
 		? Number(searchParams.get("colorByType"))
-		: colorByTypeType.shuttle;
+		: colorByTypeType.missionsPerFault;
 
 	const [colorByType, setColorByType] =
 		useState<colorByTypeType>(initalColorByType);
@@ -184,8 +184,6 @@ export default function Home() {
 					key2[1].padStart(2, "0") +
 					"SH01";
 
-				console.log(location + " " + key[1]);
-
 				//"MSAI02LV13SH01"
 				locations.forEach((loc) => {
 					if (loc.currentLocation === location) {
@@ -195,7 +193,6 @@ export default function Home() {
 			}
 
 			setTotalMissionsForShuttle(missionsForAisle);
-			console.log(missionsForAisle);
 
 			let worstMissionPerFault = {
 				amount: Infinity,
@@ -339,7 +336,7 @@ export default function Home() {
 					>
 						<option value={colorByTypeType.faults}>Faults</option>
 						<option value={colorByTypeType.counts}>Counts</option>
-						<option selected value={colorByTypeType.missionsPerFault}>
+						<option value={colorByTypeType.missionsPerFault}>
 							Missions Per Fault
 						</option>
 					</select>
@@ -391,6 +388,8 @@ export default function Home() {
 				<div className="w-full text-center sm:w-1/2 lg:w-1/4">{`Total Missions: ${totalMissions}`}</div>
 				<div className="w-full text-center sm:w-1/2 lg:w-1/4">{`Missions Per Fault: ${totalMissionsPerFault}`}</div>
 				<div className="w-full text-center sm:w-1/2 lg:w-1/4">{`Worst Mission Per Fault: ${worstMissionPerFault.amount} (Location: ${worstMissionPerFault.location})`}</div>
+				<div className="w-full text-center sm:w-1/2 lg:w-1/4">{`Most Faults: ${mostFaults.amount} (Location: ${mostFaults.location})`}</div>
+				<div className="w-full text-center sm:w-1/2 lg:w-1/4">{`Most Missions: ${bestMissions.amount} (Location: ${bestMissions.location})`}</div>
 			</div>
 			<div
 				className="flex w-full flex-wrap content-center justify-center"
