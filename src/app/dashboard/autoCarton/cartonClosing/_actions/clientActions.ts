@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+
 import { getCartonClosingAllTimed } from "./getAutoCarton";
 
 import config from "@/config";
@@ -110,25 +112,31 @@ function parseDataOld(data: any) {
 }
 
 async function fetchNewData(totalTime: number, setData: any) {
-	try {
-		//get data from server
-		const newData = await getCartonClosingAllTimed(totalTime);
+	return await unstable_cache(
+		async () => {
+			try {
+				//get data from server
+				const newData = await getCartonClosingAllTimed(totalTime);
 
-		//if empty data then return
-		if (!newData) {
-			return {
-				error: "No carton closing data found for the specified time period",
-			};
-		}
+				//if empty data then return
+				if (!newData) {
+					return {
+						error: "No carton closing data found for the specified time period",
+					};
+				}
 
-		const parsedData2 = await parseData(newData);
+				const parsedData2 = await parseData(newData);
 
-		setData(parsedData2);
+				setData(parsedData2);
 
-		return { status: "success", data: parsedData2 };
-	} catch (err) {
-		return { error: err };
-	}
+				return { status: "success", data: parsedData2 };
+			} catch (err) {
+				return { error: err };
+			}
+		},
+		[`getCartonClosingAll-${totalTime}`], // unique key per "days"
+		{ revalidate: 60 } // 1m cache
+	);
 }
 
 function parseData(data: {
