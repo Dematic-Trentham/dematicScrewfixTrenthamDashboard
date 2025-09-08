@@ -100,6 +100,15 @@ export const restartWMSSystem = async () => {
 
 		console.log(`Stdout: ${stdout}`);
 
+		await db.dashboardSystemParameters.update({
+			where: {
+				parameter: "WMSFAILED",
+			},
+			data: {
+				value: "false",
+			},
+		});
+
 		return { success: true, message: "WMS system restarted successfully" };
 	} catch (error) {
 		console.error(`Error: ${error}`);
