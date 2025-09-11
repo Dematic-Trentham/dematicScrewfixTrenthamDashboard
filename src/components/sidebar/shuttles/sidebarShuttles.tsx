@@ -1,6 +1,7 @@
 "use server";
 import React from "react";
 import { FaScrewdriver } from "react-icons/fa6";
+import { TbElevator } from "react-icons/tb";
 import Image from "next/image";
 
 import SidebarParentComponent from "../sidebarParentComponent";
@@ -30,6 +31,12 @@ const SidebarAdmin = () => {
 					icon={<FaScrewdriver />}
 					link="/dashboard/shuttles/locations"
 					text="Locations"
+				/>
+
+				<SidebarParentComponent
+					icon={<TbElevator />}
+					link="/dashboard/dms/liftMissions"
+					text="Lift Missions"
 				/>
 			</SidebarParentComponentGroup>
 		</>
