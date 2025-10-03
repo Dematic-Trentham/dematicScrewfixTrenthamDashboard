@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { set } from "zod";
+import { Tab, TabList, TabPanel, Tabs } from "react-tabs";
 
 import { getAllCells } from "./_actions/actions";
 
@@ -99,64 +100,74 @@ export default function CellsPage() {
 				</div>
 			}
 		>
-			<table className="dematicTable ce">
-				<thead>
-					<tr>
-						<th style={{ width: "30%" }}>Total Cells</th>
-						<th style={{ width: "30%" }}>Total Disabled</th>
-						<th style={{ width: "40%" }}>Total Enabled</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>{cells.length}</td>
-						<td>{cells.filter((cell) => cell.disabled).length}</td>
-						<td>{cells.filter((cell) => !cell.disabled).length}</td>
-					</tr>
-				</tbody>
-			</table>
-			<br />
-			<table className="dematicTable dematicTableStriped dematicTableHoverable">
-				<thead>
-					<tr>
-						<th style={{ width: "25%" }}>Cell Number</th>
-						<th style={{ width: "25%" }}>Status</th>
-						<th style={{ width: "25%" }}>Date Changed</th>
-						<th style={{ width: "25%" }}>Actions</th>
-					</tr>
-				</thead>
-				<tbody>
-					{filteredCells.map((cell) => {
-						return (
-							<tr
-								key={cell.id}
-								style={{
-									backgroundColor: cell.disabled ? "red" : undefined,
-								}}
-							>
-								<td>{cell.cellNumber}</td>
-								<td>{cell.disabled ? "Disabled" : "Enabled"}</td>
-								<td>
-									{new Date(cell.dateChanged).toLocaleString("en-GB", {
-										hour: "2-digit",
-										minute: "2-digit",
-										day: "2-digit",
-										month: "2-digit",
-										year: "numeric",
-									})}
-								</td>
-								<td>
-									<Link
-										href={`/dashboard/sorter/cells/${cell.cellNumber}?showOnlyDisabled=${showOnlyDisabledValue}`}
-									>
-										View History
-									</Link>
-								</td>
+			<Tabs>
+				<TabList>
+					<Tab>Overview</Tab>
+					<Tab>Last Modified</Tab>
+				</TabList>
+				<TabPanel>
+					<table className="dematicTable ce">
+						<thead>
+							<tr>
+								<th style={{ width: "30%" }}>Total Cells</th>
+								<th style={{ width: "30%" }}>Total Disabled</th>
+								<th style={{ width: "40%" }}>Total Enabled</th>
 							</tr>
-						);
-					})}
-				</tbody>
-			</table>
+						</thead>
+						<tbody>
+							<tr>
+								<td>{cells.length}</td>
+								<td>{cells.filter((cell) => cell.disabled).length}</td>
+								<td>{cells.filter((cell) => !cell.disabled).length}</td>
+							</tr>
+						</tbody>
+					</table>
+					<br />
+					<table className="dematicTable dematicTableStriped dematicTableHoverable">
+						<thead>
+							<tr>
+								<th style={{ width: "25%" }}>Cell Number</th>
+								<th style={{ width: "25%" }}>Status</th>
+								<th style={{ width: "25%" }}>Date Changed</th>
+								<th style={{ width: "25%" }}>Actions</th>
+							</tr>
+						</thead>
+						<tbody>
+							{filteredCells.map((cell) => {
+								return (
+									<tr
+										key={cell.id}
+										style={{
+											backgroundColor: cell.disabled ? "red" : undefined,
+										}}
+									>
+										<td>{cell.cellNumber}</td>
+										<td>{cell.disabled ? "Disabled" : "Enabled"}</td>
+										<td>
+											{new Date(cell.dateChanged).toLocaleString("en-GB", {
+												hour: "2-digit",
+												minute: "2-digit",
+												day: "2-digit",
+												month: "2-digit",
+												year: "numeric",
+												timeZone: "UTC",
+											})}
+										</td>
+										<td>
+											<Link
+												href={`/dashboard/sorter/cells/${cell.cellNumber}?showOnlyDisabled=${showOnlyDisabledValue}`}
+											>
+												View History
+											</Link>
+										</td>
+									</tr>
+								);
+							})}
+						</tbody>
+					</table>
+				</TabPanel>
+				<TabPanel />
+			</Tabs>
 			{lastUpdated && (
 				<div>
 					<div style={{ fontSize: "0.8em" }}>
