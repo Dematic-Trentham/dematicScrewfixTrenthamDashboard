@@ -7,24 +7,20 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-	const { faultId, complete } = await request.json();
-
-	let data = await db.controlRoomFaults.findFirst({
-		where: { faultID: faultId },
-	});
-
-	console.log("data", data);
-
-	if (data) {
-		data = await db.controlRoomFaults.update({
-			where: { id: data.id },
-			data: { DMMSDONE: complete },
-		});
-	} else {
-		data = await db.controlRoomFaults.create({
-			data: { faultID: faultId, DMMSDONE: complete },
-		});
-	}
-
-	return Response.json({ data });
+	//const { faultId, complete } = await request.json();
+	//let data = await db.controlRoomFaults.findFirst({
+	//	where: { faultID: faultId },
+	//});
+	//console.log("data", data);
+	//	if (data) {
+	//	data = await db.controlRoomFaults.update({
+	//		where: { id: data.id },
+	//		data: { DMMSDONE: complete },
+	//	});
+	//} else {
+	//		data = await db.controlRoomFaults.create({
+	//			data: { faultID: faultId, DMMSDONE: complete },
+	//		});
+	//}
+	//	return Response.json({ data });
 }
