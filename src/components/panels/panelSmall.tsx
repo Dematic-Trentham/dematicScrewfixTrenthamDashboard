@@ -1,6 +1,5 @@
 import React from "react";
 import { Box } from "@mui/material";
-import clsx from "clsx";
 
 import { cn } from "@/utils/cn";
 

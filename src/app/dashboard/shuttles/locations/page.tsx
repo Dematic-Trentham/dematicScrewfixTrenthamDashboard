@@ -2,28 +2,22 @@
 import { useEffect, useState } from "react";
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { array, set } from "zod";
 
-import { shuttleLocation, shuttleFault } from "../_types/shuttle";
+import { shuttleLocation } from "../_types/shuttle";
 
 import {
 	aisleAndLevelAmount,
-	getLocations,
-	getShuttleFaults,
-	getShuttleFaultsAndCountsNumbers,
 	getShuttleFaultsAndCountsNumbersCache,
 	hasShuttleFaultsAndCountsNumbersCache,
 } from "./_actions";
 import { colorByTypeType } from "./_components/shuttlePanel copy";
-import { getAllCounts } from "./[macAddress]/parts/_actions";
 import ShuttlePanelNew from "./_components/shuttlePanel copy";
 
-import config from "@/config";
 import PanelTop from "@/components/panels/panelTop";
 import VerticalBar from "@/components/visual/verticalBar";
 import { updateUrlParams } from "@/utils/url/params";
 import Loading from "@/components/visual/loading";
-import { niceFormatPercentage, niceRound } from "@/utils/niceNumbers";
+import { niceRound } from "@/utils/niceNumbers";
 
 export default function Home() {
 	const router = useRouter();
@@ -110,8 +104,6 @@ export default function Home() {
 			setSoftLoader(true);
 
 			//lets grab counts and faults
-
-			const startTime = performance.now();
 
 			const isCached =
 				await hasShuttleFaultsAndCountsNumbersCache(timeToSearch);
@@ -259,6 +251,7 @@ export default function Home() {
 
 			setIsLoading(false);
 			setSoftLoader(false);
+			setError(null);
 		};
 
 		fetchData();

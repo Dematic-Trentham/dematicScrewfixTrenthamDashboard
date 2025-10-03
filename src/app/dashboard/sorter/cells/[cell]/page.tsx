@@ -10,7 +10,6 @@ import { getAllCells } from "../_actions/actions";
 import { getCellHistory } from "./_actions/actions";
 
 import PanelTop from "@/components/panels/panelTop";
-import { changeDateToReadable } from "@/utils/changeDateToReadable";
 
 export default function ShuttlePage() {
 	const params = useParams<{ cell: string }>();
@@ -120,7 +119,16 @@ export default function ShuttlePage() {
 				<tbody>
 					{cellHistory.map((history) => (
 						<tr key={history.id}>
-							<td>{changeDateToReadable(history.date)}</td>
+							<td>
+								{new Date(history.dateChanged).toLocaleString("en-GB", {
+									hour: "2-digit",
+									minute: "2-digit",
+									day: "2-digit",
+									month: "2-digit",
+									year: "numeric",
+									timeZone: "UTC",
+								})}
+							</td>
 							<td>
 								<div className="inline-flex">
 									{history.disabled ? `Disabled` : "Re-Enabled"}

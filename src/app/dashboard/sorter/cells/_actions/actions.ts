@@ -11,3 +11,18 @@ export async function getAllCells() {
 
 	return result;
 }
+
+export async function getAllCellsHistory(timeToSearchDays: number) {
+	const result = await db.sorterDisabledCellsHistory.findMany({
+		orderBy: {
+			dateChanged: "desc",
+		},
+		where: {
+			dateChanged: {
+				gte: new Date(Date.now() - timeToSearchDays * 24 * 60 * 60 * 1000), // Convert days to milliseconds
+			},
+		},
+	});
+
+	return result;
+}

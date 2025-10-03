@@ -1,6 +1,5 @@
 import React from "react";
 
-import Panel from "@/components/panels/panelMiddle";
 import Spinner from "@/components/visual/spinner";
 
 interface LoadingProps {

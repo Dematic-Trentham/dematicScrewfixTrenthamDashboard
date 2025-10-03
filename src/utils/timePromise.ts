@@ -6,7 +6,7 @@ export async function TimePromise<T>(
 	const result = await promise;
 	const end = performance.now();
 
-	console.log(functionName, "took", end - start, "ms");
+	//console.log(functionName, "took", end - start, "ms");
 
 	return { time: end - start, result, functionName };
 }
