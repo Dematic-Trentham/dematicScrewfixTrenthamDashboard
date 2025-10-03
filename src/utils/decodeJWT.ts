@@ -12,9 +12,9 @@ export function decodeJWT(token: string) {
 
 		decodedObject = JSON.parse(decoded);
 	} catch (error) {
-		console.error("Failed to decode JWT:", error);
+		error;
 
-		return;
+		return null;
 	}
 
 	return decodedObject;

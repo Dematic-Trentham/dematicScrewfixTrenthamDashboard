@@ -10,7 +10,6 @@ import { getAllCells } from "../_actions/actions";
 import { getCellHistory } from "./_actions/actions";
 
 import PanelTop from "@/components/panels/panelTop";
-import { changeDateToReadable } from "@/utils/changeDateToReadable";
 
 export default function ShuttlePage() {
 	const params = useParams<{ cell: string }>();

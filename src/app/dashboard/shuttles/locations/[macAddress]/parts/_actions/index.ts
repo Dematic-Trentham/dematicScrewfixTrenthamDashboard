@@ -43,8 +43,6 @@ export const deleteShuttle = async (macAddress: string) => {
 		};
 	}
 
-	console.log(shuttle);
-
 	// if shuttle is in a location then it cannot be deleted
 	if (shuttle.currentLocation !== "") {
 		return {

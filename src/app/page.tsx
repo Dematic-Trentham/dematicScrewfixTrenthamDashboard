@@ -1,4 +1,3 @@
-import Panel from "@/components/panels/panelMiddle";
 import Spinner from "@/components/visual/spinner";
 
 export default function Home() {

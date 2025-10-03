@@ -31,6 +31,7 @@ const HoverPopup: React.FC<HoverPopupProps> = ({
 		setIsHovered(false);
 	};
 	const handleMouseMove = (e: { clientX: any; clientY: any }) => {
+		e;
 		setIsHovered(true);
 	};
 

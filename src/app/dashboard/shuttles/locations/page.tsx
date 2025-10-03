@@ -105,8 +105,6 @@ export default function Home() {
 
 			//lets grab counts and faults
 
-			const startTime = performance.now();
-
 			const isCached =
 				await hasShuttleFaultsAndCountsNumbersCache(timeToSearch);
 
@@ -253,6 +251,7 @@ export default function Home() {
 
 			setIsLoading(false);
 			setSoftLoader(false);
+			setError(null);
 		};
 
 		fetchData();

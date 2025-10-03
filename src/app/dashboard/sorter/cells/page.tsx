@@ -9,7 +9,6 @@ import { getAllCells, getAllCellsHistory } from "./_actions/actions";
 import PanelTop from "@/components/panels/panelTop";
 import { updateUrlParams } from "@/utils/url/params";
 import config from "@/config";
-
 import "react-tabs/style/react-tabs.css";
 import Loading from "@/components/visual/loading";
 

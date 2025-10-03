@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { set } from "zod";
 
 import {
 	getAllFaultLogCodes,
@@ -9,7 +8,6 @@ import {
 	deleteFaultLogCode,
 } from "./_actions/actions"; // Adjust the import path as necessary
 
-import PanelMiddle from "@/components/panels/panelMiddle";
 import PanelTop from "@/components/panels/panelTop";
 
 export default function EditPage() {
@@ -36,8 +34,6 @@ export default function EditPage() {
 				})
 			);
 
-			console.log("faultCodeMapped", faultCodeMapped);
-
 			setFaultCodes(faultCodeMapped); // Update state with fetched fault codes
 		}
 		fetchFaultCodes();
@@ -54,21 +50,15 @@ export default function EditPage() {
 				<form
 					onSubmit={async (e) => {
 						e.preventDefault();
-						console.log("Form submitted");
 
 						const formData = new FormData(e.currentTarget);
 						const title = formData.get("title") as string;
 						const message = formData.get("message") as string;
 
-						console.log("Title:", title);
-						console.log("Message:", message);
-
 						const response = await updateFaultLogCode(currentID!, {
 							title,
 							message,
 						});
-
-						console.log("Response:", response);
 
 						setCurrentID(null);
 						setCurrentTitle(null);
@@ -157,8 +147,6 @@ export default function EditPage() {
 					<button
 						className="inline-flex justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
 						onClick={async () => {
-							console.log("Deleting fault code with ID:", currentID);
-
 							// Call your delete function here
 							await deleteFaultLogCode(currentID!);
 
@@ -184,21 +172,15 @@ export default function EditPage() {
 				<form
 					onSubmit={async (e) => {
 						e.preventDefault();
-						console.log("Form submitted");
 
 						const formData = new FormData(e.currentTarget);
 						const title = formData.get("title") as string;
 						const message = formData.get("message") as string;
 
-						console.log("Title:", title);
-						console.log("Message:", message);
-
 						const response = await createFaultLogCode({
 							title,
 							message,
 						});
-
-						console.log("Response:", response);
 
 						setCurrentID(null);
 						setCurrentTitle(null);
@@ -306,7 +288,7 @@ export default function EditPage() {
 
 	function handleEdit(id: string) {
 		// Handle edit action here
-		console.log("Edit fault code with ID:", id);
+
 		// You can navigate to an edit page or open a modal for editing
 
 		setCurrentID(id);
@@ -319,7 +301,7 @@ export default function EditPage() {
 
 	function handleAdd() {
 		// Handle add action here
-		console.log("Add new fault code");
+
 		// You can navigate to an add page or open a modal for adding
 
 		setState("add");
@@ -327,7 +309,6 @@ export default function EditPage() {
 
 	function handleDelete(id: string) {
 		// Handle delete action here
-		console.log("Delete fault code with ID:", id);
 		// You can show a confirmation dialog and then delete the fault code
 
 		setCurrentID(id);

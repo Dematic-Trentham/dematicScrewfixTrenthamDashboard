@@ -1,6 +1,6 @@
 "use server";
 
-import { BsBoxSeamFill, BsBox, BsBoxes } from "react-icons/bs";
+import { BsBoxSeamFill, BsBoxes } from "react-icons/bs";
 import React from "react";
 
 import SidebarParentComponent from "../sidebarParentComponent";
