@@ -84,6 +84,9 @@ const ShuttlePanelNew: React.FC<ShuttlePanelProps> = (props) => {
 
 	if (props.colourType == colorByTypeType.missionsPerFault) {
 		Display = props.shuttleMissionPerFault.toFixed(2);
+		if (props.shuttleFaults === 0) {
+			Display = "No Faults: " + props.shuttleMissions;
+		}
 	} else if (props.colourType == colorByTypeType.counts) {
 		Display = props.shuttleMissions.toFixed(0);
 	} else if (props.colourType == colorByTypeType.faults) {
