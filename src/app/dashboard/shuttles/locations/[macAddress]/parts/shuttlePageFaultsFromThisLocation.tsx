@@ -115,6 +115,11 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 			<button
 				className="mb-4 rounded bg-blue-500 p-2 text-white"
 				onClick={() => {
+					const sanitize = (v: any) =>
+						String(v ?? "")
+							.replace(/,/g, "") // remove commas
+							.replace(/\r?\n/g, " "); // remove newlines
+
 					const csvContent = [
 						[
 							"Timestamp Date",
@@ -132,25 +137,31 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 							"X Coordinate",
 						],
 						...faults.map((fault) => [
-							fault.timestamp.toLocaleString(),
-							fault.resolvedTimestamp?.toLocaleString() || "Not Resolved",
-							fault.resolvedTimestamp
-								? Math.round(
-										(fault.resolvedTimestamp.getTime() -
-											fault.timestamp.getTime()) /
-											1000
-									).toString()
-								: "Not Resolved",
-							faultCodeLookup.find(
-								(faultCode) => faultCode.ID === fault.faultCode
-							)?.faultMessage || "Unknown",
-							fault.WLocation,
-							fault.ZLocation,
-							fault.aisle,
-							fault.level,
-							fault.shuttleID,
-							fault.xLocation,
-							fault.xCoordinate,
+							sanitize(fault.timestamp.toLocaleString()),
+							sanitize(
+								fault.resolvedTimestamp?.toLocaleString() || "Not Resolved"
+							),
+							sanitize(
+								fault.resolvedTimestamp
+									? Math.round(
+											(fault.resolvedTimestamp.getTime() -
+												fault.timestamp.getTime()) /
+												1000
+										).toString()
+									: "Not Resolved"
+							),
+							sanitize(
+								faultCodeLookup.find(
+									(faultCode) => faultCode.ID === fault.faultCode
+								)?.faultMessage || "Unknown"
+							),
+							sanitize(fault.WLocation),
+							sanitize(fault.ZLocation),
+							sanitize(fault.aisle),
+							sanitize(fault.level),
+							sanitize(fault.shuttleID),
+							sanitize(fault.xLocation),
+							sanitize(fault.xCoordinate),
 						]),
 					]
 						.map((e) => e.join(","))
