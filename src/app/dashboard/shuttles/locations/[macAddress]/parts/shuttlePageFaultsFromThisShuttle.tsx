@@ -115,12 +115,18 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 			<button
 				className="mb-4 rounded bg-blue-500 p-2 text-white"
 				onClick={() => {
+					const sanitize = (val: any) =>
+						String(val ?? "")
+							.replace(/,/g, "")
+							.replace(",", "")
+							.replace(/"/g, "")
+							.replace(/[\r\n]+/g, " ")
+							.trim();
+
 					const csvContent = [
 						[
-							"Timestamp Date",
-							"Timestamp Time",
-							"Resolve Time Date",
-							"Resolve Time Time",
+							"Timestamp",
+							"Resolve Time",
 							"Time in Fault",
 							"Fault Description",
 							"W Location",
@@ -131,29 +137,42 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 							"X Location",
 							"X Coordinate",
 						],
-						...faults.map((fault) => [
-							fault.timestamp.toLocaleString(),
-							fault.resolvedTimestamp?.toLocaleString() || "Not Resolved",
-							fault.resolvedTimestamp
+						...faults.map((fault) => {
+							const ts = fault.timestamp
+								? new Date(fault.timestamp).toLocaleString()
+								: "";
+							const resolved = fault.resolvedTimestamp
+								? new Date(fault.resolvedTimestamp).toLocaleString()
+								: "Not Resolved";
+							const timeInFault = fault.resolvedTimestamp
 								? (
 										(fault.resolvedTimestamp.getTime() -
 											fault.timestamp.getTime()) /
 										1000
 									).toString()
-								: "Not Resolved",
-							faultCodeLookup.find(
-								(faultCode) => faultCode.ID === fault.faultCode
-							)?.faultMessage || "Unknown",
-							fault.WLocation,
-							fault.ZLocation,
-							fault.aisle,
-							fault.level,
-							fault.shuttleID,
-							fault.xLocation,
-							fault.xCoordinate,
-						]),
+								: "Not Resolved";
+							const faultMessage =
+								fault.faultCode === "-1"
+									? "Movement Log"
+									: faultCodeLookup.find((fc) => fc.ID === fault.faultCode)
+											?.faultMessage || "Unknown";
+
+							return [
+								sanitize(ts),
+								sanitize(resolved),
+								sanitize(timeInFault),
+								sanitize(faultMessage),
+								sanitize(fault.WLocation),
+								sanitize(fault.ZLocation),
+								sanitize(fault.aisle),
+								sanitize(fault.level),
+								sanitize(fault.shuttleID),
+								sanitize(fault.xLocation),
+								sanitize(fault.xCoordinate),
+							].join(",");
+						}),
 					]
-						.map((e) => e.join(","))
+						.map((e) => (Array.isArray(e) ? e.join(",") : e))
 						.join("\n");
 
 					const blob = new Blob([csvContent], {
