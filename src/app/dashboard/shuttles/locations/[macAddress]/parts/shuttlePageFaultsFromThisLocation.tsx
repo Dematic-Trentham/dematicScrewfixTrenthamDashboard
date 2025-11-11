@@ -123,9 +123,9 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 					const csvContent = [
 						[
 							"Timestamp Date",
-							"Timestamp Time",
+
 							"Resolve Time Date",
-							"Resolve Time Time",
+
 							"Time in Fault",
 							"Fault Description",
 							"W Location",
