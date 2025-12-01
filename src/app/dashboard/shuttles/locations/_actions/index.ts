@@ -146,3 +146,43 @@ export const aisleAndLevelAmount = async () => {
 		amountOfLevels: amountOfLevelsResult,
 	};
 };
+
+export const addMaintenanceLog = async (
+	macAddress: string,
+	maintenanceLog: string
+) => {
+	try {
+		const shuttle = await db.dmsShuttleLocations.findUnique({
+			where: { macAddress: macAddress },
+		});
+
+		if (!shuttle) {
+			return { error: "Shuttle not found" };
+		}
+		await db.dmsShuttleLastMaintenance.create({
+			data: {
+				macAddress: macAddress,
+				shuttleID: shuttle.shuttleID, // Add shuttleID from the found shuttle
+				maintenanceDetails: maintenanceLog,
+				lastMaintenanceDate: new Date(),
+			},
+		});
+
+		return { success: true };
+	} catch (error) {
+		return { error: "Failed to add maintenance log" };
+	}
+};
+
+export const getMaintenanceLogs = async (macAddress: string) => {
+	try {
+		const logs = await db.dmsShuttleLastMaintenance.findMany({
+			where: { macAddress: macAddress },
+			orderBy: { lastMaintenanceDate: "desc" },
+		});
+
+		return logs;
+	} catch (error) {
+		return { error: "Failed to retrieve maintenance logs" };
+	}
+};

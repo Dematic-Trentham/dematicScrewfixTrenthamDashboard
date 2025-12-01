@@ -3,6 +3,9 @@ import { Input } from "@nextui-org/input";
 import { Button } from "@nextui-org/button";
 import { toast } from "react-toastify";
 import { setCookie } from "cookies-next";
+import { Textarea } from "@nextui-org/input";
+
+import { addMaintenanceLog } from "../../_actions";
 
 import { deleteShuttle, getShuttleFromMac, updateShuttleId } from "./_actions";
 
@@ -109,6 +112,62 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 		}
 	};
 
+	const [isMaintenanceDirty, setIsMaintenanceDirty] = useState(false);
+
+	const handleShuttleMaintenanceChange = (
+		event: React.ChangeEvent<HTMLInputElement>
+	) => {
+		//expand textarea as user types
+		const textarea = event.target as unknown as HTMLTextAreaElement;
+
+		textarea.style.height = "auto";
+		textarea.style.height = textarea.scrollHeight + "px";
+
+		//if textarea is empty, set button state to disabled
+		if (textarea.value.trim() === "") {
+			//disable button
+			//set button state to disabled
+			setIsMaintenanceDirty(false);
+		} else {
+			setIsMaintenanceDirty(true);
+		}
+
+		return;
+	};
+
+	const handleSaveMaintenance = async () => {
+		//check if textarea is empty
+
+		const textarea = document.getElementById(
+			"shuttleMaintenance"
+		) as unknown as HTMLTextAreaElement;
+
+		if (textarea.value.trim() === "") {
+			toast.error("Shuttle Maintenance Log cannot be empty");
+
+			return;
+		}
+
+		//append new maintenance log to existing log
+		const result = await addMaintenanceLog(
+			props.macAddress,
+			textarea.value.trim()
+		);
+
+		if ((result as any)?.error) {
+			setError((result as any).error);
+			toast.error("Failed to add Shuttle Maintenance Log");
+
+			return;
+		}
+
+		textarea.value = "";
+		setIsMaintenanceDirty(false);
+		toast.success("Shuttle Maintenance Log updated successfully");
+
+		return;
+	};
+
 	if (isLoading) {
 		return <div>is loading....</div>;
 	}
@@ -132,31 +191,61 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 	return (
 		<div>
 			{error && <div className="mb-2 text-red-600">{error}</div>}
-			<Input
-				defaultValue={shuttleID || ""}
-				id="shuttleID"
-				label="Shuttle ID"
-				onChange={handleShuttleIdChange}
-				onKeyDown={async (event: { key: string }) => {
-					if (event.key === "Enter") {
-						await handleSave();
-					}
-				}}
-			/>
-			<div className="flex flex-row items-center justify-evenly space-x-2 pt-2">
-				<div className="bg- flex flex-row items-center justify-evenly space-x-2 pt-2">
-					<Button
-						color={!isDirty ? "default" : "primary"}
-						disabled={!isDirty}
-						onPress={handleSave}
-					>
-						Save
-					</Button>
+
+			<div>
+				<div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 shadow-sm">
+					<h1 className="mb-2 text-2xl font-bold">Shuttle Maintenance</h1>
+					<div className="flex flex-row items-center space-x-2 text-gray-700">
+						<Textarea
+							className=""
+							id="shuttleMaintenance"
+							placeholder="Shuttle Maintenance Log"
+							onChange={handleShuttleMaintenanceChange}
+						/>
+						<Button
+							className="bottom-0 top-0"
+							color={!isMaintenanceDirty ? "default" : "primary"}
+							disabled={!isMaintenanceDirty}
+							onPress={async () => await handleSaveMaintenance?.()}
+						>
+							Submit
+						</Button>
+					</div>
+
+					<div className="flex flex-row items-center justify-end space-x-2 pt-2" />
 				</div>
-				<div className="bg- flex flex-row items-center justify-evenly space-x-2 pt-2">
-					<Button color="danger" onPress={handleDelete}>
-						Delete
-					</Button>
+			</div>
+
+			<div>
+				<div className="mb-4 rounded-lg border border-gray-300 bg-gray-50 p-4 shadow-sm">
+					<h2 className="mb-2 text-xl font-bold">Shuttle ID</h2>
+					<Input
+						defaultValue={shuttleID || ""}
+						id="shuttleID"
+						label="Shuttle ID"
+						onChange={handleShuttleIdChange}
+						onKeyDown={async (event: { key: string }) => {
+							if (event.key === "Enter") {
+								await handleSave();
+							}
+						}}
+					/>
+					<div className="flex flex-row items-center justify-evenly space-x-2 pt-2">
+						<div className="bg- flex flex-row items-center justify-evenly space-x-2 pt-2">
+							<Button
+								color={!isDirty ? "default" : "primary"}
+								disabled={!isDirty}
+								onPress={handleSave}
+							>
+								Save
+							</Button>
+						</div>
+						<div className="bg- flex flex-row items-center justify-evenly space-x-2 pt-2">
+							<Button color="danger" onPress={handleDelete}>
+								Delete
+							</Button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
