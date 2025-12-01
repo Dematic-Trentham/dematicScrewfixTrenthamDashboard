@@ -2,9 +2,11 @@
 
 import { exec } from "child_process";
 import { promisify } from "util";
+import { get } from "http";
 
 import db from "@/db/db";
 import { hasPermission } from "@/utils/getUser";
+import { getParameterFromDB } from "@/utils/getParameterFromDB";
 
 export const getOrderStartStats = async () => {
 	const result = await db.siteParameters.findMany();
@@ -79,10 +81,26 @@ export const restartWMSSystem = async () => {
 	});
 
 	if (!ip) {
+		//make the feild with parameter dockerhostIP if it does not exist with default value of "192.168.1.100"
+		await db.dashboardSystemParameters.create({
+			data: {
+				parameter: "dockerhostIP",
+				value: "192.168.1.100",
+			},
+		});
+
 		return { success: false, error: "IP address for docker host not found" };
 	}
 
 	if (!wmsContainerName) {
+		//make the feild with parameter constainerName_wms if it does not exist with default value of "wms_container" 	dematic-dashboard-dematicscrewfixtrenthamwmstodb-1
+		await db.dashboardSystemParameters.create({
+			data: {
+				parameter: "constainerName_wms",
+				value: "dematic-dashboard-dematicscrewfixtrenthamwmstodb-1",
+			},
+		});
+
 		return { success: false, error: "WMS container name not found" };
 	}
 
@@ -136,11 +154,7 @@ export const restartPLCSystem = async () => {
 		},
 	});
 
-	const plcContainerName = await db.dashboardSystemParameters.findFirst({
-		where: {
-			parameter: "constainerName_plc",
-		},
-	});
+	const plcContainerName = await getParameterFromDB("constainerName_plc");
 
 	if (!plcContainerName) {
 		return { success: false, error: "PLC container name not found" };
@@ -150,7 +164,7 @@ export const restartPLCSystem = async () => {
 		return { success: false, error: "IP address for docker host not found" };
 	}
 
-	const sshCommand = `sshpass -p 'dematicdematic' ssh -o StrictHostKeyChecking=no -p 22 dematic@${ip.value} "docker restart ${plcContainerName.value}"`;
+	const sshCommand = `sshpass -p 'dematicdematic' ssh -o StrictHostKeyChecking=no -p 22 dematic@${ip.value} "docker restart ${plcContainerName.valueOf()}"`;
 	const execPromise = promisify(exec);
 
 	try {

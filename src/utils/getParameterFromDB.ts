@@ -9,7 +9,17 @@ export async function getParameterFromDB(parameter: string) {
 
 	//if no result raise an error
 	if (!result) {
-		throw new Error(`Parameter ${parameter} not found in the database`);
+		//create the parameter with empty value
+		await db.dashboardSystemParameters.create({
+			data: {
+				parameter: parameter,
+				value: "",
+			},
+		});
+
+		throw new Error(
+			`Parameter ${parameter} not found in the database and has been created with an empty value`
+		);
 	}
 
 	return result?.value;
