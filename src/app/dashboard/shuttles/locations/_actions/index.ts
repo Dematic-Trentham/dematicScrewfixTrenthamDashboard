@@ -170,7 +170,7 @@ export const addMaintenanceLog = async (
 
 		return { success: true };
 	} catch (error) {
-		return { error: "Failed to add maintenance log" };
+		return { error: "Failed to add maintenance log " + error };
 	}
 };
 
