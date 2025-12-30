@@ -5,6 +5,7 @@ import "tippy.js/dist/tippy.css";
 
 import {
 	getFaultCodeLookup,
+	getLastMaintenances,
 	getShuttleFaults,
 	getShuttleMovementLogsByMac,
 } from "./_actions";
@@ -29,16 +30,74 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 		shuttleFaultCodeLookup[]
 	>([]);
 
+	const [lastMaintenanceTime, setLastMaintenanceTime] = useState<Date | null>(
+		null
+	);
+
+	const [lastMaintenanceText, setLastMaintenanceText] = useState<string>("");
+
+	const [maintenanceLog, setMaintenanceLog] = useState<
+		| {
+				ID: string;
+				macAddress: string;
+				shuttleID: string;
+				lastMaintenanceDate: Date;
+				maintenanceDetails: string;
+		  }[]
+		| null
+	>(null);
+
 	useEffect(() => {
 		const fetchShuttle = async () => {
-			const shuttle = await getShuttleFaults(
-				props.macAddress,
-				props.daysToSearch
-			);
+			let localDaysToSearch = props.daysToSearch;
+			let lastMaintenanceArr:
+				| {
+						ID: any;
+						lastMaintenanceDate: any;
+						maintenanceDetails: any;
+				  }[]
+				| null = [];
+
+			if (props.daysToSearch === -99) {
+				//fetch last maintenance time
+				lastMaintenanceArr = await getLastMaintenances(props.macAddress);
+
+				if (lastMaintenanceArr && lastMaintenanceArr.length > 0) {
+					const lastMaintenance = lastMaintenanceArr[0];
+
+					setLastMaintenanceText(
+						` (Details: ${lastMaintenance.maintenanceDetails})`
+					);
+
+					//convert lastMaintenanceDate to date object
+					setLastMaintenanceTime(new Date(lastMaintenance.lastMaintenanceDate));
+					//setMaintenanceLog(lastMaintenanceArr);
+
+					localDaysToSearch = Math.ceil(
+						(Date.now() -
+							new Date(lastMaintenance.lastMaintenanceDate).getTime()) /
+							(24 * 60 * 60 * 1000)
+					);
+				} else {
+					//no maintenance found, set date to null
+					setLastMaintenanceTime(null);
+					setMaintenanceLog(null);
+					console.log("setting max");
+					localDaysToSearch = 9999; //set to a high number to fetch all faults
+				}
+			} else {
+				lastMaintenanceArr = await getLastMaintenances(props.macAddress);
+			}
+
+			console.log("Last maintenance array:", lastMaintenanceArr);
+
+			console.log("Fetching shuttle faults for:", localDaysToSearch, "days");
+
+			let shuttle = await getShuttleFaults(props.macAddress, localDaysToSearch);
 			const faultCodeLookup = await getFaultCodeLookup();
 			const ShuttleMovementLogsByLocation = await getShuttleMovementLogsByMac(
 				props.macAddress,
-				props.daysToSearch
+				localDaysToSearch
 			);
 
 			if (!shuttle) {
@@ -83,6 +142,38 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 				}
 			);
 
+			console.log("Last maintenance logs:", lastMaintenanceArr);
+
+			//for each maintenance log add a shuttle fault entry indicating maintenance
+			lastMaintenanceArr?.forEach(
+				(log: {
+					ID: any;
+					lastMaintenanceDate: any;
+					maintenanceDetails: any;
+				}) => {
+					//Make log into a json object
+					const logString = JSON.stringify(log);
+
+					shuttle.push({
+						ID: log.ID,
+						aisle: 0,
+						level: 0,
+						timestamp: log.lastMaintenanceDate,
+						macAddress: "N/A",
+						faultCode: "-2",
+						WLocation: 0,
+						ZLocation: 0,
+						shuttleID: "N/A",
+						xLocation: 0,
+						xCoordinate: 0,
+						faultMessage: -1,
+						resolvedReason: "N/A",
+						resolvedTimestamp: null,
+						rawInfo: logString,
+					});
+				}
+			);
+
 			//sort the shuttle faults by timestamp
 			shuttle.sort(
 				(
@@ -92,6 +183,16 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 					return b.timestamp.getTime() - a.timestamp.getTime();
 				}
 			);
+
+			//if there is a last maintenance time, filter out all faults that happened before the last maintenance time
+			if (props.daysToSearch === -99 && lastMaintenanceTime) {
+				shuttle = shuttle.filter(
+					(fault: { timestamp: { getTime: () => number } }) =>
+						fault.timestamp.getTime() >= lastMaintenanceTime.getTime()
+				);
+			}
+
+			console.log("Shuttle faults fetched:", shuttle);
 
 			setIsLoading(false);
 			setFaults(shuttle);
@@ -178,6 +279,13 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 	return (
 		<>
 			{exportButton}
+			{lastMaintenanceTime && (
+				<>
+					Showing faults since last maintenance on{" "}
+					{lastMaintenanceTime.toLocaleString()}
+					{lastMaintenanceText}
+				</>
+			)}
 			<table className="w-full">
 				<thead className="border border-black bg-orange-400">
 					<tr>
@@ -232,6 +340,27 @@ function makeFaultRow(
 				<td>{`At aisle  ${log.aisle}`}</td>
 				<td>{`At level  ${log.level}`}</td>
 				<td colSpan={3} />
+			</tr>
+		);
+	} else if (fault.faultCode === "-2") {
+		//This is a shuttle movement log
+
+		const log = JSON.parse(fault.rawInfo);
+
+		//make date object
+		log.timestamp = new Date(log.timestamp);
+
+		console.log(fault);
+
+		//return a row with the shuttle movement log details in it make it blue
+		return (
+			<tr
+				key={log.ID}
+				className="border border-black bg-yellow-200 text-center hover:bg-yellow-400"
+			>
+				<td>{fault.timestamp.toLocaleString()}</td>
+				<td>Maintenace Performed </td>
+				<td colSpan={5}> {`Details: ${log.maintenanceDetails}`}</td>
 			</tr>
 		);
 	} else {

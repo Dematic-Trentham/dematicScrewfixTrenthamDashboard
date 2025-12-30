@@ -273,3 +273,22 @@ export const getShuttleCountsByLocation = async (
 
 	return counts;
 };
+
+export const getLastMaintenances = async (macAddress: string) => {
+	let maintenances = await db.dmsShuttleLastMaintenance.findMany({
+		where: {
+			macAddress: macAddress,
+		},
+		orderBy: {
+			lastMaintenanceDate: "desc",
+		},
+	});
+
+	if (maintenances.length === 0) {
+		return null;
+	}
+
+	console.log("Last maintenance fetched:", maintenances.length);
+
+	return maintenances;
+};

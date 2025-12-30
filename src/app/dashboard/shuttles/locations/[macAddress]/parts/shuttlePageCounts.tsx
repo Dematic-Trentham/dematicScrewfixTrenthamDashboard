@@ -131,6 +131,11 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 	return (
 		<div>
 			{exportButton}
+			{props.daysToSearch === -99 && (
+				<div className="text-red-600">
+					Last Maintenance not aviable per Aisle/Level location grouping.
+				</div>
+			)}
 			<div>
 				<div className="mb-4 flex gap-2">
 					<button
