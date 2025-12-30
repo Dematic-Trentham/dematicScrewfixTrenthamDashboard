@@ -113,45 +113,34 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 	};
 
 	const [isMaintenanceDirty, setIsMaintenanceDirty] = useState(false);
+	const [maintenanceLog, setMaintenanceLog] = useState<string>("");
 
 	const handleShuttleMaintenanceChange = (
-		event: React.ChangeEvent<HTMLInputElement>
+		event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
+		const value = event.target.value;
+
+		setMaintenanceLog(value);
+
 		//expand textarea as user types
-		const textarea = event.target as unknown as HTMLTextAreaElement;
+		const textarea = event.target as HTMLTextAreaElement;
 
 		textarea.style.height = "auto";
 		textarea.style.height = textarea.scrollHeight + "px";
 
-		//if textarea is empty, set button state to disabled
-		if (textarea.value.trim() === "") {
-			//disable button
-			//set button state to disabled
-			setIsMaintenanceDirty(false);
-		} else {
-			setIsMaintenanceDirty(true);
-		}
-
-		return;
+		setIsMaintenanceDirty(value.trim() !== "");
 	};
 
 	const handleSaveMaintenance = async () => {
-		//check if textarea is empty
-
-		const textarea = document.getElementById(
-			"shuttleMaintenance"
-		) as unknown as HTMLTextAreaElement;
-
-		if (textarea.value.trim() === "") {
+		if (maintenanceLog.trim() === "") {
 			toast.error("Shuttle Maintenance Log cannot be empty");
 
 			return;
 		}
 
-		//append new maintenance log to existing log
 		const result = await addMaintenanceLog(
 			props.macAddress,
-			textarea.value.trim()
+			maintenanceLog.trim()
 		);
 
 		if ((result as any)?.error) {
@@ -161,7 +150,8 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 			return;
 		}
 
-		textarea.value = "";
+		setError("");
+		setMaintenanceLog("");
 		setIsMaintenanceDirty(false);
 		toast.success("Shuttle Maintenance Log updated successfully");
 
@@ -200,10 +190,11 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 							className=""
 							id="shuttleMaintenance"
 							placeholder="Shuttle Maintenance Log"
+							value={maintenanceLog}
 							onChange={handleShuttleMaintenanceChange}
 						/>
 						<Button
-							className="bottom-0 top-0"
+							className="bottom-0"
 							color={!isMaintenanceDirty ? "default" : "primary"}
 							disabled={!isMaintenanceDirty}
 							onPress={async () => await handleSaveMaintenance?.()}

@@ -189,6 +189,11 @@ const ShuttlePageFaultsFromThisLocation: React.FC<
 	return (
 		<div>
 			{exportButton}
+			{props.daysToSearch === -99 && (
+				<div className="text-red-600">
+					Last Maintenance not aviable per Aisle/Level location grouping.
+				</div>
+			)}
 			<table className="w-full">
 				<thead className="border border-black bg-orange-400">
 					<tr>
