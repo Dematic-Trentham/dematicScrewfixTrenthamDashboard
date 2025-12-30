@@ -250,7 +250,10 @@ export default function ShuttlePage(props: {}) {
 					</TabPanel>
 
 					<TabPanel>
-						<ShuttlePageSettings macAddress={macAddress} />
+						<ShuttlePageSettings
+							location={currentLocation}
+							macAddress={macAddress}
+						/>
 					</TabPanel>
 				</Tabs>
 			</PanelTop>

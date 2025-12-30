@@ -13,6 +13,7 @@ import { hasPermission } from "@/utils/getUser";
 
 interface ShuttlePageSettingsProps {
 	macAddress: string;
+	location: string;
 }
 
 const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
@@ -25,7 +26,13 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 
 	const [isDirty, setIsDirty] = useState(false);
 
+	const [lockOutDelete, setLockOutDelete] = useState(true);
+
 	useEffect(() => {
+		if (props.location === "Maintenance Bay") {
+			setLockOutDelete(false);
+		}
+
 		const fetchShuttle = async () => {
 			const shuttle = await getShuttleFromMac(props.macAddress);
 
@@ -231,11 +238,18 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 								Save
 							</Button>
 						</div>
-						<div className="bg- flex flex-row items-center justify-evenly space-x-2 pt-2">
-							<Button color="danger" onPress={handleDelete}>
-								Delete
-							</Button>
-						</div>
+						{!lockOutDelete && (
+							<div className="bg- flex flex-row items-center justify-evenly space-x-2 pt-2">
+								<Button color="danger" onPress={handleDelete}>
+									Delete
+								</Button>
+							</div>
+						)}
+						{lockOutDelete && (
+							<div className="bg- flex flex-row items-center justify-evenly space-x-2 pt-2">
+								Shuttle must be in Maintenance Bay to Delete
+							</div>
+						)}
 					</div>
 				</div>
 			</div>
