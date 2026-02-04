@@ -7,7 +7,7 @@ import SidebarParentComponent from "../sidebarParentComponent";
 
 import HorizontalBar from "@/components/visual/horizontalBar";
 
-const SidebarSitePing = () => {
+const SidebarSitePing = async () => {
 	return (
 		<>
 			<HorizontalBar />

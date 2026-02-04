@@ -8,7 +8,7 @@ import SidebarParentComponentGroup from "../sidebarParentComponentGroup";
 
 import HorizontalBar from "@/components/visual/horizontalBar";
 
-const SidebarAutoCarton = () => {
+const SidebarAutoCarton = async () => {
 	return (
 		<>
 			<HorizontalBar />

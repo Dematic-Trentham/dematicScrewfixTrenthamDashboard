@@ -7,7 +7,7 @@ import SidebarParentComponent from "../sidebarParentComponent";
 
 import HorizontalBar from "@/components/visual/horizontalBar";
 
-const SidebarEMS = () => {
+const SidebarEMS = async () => {
 	return (
 		<>
 			<HorizontalBar />
