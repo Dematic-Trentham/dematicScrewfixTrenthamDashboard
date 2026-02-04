@@ -7,7 +7,7 @@ import SidebarParentComponentGroup from "../sidebarParentComponentGroup";
 
 import HorizontalBar from "@/components/visual/horizontalBar";
 
-const SidebarAdmin = () => {
+const SidebarAdmin = async () => {
 	return (
 		<>
 			<HorizontalBar />

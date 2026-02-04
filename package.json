@@ -43,7 +43,7 @@
 		"i": "^0.3.7",
 		"jsonwebtoken": "^9.0.2",
 		"neverthrow": "^8.2.0",
-		"next": "^15.0.3",
+		"next": "^16.1.6",
 		"next-auth": "^4.24.7",
 		"next-client-cookies": "^2.0.1",
 		"next-cookies": "^2.0.3",
