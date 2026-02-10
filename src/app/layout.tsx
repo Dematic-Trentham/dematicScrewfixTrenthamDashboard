@@ -11,6 +11,7 @@ import { siteConfig } from "@/config/site";
 import Sidebar from "@/components/sidebar/sidebar";
 import Topbar from "@/components/topbar/topbar";
 import ReloadPage from "@/components/reload";
+import Alerts from "@/components/alerts/alerts";
 
 export const metadata: Metadata = {
 	title: {
@@ -52,6 +53,7 @@ export default function RootLayout({
 							<ToastContextProvider>
 								<ToastProvider>
 									<ReloadPage />
+									<Alerts />
 									<div className="duration-5000 flex h-screen bg-gray-200 text-black transition-all dark:bg-slate-500 dark:text-slate-100">
 										<Sidebar />
 										{/* Main content */}
