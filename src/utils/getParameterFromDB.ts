@@ -1,6 +1,9 @@
 import db from "@/db/db";
 
-export async function getParameterFromDB(parameter: string) {
+export async function getParameterFromDB(
+	parameter: string,
+	defaultValue: string = ""
+): Promise<string> {
 	const result = await db.dashboardSystemParameters.findFirst({
 		where: {
 			parameter: parameter,
@@ -13,7 +16,7 @@ export async function getParameterFromDB(parameter: string) {
 		await db.dashboardSystemParameters.create({
 			data: {
 				parameter: parameter,
-				value: "",
+				value: defaultValue,
 			},
 		});
 
