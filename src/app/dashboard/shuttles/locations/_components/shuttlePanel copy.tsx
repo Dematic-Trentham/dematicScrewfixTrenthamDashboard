@@ -92,14 +92,24 @@ const ShuttlePanelNew: React.FC<ShuttlePanelProps> = (props) => {
 
 	let displayLabel = <></>;
 
-	displayLabel = (
-		<div className={`rounded-xl ${shuttleColor} m-0 h-8 p-0 text-3xl`}>
-			<div className="flex h-full items-center justify-between px-2 text-black">
-				<div>{props.shuttleInfo.shuttleID || "No ID"}</div>
-				{Display && <div className="text-lg">{Display}</div>}
+	if (props.shuttleInfo.shuttleID.includes("Unknown")) {
+		displayLabel = (
+			<div className={`rounded-xl ${shuttleColor} m-0 h-8 p-0 text-3xl`}>
+				<div className="flex h-full items-center justify-between px-2 text-3xl">
+					<div>{"No ID"}</div>
+				</div>
 			</div>
-		</div>
-	);
+		);
+	} else {
+		displayLabel = (
+			<div className={`rounded-xl ${shuttleColor} m-0 h-8 p-0 text-3xl`}>
+				<div className="flex h-full items-center justify-between px-2 text-black">
+					<div>{props.shuttleInfo.shuttleID || "No ID"}</div>
+					{Display && <div className="text-lg">{Display}</div>}
+				</div>
+			</div>
+		);
+	}
 
 	let hover = (
 		<div className="w-96 animate-none rounded-2xl border-4 border-black bg-amber-600 p-2 py-1 text-black">
