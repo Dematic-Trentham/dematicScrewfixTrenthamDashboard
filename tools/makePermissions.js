@@ -1,9 +1,7 @@
 import fs from "fs";
 import { join } from "path";
 
-import { PrismaClient } from "@prisma/client";
-
-const prisma = new PrismaClient();
+import { db } from "@/db/db";
 
 const srcDir = "./src/";
 
@@ -46,7 +44,7 @@ function checkFile(filePath) {
 }
 
 async function checkUsersAndDelete() {
-	const allUsers = await prisma.dashboardUsers.findMany();
+	const allUsers = await db.dashboardUsers.findMany();
 
 	allUsers.forEach(async (user) => {
 		const usersPermissions = user.permissions.split(",");
@@ -56,7 +54,7 @@ async function checkUsersAndDelete() {
 		});
 
 		if (newPermissions.length !== usersPermissions.length) {
-			const result = await prisma.dashboardUsers.update({
+			const result = await db.dashboardUsers.update({
 				where: {
 					id: user.id,
 				},
@@ -74,11 +72,11 @@ async function main() {
 	await readFilesRecursively(srcDir);
 
 	//check if any permissions need to be deleted
-	const allPermissions = await prisma.dashboardUsersPermissions.findMany();
+	const allPermissions = await db.dashboardUsersPermissions.findMany();
 
 	allPermissions.forEach(async (permission) => {
 		if (!permissions.includes(permission.name)) {
-			const result = await prisma.dashboardUsersPermissions.delete({
+			const result = await db.dashboardUsersPermissions.delete({
 				where: {
 					id: permission.id,
 				},
@@ -90,18 +88,16 @@ async function main() {
 
 	permissions.forEach(async (permission) => {
 		//does permission already exist?
-		const existingPermission = await prisma.dashboardUsersPermissions.findFirst(
-			{
-				where: {
-					name: permission,
-				},
-			}
-		);
+		const existingPermission = await db.dashboardUsersPermissions.findFirst({
+			where: {
+				name: permission,
+			},
+		});
 
 		if (existingPermission) {
 			return;
 		}
-		const result = await prisma.dashboardUsersPermissions.create({
+		const result = await db.dashboardUsersPermissions.create({
 			data: {
 				name: permission,
 			},
@@ -111,8 +107,6 @@ async function main() {
 	});
 
 	await checkUsersAndDelete();
-
-	prisma.$disconnect();
 
 	console.log("Done 😊 - Database Updated, don't forget to add comments");
 }

@@ -1,12 +1,11 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 import { validateSignup } from "../_util/validation";
 import generateJwtToken from "../../_actions/generateJWT";
 
-const prisma = new PrismaClient();
+import db from "@/db/db";
 
 export default async function signupUser(data: any) {
 	// Validate the form data
@@ -30,7 +29,7 @@ export default async function signupUser(data: any) {
 	};
 
 	//make sure the email is not already in use
-	const user = await prisma.dashboardUsers.findUnique({
+	const user = await db.dashboardUsers.findUnique({
 		where: {
 			email: data.email,
 		},
@@ -81,7 +80,7 @@ export default async function signupUser(data: any) {
 	};
 
 	//is this the first user? if so, make them an admin
-	const userCount = await prisma.dashboardUsers.count();
+	const userCount = await db.dashboardUsers.count();
 
 	if (userCount === 0) {
 		userObject.permissions = "admin";
@@ -91,7 +90,7 @@ export default async function signupUser(data: any) {
 	}
 
 	// Add the user to the database
-	const creationResult = await prisma.dashboardUsers.create({
+	const creationResult = await db.dashboardUsers.create({
 		data: userObject,
 	});
 

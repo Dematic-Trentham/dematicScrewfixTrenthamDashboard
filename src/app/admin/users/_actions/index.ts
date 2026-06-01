@@ -1,17 +1,15 @@
 "use server";
-import { PrismaClient } from "@prisma/client";
 
 import { typeUserVisible } from "@/types/user";
 import { hasPermission } from "@/utils/getUser";
-
-const prisma = new PrismaClient();
+import db from "@/db/db";
 
 export default async function getAllUsers(): Promise<typeUserVisible[]> {
 	if (!(await hasPermission("admin"))) {
 		return [];
 	}
 
-	const users = await prisma.dashboardUsers.findMany({
+	const users = await db.dashboardUsers.findMany({
 		orderBy: {
 			createdAt: "asc",
 		},
@@ -45,7 +43,7 @@ export async function getAUser(id: string): Promise<typeUserVisible | null> {
 	if (!(await hasPermission("admin"))) {
 		return null;
 	}
-	const user = await prisma.dashboardUsers.findUnique({
+	const user = await db.dashboardUsers.findUnique({
 		where: {
 			id: id,
 		},
@@ -76,7 +74,7 @@ export async function updateUser(
 	if (!(await hasPermission("admin"))) {
 		return null;
 	}
-	const user = await prisma.dashboardUsers.update({
+	const user = await db.dashboardUsers.update({
 		where: {
 			id: id,
 		},
@@ -106,7 +104,7 @@ export async function deleteUser(id: string): Promise<typeUserVisible | null> {
 		return null;
 	}
 
-	const user = await prisma.dashboardUsers.delete({
+	const user = await db.dashboardUsers.delete({
 		where: {
 			id: id,
 		},
