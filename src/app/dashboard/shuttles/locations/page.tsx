@@ -478,8 +478,10 @@ export default function Home() {
 									<DraggableItem
 										key={shuttle.shuttleID}
 										bg="unknown"
+										currentSearchTime={timeToSearch.toString()}
 										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
+										shuttle={shuttle}
 									/>
 								);
 							}
@@ -493,8 +495,10 @@ export default function Home() {
 									<DraggableItem
 										key={shuttle.shuttleID}
 										bg="GTG"
+										currentSearchTime={timeToSearch.toString()}
 										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
+										shuttle={shuttle}
 									/>
 								);
 							}
@@ -508,8 +512,10 @@ export default function Home() {
 									<DraggableItem
 										key={shuttle.shuttleID}
 										bg="Service"
+										currentSearchTime={timeToSearch.toString()}
 										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
+										shuttle={shuttle}
 									/>
 								);
 							}
@@ -523,8 +529,10 @@ export default function Home() {
 									<DraggableItem
 										key={shuttle.shuttleID}
 										bg="Parts"
+										currentSearchTime={timeToSearch.toString()}
 										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
+										shuttle={shuttle}
 									/>
 								);
 							}
