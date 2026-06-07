@@ -10,7 +10,7 @@ import db from "@/db/db";
 export async function getUser(
 	id: string
 ): Promise<typeUserVisible | { error: string }> {
-	if (!hasPermission("admin")) {
+	if (!(await hasPermission("admin"))) {
 		return { error: "Permission denied" };
 	}
 
@@ -50,7 +50,7 @@ export async function getUser(
 export async function deleteUser(
 	id: string
 ): Promise<boolean | { error: string }> {
-	if (!hasPermission("admin")) {
+	if (!(await hasPermission("admin"))) {
 		return { error: "Permission denied" };
 	}
 	//if id is not a string, return an error
@@ -78,7 +78,7 @@ export async function deleteUser(
 export async function modifyUser(
 	user: typeUserVisible
 ): Promise<typeUserVisible | { error: string }> {
-	if (!hasPermission("admin")) {
+	if (!(await hasPermission("admin"))) {
 		return { error: "Permission denied" };
 	}
 	//if user is not a typeUserVisible object, return an error
@@ -139,7 +139,7 @@ export async function getAllPermissions(): Promise<
 export async function uploadProfilePic(
 	data: FormData
 ): Promise<{ error?: string; token?: string }> {
-	if (!hasPermission("admin")) {
+	if (!(await hasPermission("admin"))) {
 		return { error: "Permission denied" };
 	}
 
