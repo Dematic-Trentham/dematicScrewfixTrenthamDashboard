@@ -208,9 +208,8 @@ export const updateShuttleLocation2 = async (
 
 		//clear the cache to ensure fresh data is fetched next time
 		for (const key in cacheStore) {
-			if (key.startsWith("getShuttleFaultsAndCountsNumbers-")) {
-				delete cacheStore[key];
-			}
+			console.log("Clearing cache key:", key);
+			delete cacheStore[key];
 		}
 
 		return { success: true, shuttle: updatedShuttle };
