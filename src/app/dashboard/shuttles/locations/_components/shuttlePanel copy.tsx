@@ -106,7 +106,7 @@ const ShuttlePanelNew: React.FC<ShuttlePanelProps> = (props) => {
 	} else {
 		displayLabel = (
 			<div className={`rounded-xl ${shuttleColor} m-0 h-8 p-0 text-3xl`}>
-				<div className="flex h-full items-center justify-between px-2 text-black">
+				<div className="flex h-full items-center justify-between overflow-hidden whitespace-nowrap px-2 text-black">
 					<div>{props.shuttleInfo.shuttleID || "No ID"}</div>
 					{Display && <div className="text-lg">{Display}</div>}
 				</div>

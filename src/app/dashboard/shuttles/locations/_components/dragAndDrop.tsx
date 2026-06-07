@@ -14,12 +14,12 @@ export function DropColumn({
 	});
 
 	return (
-		<div className="col flex h-full w-full flex-col items-center rounded bg-gray-300 lg:w-64">
-			<div className="mb-2 w-full font-bold">{title}</div>
+		<div className="col flex h-full w-full flex-col items-center rounded-xl rounded-t-2xl bg-gray-300 p-2 text-center lg:w-64">
+			<div className="w-full pb-2 font-bold">{title}</div>
 
 			<div
 				ref={setNodeRef}
-				className={`col flex w-full flex-wrap rounded p-2 ${
+				className={`col flex min-h-32 w-full flex-wrap items-center justify-center ${
 					isOver ? "bg-blue-100" : ""
 				} items-center align-top`}
 			>
@@ -32,7 +32,15 @@ export function DropColumn({
 import { CSS } from "@dnd-kit/utilities";
 import { ReactNode } from "react";
 
-export function DraggableItem({ id, bg }: { id: string; bg?: string }) {
+export function DraggableItem({
+	id,
+	bg,
+	highlight,
+}: {
+	id: string;
+	bg?: string;
+	highlight?: string;
+}) {
 	const { attributes, listeners, setNodeRef, transform } = useDraggable({
 		id,
 	});
@@ -42,15 +50,26 @@ export function DraggableItem({ id, bg }: { id: string; bg?: string }) {
 		GTG: "bg-green-400",
 		Service: "bg-yellow-400",
 		Parts: "bg-blue-400",
+		highlightNot: "bg-violet-500",
+		highlight: "bg-lime-500 animate-pulse speed-25",
 	};
 	const style = {
 		transform: CSS.Translate.toString(transform),
 	};
 
+	let bgLocal = bg;
+
+	if (highlight != "") {
+		bgLocal = "highlightNot";
+		if (id.toLowerCase().includes(highlight?.toLowerCase() || "")) {
+			bgLocal = "highlight";
+		}
+	}
+
 	return (
 		<div
 			ref={setNodeRef}
-			className={`mb-2 h-16 w-16 cursor-grab touch-none rounded-2xl border p-2 align-middle shadow ${bg ? colours[bg] : "bg-red-500"} flex items-center justify-center`}
+			className={`m-0.5 h-16 w-16 cursor-grab touch-none overflow-hidden rounded-2xl border border-black p-2 align-middle shadow ${bgLocal ? colours[bgLocal] : "bg-red-500"} flex items-center justify-center`}
 			style={style}
 			{...listeners}
 			{...attributes}

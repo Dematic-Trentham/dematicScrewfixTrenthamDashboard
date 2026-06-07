@@ -161,6 +161,15 @@ export default function Home() {
 			}
 
 			setLocations(locationsByAisleAndLevel);
+
+			//sort the maintenance bay by shuttle ID
+			maintenanceBayLocations.sort((a, b) => {
+				if (a.shuttleID < b.shuttleID) return -1;
+				if (a.shuttleID > b.shuttleID) return 1;
+
+				return 0;
+			});
+
 			setMaintenanceBay(maintenanceBayLocations);
 
 			//calculate missions per fault
@@ -455,9 +464,9 @@ export default function Home() {
 				</div>
 			</div>
 			<br />
-			<p>Out of Aisle</p>
+			<p className="text-center">Out of Aisle</p>
 			<DndContext onDragEnd={handleDragEnd}>
-				<div className="flex flex-col items-stretch space-y-2 text-center lg:flex-row lg:space-x-2 lg:space-y-0">
+				<div className="col flex w-full flex-wrap items-stretch justify-center lg:flex-row lg:space-x-2 lg:space-y-0">
 					<DropColumn id="unknown" title="Unknown Status">
 						{maintenanceBay.map((shuttle, idx) => {
 							if (
@@ -469,6 +478,7 @@ export default function Home() {
 									<DraggableItem
 										key={shuttle.shuttleID}
 										bg="unknown"
+										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
 									/>
 								);
@@ -483,6 +493,7 @@ export default function Home() {
 									<DraggableItem
 										key={shuttle.shuttleID}
 										bg="GTG"
+										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
 									/>
 								);
@@ -497,6 +508,7 @@ export default function Home() {
 									<DraggableItem
 										key={shuttle.shuttleID}
 										bg="Service"
+										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
 									/>
 								);
@@ -504,7 +516,20 @@ export default function Home() {
 						})}
 					</DropColumn>
 
-					<DropColumn id="Parts" title="Awaiting Parts" />
+					<DropColumn id="Parts" title="Awaiting Parts">
+						{maintenanceBay.map((shuttle, idx) => {
+							if (shuttle.currentLocation === "Parts") {
+								return (
+									<DraggableItem
+										key={shuttle.shuttleID}
+										bg="Parts"
+										highlight={selectedShuttle}
+										id={shuttle.shuttleID}
+									/>
+								);
+							}
+						})}
+					</DropColumn>
 				</div>
 			</DndContext>
 		</PanelTop>
@@ -515,23 +540,20 @@ export default function Home() {
 			const { active, over } = event;
 
 			if (over) {
-				const result = await updateShuttleLocation2(active.id, over.id);
+				maintenanceBay.forEach((shuttle) => {
+					if (shuttle.shuttleID === active.id) {
+						shuttle.currentLocation = over.id;
+					}
+				});
 
-				console.log(result);
+				// Update the locations state to trigger a re-render
+				setMaintenanceBay([...maintenanceBay]);
+				const result = await updateShuttleLocation2(active.id, over.id);
 
 				if (result.error) {
 					toast.error("Failed to update shuttle location:");
 				} else {
 					toast.success("Shuttle location updated successfully");
-
-					maintenanceBay.forEach((shuttle) => {
-						if (shuttle.shuttleID === active.id) {
-							shuttle.currentLocation = over.id;
-						}
-					});
-
-					// Update the locations state to trigger a re-render
-					setMaintenanceBay([...maintenanceBay]);
 				}
 			}
 		})();
