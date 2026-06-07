@@ -1,11 +1,10 @@
 "use server";
 
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 
 import generateJwtToken from "../../_actions/generateJWT";
 
-const prisma = new PrismaClient();
+import db from "@/db/db";
 
 export default async function loginUser(data: any) {
 	//make an error object
@@ -16,7 +15,7 @@ export default async function loginUser(data: any) {
 	};
 
 	//make sure the email is not already in use
-	const user = await prisma.dashboardUsers.findUnique({
+	const user = await db.dashboardUsers.findUnique({
 		where: {
 			email: data.email,
 		},

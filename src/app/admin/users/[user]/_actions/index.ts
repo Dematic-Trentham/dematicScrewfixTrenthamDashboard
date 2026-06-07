@@ -1,18 +1,16 @@
 "use server";
-import { PrismaClient } from "@prisma/client";
 
 import { typeUserVisible } from "@/types/user";
 import uploadImage from "@/utils/uploadImage";
 import updateUserToken from "@/app/user/auth/_actions/updateUserToken";
 import { hasPermission } from "@/utils/getUser";
-
-const prisma = new PrismaClient();
+import db from "@/db/db";
 
 //get one user from the server
 export async function getUser(
 	id: string
 ): Promise<typeUserVisible | { error: string }> {
-	if (!hasPermission("admin")) {
+	if (!(await hasPermission("admin"))) {
 		return { error: "Permission denied" };
 	}
 
@@ -21,7 +19,7 @@ export async function getUser(
 		return { error: "Invalid id" };
 	}
 
-	const userResult = await prisma.dashboardUsers.findUnique({
+	const userResult = await db.dashboardUsers.findUnique({
 		where: {
 			id: id,
 		},
@@ -52,7 +50,7 @@ export async function getUser(
 export async function deleteUser(
 	id: string
 ): Promise<boolean | { error: string }> {
-	if (!hasPermission("admin")) {
+	if (!(await hasPermission("admin"))) {
 		return { error: "Permission denied" };
 	}
 	//if id is not a string, return an error
@@ -61,7 +59,7 @@ export async function deleteUser(
 	}
 
 	//delete the user
-	const result = await prisma.dashboardUsers.delete({
+	const result = await db.dashboardUsers.delete({
 		where: {
 			id: id,
 		},
@@ -80,7 +78,7 @@ export async function deleteUser(
 export async function modifyUser(
 	user: typeUserVisible
 ): Promise<typeUserVisible | { error: string }> {
-	if (!hasPermission("admin")) {
+	if (!(await hasPermission("admin"))) {
 		return { error: "Permission denied" };
 	}
 	//if user is not a typeUserVisible object, return an error
@@ -93,7 +91,7 @@ export async function modifyUser(
 	}
 
 	//update the user
-	const result = await prisma.dashboardUsers.update({
+	const result = await db.dashboardUsers.update({
 		where: {
 			id: user.id,
 		},
@@ -126,7 +124,7 @@ export async function getAllPermissions(): Promise<
 	}
 
 	//get all permissions from the server
-	const permissions = await prisma.dashboardUsersPermissions.findMany();
+	const permissions = await db.dashboardUsersPermissions.findMany();
 
 	//if there are no permissions, return an error
 	if (!permissions) {
@@ -141,7 +139,7 @@ export async function getAllPermissions(): Promise<
 export async function uploadProfilePic(
 	data: FormData
 ): Promise<{ error?: string; token?: string }> {
-	if (!hasPermission("admin")) {
+	if (!(await hasPermission("admin"))) {
 		return { error: "Permission denied" };
 	}
 
@@ -159,7 +157,7 @@ export async function uploadProfilePic(
 		return { error: "Invalid id" };
 	}
 
-	const result = await prisma.dashboardUsers.update({
+	const result = await db.dashboardUsers.update({
 		where: {
 			id: data.get("id") as string,
 		},

@@ -1,12 +1,10 @@
 "use server";
-import { PrismaClient } from "@prisma/client";
 
 import { typeUserVisible } from "@/types/user";
 import uploadImage from "@/utils/uploadImage";
 import updateUserToken from "@/app/user/auth/_actions/updateUserToken";
 import { getUser as getUserCookie } from "@/utils/getUser";
-
-const prisma = new PrismaClient();
+import db from "@/db/db";
 
 //get one user from the server
 export async function getUser(): Promise<typeUserVisible | { error: string }> {
@@ -23,7 +21,7 @@ export async function getUser(): Promise<typeUserVisible | { error: string }> {
 		return { error: "Invalid id" };
 	}
 
-	const userResult = await prisma.dashboardUsers.findUnique({
+	const userResult = await db.dashboardUsers.findUnique({
 		where: {
 			id: idFromCookie ?? undefined,
 		},
@@ -77,7 +75,7 @@ export async function modifyUser(
 	}
 
 	//update the user
-	const result = await prisma.dashboardUsers.update({
+	const result = await db.dashboardUsers.update({
 		where: {
 			id: idFromCookie,
 		},
@@ -121,7 +119,7 @@ export async function uploadProfilePic(
 		return { error: "File path is undefined" };
 	}
 
-	const result = await prisma.dashboardUsers.update({
+	const result = await db.dashboardUsers.update({
 		where: {
 			id: idFromCookie ?? undefined,
 		},
@@ -149,7 +147,7 @@ export async function getAllPermissions(): Promise<
 	{ id: string; name: string; description: string | null }[] | { error: string }
 > {
 	//get all permissions from the server
-	const permissions = await prisma.dashboardUsersPermissions.findMany();
+	const permissions = await db.dashboardUsersPermissions.findMany();
 
 	//if there are no permissions, return an error
 	if (!permissions) {

@@ -1,11 +1,9 @@
 "use server";
-import { PrismaClient } from "@prisma/client";
 
 import generateJwtToken from "./generateJWT";
 
+import db from "@/db/db";
 import { getUser } from "@/utils/getUser";
-
-const prisma = new PrismaClient();
 
 export default async function updateUserToken(): Promise<{
 	token?: string;
@@ -20,7 +18,7 @@ export default async function updateUserToken(): Promise<{
 	}
 
 	//get the user data from the server
-	const userFromDb = await prisma.dashboardUsers.findUnique({
+	const userFromDb = await db.dashboardUsers.findUnique({
 		where: {
 			id: user.id ?? undefined,
 		},

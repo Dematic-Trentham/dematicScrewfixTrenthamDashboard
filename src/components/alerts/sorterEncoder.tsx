@@ -23,7 +23,7 @@ const SorterEncoder: React.FC<Props> = ({ className }) => {
 		const check = async () => {
 			const fetch = await cacheGetShouldWeBeAlarmingForSorterEncoder();
 
-			console.log("fetch", fetch);
+			//console.log("fetch", fetch);
 
 			setIsVisible(fetch.shouldAlarm);
 			setAmountOfFaults(fetch.faults);
