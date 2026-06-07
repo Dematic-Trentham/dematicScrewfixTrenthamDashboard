@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 
 import db from "@/db/db";
 import { getParameterFromDB } from "@/utils/getParameterFromDB";
+const testingMode = process.env.TESTING_MODE === "true" || false;
 
 export const getLocations = async () => {
 	let locations = await db.dmsShuttleLocations.findMany();
@@ -104,6 +105,10 @@ export const getShuttleFaultsAndCountsNumbers = async (days: number) => {
 };
 
 export const getShuttleFaultsAndCountsNumbersCache = async (days: number) => {
+	if (testingMode) {
+		return await getShuttleFaultsAndCountsNumbers(days);
+	}
+
 	return await unstable_cache(
 		async () => {
 			const data = await getShuttleFaultsAndCountsNumbers(days);
@@ -184,5 +189,31 @@ export const getMaintenanceLogs = async (macAddress: string) => {
 		return logs;
 	} catch (error) {
 		return { error: "Failed to retrieve maintenance logs" };
+	}
+};
+
+export const updateShuttleLocation2 = async (
+	shuttleID: string,
+	newLocation: string
+): Promise<{ success?: boolean; shuttle?: any; error?: string }> => {
+	console.log("Updating shuttle location for", shuttleID, "to", newLocation);
+	try {
+		console.log("Updating shuttle location for", shuttleID, "to", newLocation);
+		const updatedShuttle = await db.dmsShuttleLocations.update({
+			where: { shuttleID: shuttleID },
+			data: { currentLocation: newLocation },
+		});
+
+		console.log("Shuttle location updated:", updatedShuttle);
+
+		//clear the cache to ensure fresh data is fetched next time
+		for (const key in cacheStore) {
+			console.log("Clearing cache key:", key);
+			delete cacheStore[key];
+		}
+
+		return { success: true, shuttle: updatedShuttle };
+	} catch (error) {
+		return { error: "Failed to update shuttle location: " + error };
 	}
 };
