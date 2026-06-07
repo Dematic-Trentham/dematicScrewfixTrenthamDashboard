@@ -1,5 +1,8 @@
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 
+import { shuttleLocation } from "../../_types/shuttle";
+
+import Link from "next/link";
 export function DropColumn({
 	id,
 	title,
@@ -36,10 +39,14 @@ export function DraggableItem({
 	id,
 	bg,
 	highlight,
+	shuttle,
+	currentSearchTime,
 }: {
 	id: string;
 	bg?: string;
 	highlight?: string;
+	shuttle: shuttleLocation;
+	currentSearchTime?: string;
 }) {
 	const { attributes, listeners, setNodeRef, transform } = useDraggable({
 		id,
@@ -74,7 +81,16 @@ export function DraggableItem({
 			{...listeners}
 			{...attributes}
 		>
-			{id}
+			<Link
+				href={
+					"/dashboard/shuttles/locations/" +
+					shuttle.macAddress.replaceAll(" ", "") +
+					"?currentSearchTime=" +
+					(currentSearchTime || "1")
+				}
+			>
+				{id}
+			</Link>
 		</div>
 	);
 }
