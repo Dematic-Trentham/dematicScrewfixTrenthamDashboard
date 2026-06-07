@@ -2,6 +2,8 @@
 import { useEffect, useState } from "react";
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { DndContext } from "@dnd-kit/core";
+import { toast } from "react-toastify";
 
 import { shuttleLocation } from "../_types/shuttle";
 
@@ -9,9 +11,11 @@ import {
 	aisleAndLevelAmount,
 	getShuttleFaultsAndCountsNumbersCache,
 	hasShuttleFaultsAndCountsNumbersCache,
+	updateShuttleLocation2,
 } from "./_actions";
 import { colorByTypeType } from "./_components/shuttlePanel copy";
 import ShuttlePanelNew from "./_components/shuttlePanel copy";
+import { DropColumn, DraggableItem } from "./_components/dragAndDrop";
 
 import PanelTop from "@/components/panels/panelTop";
 import VerticalBar from "@/components/visual/verticalBar";
@@ -134,7 +138,11 @@ export default function Home() {
 				if (
 					loc.currentLocation == undefined ||
 					loc.currentLocation === null ||
-					loc.currentLocation === ""
+					loc.currentLocation === "" ||
+					loc.currentLocation.toLowerCase() === "unknown" ||
+					loc.currentLocation === "GTG" ||
+					loc.currentLocation === "Service" ||
+					loc.currentLocation === "Parts"
 				) {
 					maintenanceBayLocations.push(loc);
 
@@ -388,11 +396,11 @@ export default function Home() {
 				className="flex w-full flex-wrap content-center justify-center"
 				id="shuttle-levels"
 			>
-				<div className="hidden min-w-56 flex-col space-x-1 space-y-1 self-center lg:flex">
+				<div className="hidden flex-col space-x-1 space-y-1 self-center lg:flex">
 					<p className="text-end text-xs">Aisle</p>
 
 					{Array.from({ length: levelCount }, (_, index) => (
-						<div key={levelCount - index} className="h-8 text-end text-3xl">
+						<div key={levelCount - index} className="w h-8 text-end text-3xl">
 							{<p>{levelCount - index}</p>}
 						</div>
 					))}
@@ -447,26 +455,85 @@ export default function Home() {
 				</div>
 			</div>
 			<br />
+			<p>Out of Aisle</p>
+			<DndContext onDragEnd={handleDragEnd}>
+				<div className="flex flex-col items-stretch space-y-2 text-center lg:flex-row lg:space-x-2 lg:space-y-0">
+					<DropColumn id="unknown" title="Unknown Status">
+						{maintenanceBay.map((shuttle, idx) => {
+							if (
+								shuttle.currentLocation != "GTG" &&
+								shuttle.currentLocation != "Service" &&
+								shuttle.currentLocation != "Parts"
+							) {
+								return (
+									<DraggableItem
+										key={shuttle.shuttleID}
+										bg="unknown"
+										id={shuttle.shuttleID}
+									/>
+								);
+							}
+						})}
+					</DropColumn>
 
-			<p className="text-medium font-bold">Maintenance Bay</p>
-			<div className="flex flex-wrap justify-center gap-2">
-				{maintenanceBay.map((shuttle, idx) => (
-					<ShuttlePanelNew
-						key={shuttle.shuttleID || idx}
-						colourType={colorByType}
-						currentSearchTime={timeToSearch}
-						highlight={selectedShuttle}
-						mostFaults={mostFaults.amount}
-						mostMissions={bestMissions.amount}
-						shuttleFaults={totalFaultsForShuttle[shuttle.shuttleID] || 0}
-						shuttleInfo={shuttle}
-						shuttleLocation={shuttle.currentLocation || ""}
-						shuttleMissionPerFault={missionsPerFaults[shuttle.shuttleID] || 0}
-						shuttleMissions={totalMissionsForShuttle[shuttle.shuttleID] || 0}
-						worstMissionPerFault={worstMissionPerFault.amount}
-					/>
-				))}
-			</div>
+					<DropColumn id="GTG" title="Good To Go">
+						{maintenanceBay.map((shuttle, idx) => {
+							if (shuttle.currentLocation === "GTG") {
+								return (
+									<DraggableItem
+										key={shuttle.shuttleID}
+										bg="GTG"
+										id={shuttle.shuttleID}
+									/>
+								);
+							}
+						})}
+					</DropColumn>
+
+					<DropColumn id="Service" title="Needs Service">
+						{maintenanceBay.map((shuttle, idx) => {
+							if (shuttle.currentLocation === "Service") {
+								return (
+									<DraggableItem
+										key={shuttle.shuttleID}
+										bg="Service"
+										id={shuttle.shuttleID}
+									/>
+								);
+							}
+						})}
+					</DropColumn>
+
+					<DropColumn id="Parts" title="Awaiting Parts" />
+				</div>
+			</DndContext>
 		</PanelTop>
 	);
+
+	function handleDragEnd(event: any) {
+		(async () => {
+			const { active, over } = event;
+
+			if (over) {
+				const result = await updateShuttleLocation2(active.id, over.id);
+
+				console.log(result);
+
+				if (result.error) {
+					toast.error("Failed to update shuttle location:");
+				} else {
+					toast.success("Shuttle location updated successfully");
+
+					maintenanceBay.forEach((shuttle) => {
+						if (shuttle.shuttleID === active.id) {
+							shuttle.currentLocation = over.id;
+						}
+					});
+
+					// Update the locations state to trigger a re-render
+					setMaintenanceBay([...maintenanceBay]);
+				}
+			}
+		})();
+	}
 }
