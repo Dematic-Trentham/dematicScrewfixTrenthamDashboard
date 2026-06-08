@@ -216,7 +216,7 @@ const ShuttlePageFaultsFromThisShuttleGrouped: React.FC<
 							);
 						})
 					)}
-					<tr className="border border-black bg-gray-200 font-bold">
+					<tr className="border border-black bg-gray-200 text-center font-bold">
 						<td>Total</td>
 						<td>{faults.reduce((total, fault) => total + fault.count, 0)}</td>
 					</tr>
