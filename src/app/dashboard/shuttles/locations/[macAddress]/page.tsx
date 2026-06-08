@@ -1,5 +1,5 @@
 "use client";
-
+import "react-tabs/style/react-tabs.css";
 import { useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
