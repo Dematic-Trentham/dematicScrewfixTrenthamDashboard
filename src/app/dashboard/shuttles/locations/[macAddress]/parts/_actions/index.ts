@@ -1,5 +1,7 @@
 "use server";
 
+import { shuttleLocationEnum } from "../../../../_types/shuttle";
+
 import db from "@/db/db";
 
 export const getShuttleFromId = async (shuttleID: string) => {
@@ -43,8 +45,13 @@ export const deleteShuttle = async (macAddress: string) => {
 		};
 	}
 
-	// if shuttle is in a location then it cannot be deleted
-	if (shuttle.currentLocation !== "") {
+	// if shuttle is not in the enum
+
+	if (
+		!Object.values(shuttleLocationEnum).includes(
+			shuttle.currentLocation as shuttleLocationEnum
+		)
+	) {
 		return {
 			error: "Shuttle ID is in a location and cannot be deleted",
 		};

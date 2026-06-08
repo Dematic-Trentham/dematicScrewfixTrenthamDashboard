@@ -1,10 +1,11 @@
 "use client";
 
-import "react-tabs/style/react-tabs.css";
 import { useEffect, useState } from "react";
 import { Tab, Tabs, TabList, TabPanel } from "react-tabs";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useParams } from "next/navigation";
+
+import { shuttleLocationEnum } from "../../_types/shuttle";
 
 import { getShuttleFromMac } from "./parts/_actions";
 import ShuttlePageSettings from "./parts/shuttlePageSettings";
@@ -73,8 +74,12 @@ export default function ShuttlePage(props: {}) {
 			setCurrentLocation(shuttle.currentLocation || "Maintenance Bay");
 
 			//set the human readable location
-			if (shuttle.currentLocation === "Maintenance Bay") {
-				setHumanReadableLocation("Maintenance Bay");
+			if (
+				Object.values(shuttleLocationEnum).includes(
+					shuttle.currentLocation as shuttleLocationEnum
+				)
+			) {
+				setHumanReadableLocation(shuttle.currentLocation);
 			} else {
 				const aisle = shuttle.currentLocation.substring(4, 6); //get the aisle number
 				const level = shuttle.currentLocation.substring(8, 10); //get the level number
