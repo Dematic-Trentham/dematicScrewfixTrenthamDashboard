@@ -1,6 +1,6 @@
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 
-import { shuttleLocation } from "../../_types/shuttle";
+import { shuttleLocation, shuttleLocationEnum } from "../../_types/shuttle";
 
 import Link from "next/link";
 export function DropColumn({
@@ -54,9 +54,9 @@ export function DraggableItem({
 
 	const colours: Record<string, string> = {
 		unknown: "bg-red-500",
-		GTG: "bg-green-400",
-		Service: "bg-yellow-400",
-		Parts: "bg-blue-400",
+		[shuttleLocationEnum.GTG]: "bg-green-400",
+		[shuttleLocationEnum.Service]: "bg-yellow-400",
+		[shuttleLocationEnum.Parts]: "bg-blue-400",
 		highlightNot: "bg-violet-500",
 		highlight: "bg-lime-500 animate-pulse speed-25",
 	};

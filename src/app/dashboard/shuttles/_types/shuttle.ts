@@ -33,3 +33,11 @@ export type shuttleFaultCodeLookup = {
 	ID: string;
 	faultMessage: string;
 };
+
+export enum shuttleLocationEnum {
+	GTG = "GTG",
+	Service = "Service",
+	Parts = "Parts",
+	MaintenanceBay = "Maintenance Bay",
+	Unknown = "Unknown",
+}

@@ -6,6 +6,7 @@ import { setCookie } from "cookies-next";
 import { Textarea } from "@nextui-org/input";
 
 import { addMaintenanceLog } from "../../_actions";
+import { shuttleLocationEnum } from "../../../_types/shuttle";
 
 import { deleteShuttle, getShuttleFromMac, updateShuttleId } from "./_actions";
 
@@ -29,7 +30,12 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 	const [lockOutDelete, setLockOutDelete] = useState(true);
 
 	useEffect(() => {
-		if (props.location === "Maintenance Bay") {
+		if (
+			// if 	props.location is in the enum shuttleLocationEnum then allow delete otherwise lock it out
+			Object.values(shuttleLocationEnum).includes(
+				props.location as shuttleLocationEnum
+			)
+		) {
 			setLockOutDelete(false);
 		}
 
@@ -247,7 +253,7 @@ const ShuttlePageSettings: React.FC<ShuttlePageSettingsProps> = (props) => {
 						)}
 						{lockOutDelete && (
 							<div className="bg- flex flex-row items-center justify-evenly space-x-2 pt-2">
-								Shuttle must be in Maintenance Bay to Delete
+								Shuttle must be out of the Aisle to Delete
 							</div>
 						)}
 					</div>
