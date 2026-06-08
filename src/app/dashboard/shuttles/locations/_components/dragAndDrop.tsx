@@ -58,6 +58,7 @@ export function DraggableItem({
 		[shuttleLocationEnum.Service]: "bg-yellow-400",
 		[shuttleLocationEnum.Parts]: "bg-blue-400",
 		[shuttleLocationEnum.Investigation]: "bg-pink-400",
+		[shuttleLocationEnum.AisleTestingRequired]: "bg-lime-600",
 		highlightNot: "bg-violet-500",
 		highlight: "bg-lime-500 animate-pulse speed-25",
 	};

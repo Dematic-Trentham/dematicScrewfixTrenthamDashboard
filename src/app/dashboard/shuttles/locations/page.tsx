@@ -558,6 +558,25 @@ export default function Home() {
 							}
 						})}
 					</DropColumn>
+					<DropColumn id="AisleTestingRequired" title="Aisle Testing Required">
+						{maintenanceBay.map((shuttle, idx) => {
+							if (
+								shuttle.currentLocation ===
+								shuttleLocationEnum.AisleTestingRequired
+							) {
+								return (
+									<DraggableItem
+										key={shuttle.shuttleID}
+										bg={shuttleLocationEnum.AisleTestingRequired}
+										currentSearchTime={timeToSearch.toString()}
+										highlight={selectedShuttle}
+										id={shuttle.shuttleID}
+										shuttle={shuttle}
+									/>
+								);
+							}
+						})}
+					</DropColumn>
 				</div>
 			</DndContext>
 		</PanelTop>

@@ -41,4 +41,5 @@ export enum shuttleLocationEnum {
 	MaintenanceBay = "Maintenance Bay",
 	Investigation = "Investigation",
 	Unknown = "Unknown",
+	AisleTestingRequired = "AisleTestingRequired",
 }
