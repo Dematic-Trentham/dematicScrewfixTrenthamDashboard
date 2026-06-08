@@ -119,6 +119,9 @@ const ShuttlePageFaultsFromThisShuttleGrouped: React.FC<
 				}
 			});
 
+			//sort shuttleGroup by count descending
+			shuttleGroup.sort((a, b) => b.count - a.count);
+
 			setFaults(shuttleGroup);
 			setFaultCodeLookup(faultCodeLookup);
 			setError(null);
