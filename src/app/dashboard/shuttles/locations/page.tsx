@@ -143,7 +143,8 @@ export default function Home() {
 					loc.currentLocation === shuttleLocationEnum.GTG ||
 					loc.currentLocation === shuttleLocationEnum.Service ||
 					loc.currentLocation === shuttleLocationEnum.Parts ||
-					loc.currentLocation === shuttleLocationEnum.Investigation
+					loc.currentLocation === shuttleLocationEnum.Investigation ||
+					loc.currentLocation === shuttleLocationEnum.AisleTestingRequired
 				) {
 					maintenanceBayLocations.push(loc);
 
@@ -469,20 +470,18 @@ export default function Home() {
 			<DndContext onDragEnd={handleDragEnd}>
 				<div className="col flex w-full flex-wrap items-stretch justify-center gap-2 lg:flex-row">
 					<DropColumn
-						id="unknown"
-						title={`Unknown (${maintenanceBay.filter((shuttle) => shuttle.currentLocation === undefined || shuttle.currentLocation === null || shuttle.currentLocation === "" || shuttle.currentLocation.toLowerCase() === "unknown").length})`}
+						id="AisleTestingRequired"
+						title={`Aisle Testing Required (${maintenanceBay.filter((shuttle) => shuttle.currentLocation === shuttleLocationEnum.AisleTestingRequired).length})`}
 					>
 						{maintenanceBay.map((shuttle, idx) => {
 							if (
-								shuttle.currentLocation != shuttleLocationEnum.GTG &&
-								shuttle.currentLocation != shuttleLocationEnum.Service &&
-								shuttle.currentLocation != shuttleLocationEnum.Parts &&
-								shuttle.currentLocation != shuttleLocationEnum.Investigation
+								shuttle.currentLocation ===
+								shuttleLocationEnum.AisleTestingRequired
 							) {
 								return (
 									<DraggableItem
 										key={shuttle.shuttleID}
-										bg="unknown"
+										bg={shuttleLocationEnum.AisleTestingRequired}
 										currentSearchTime={timeToSearch.toString()}
 										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
@@ -574,18 +573,22 @@ export default function Home() {
 						})}
 					</DropColumn>
 					<DropColumn
-						id="AisleTestingRequired"
-						title={`Aisle Testing Required (${maintenanceBay.filter((shuttle) => shuttle.currentLocation === shuttleLocationEnum.AisleTestingRequired).length})`}
+						id="unknown"
+						title={`Unknown (${maintenanceBay.filter((shuttle) => shuttle.currentLocation === undefined || shuttle.currentLocation === null || shuttle.currentLocation === "" || shuttle.currentLocation.toLowerCase() === "unknown").length})`}
 					>
 						{maintenanceBay.map((shuttle, idx) => {
 							if (
-								shuttle.currentLocation ===
-								shuttleLocationEnum.AisleTestingRequired
+								shuttle.currentLocation != shuttleLocationEnum.GTG &&
+								shuttle.currentLocation != shuttleLocationEnum.Service &&
+								shuttle.currentLocation != shuttleLocationEnum.Parts &&
+								shuttle.currentLocation != shuttleLocationEnum.Investigation &&
+								shuttle.currentLocation !=
+									shuttleLocationEnum.AisleTestingRequired
 							) {
 								return (
 									<DraggableItem
 										key={shuttle.shuttleID}
-										bg={shuttleLocationEnum.AisleTestingRequired}
+										bg="unknown"
 										currentSearchTime={timeToSearch.toString()}
 										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
