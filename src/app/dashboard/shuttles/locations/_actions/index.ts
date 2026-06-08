@@ -1,5 +1,6 @@
 "use server";
 import { unstable_cache } from "next/cache";
+import { updateTag } from "next/cache";
 
 import db from "@/db/db";
 import { getParameterFromDB } from "@/utils/getParameterFromDB";
@@ -120,7 +121,7 @@ export const getShuttleFaultsAndCountsNumbersCache = async (days: number) => {
 			return data;
 		},
 		[`getShuttleFaultsAndCountsNumbers-${days}`], // unique key per "days"
-		{ revalidate: 60 } // 1m cache
+		{ revalidate: 60, tags: [`getShuttleFaultsAndCountsNumbers`] } // 1m cache
 	)();
 };
 
@@ -211,6 +212,8 @@ export const updateShuttleLocation2 = async (
 			console.log("Clearing cache key:", key);
 			delete cacheStore[key];
 		}
+
+		updateTag(`getShuttleFaultsAndCountsNumbers`);
 
 		return { success: true, shuttle: updatedShuttle };
 	} catch (error) {
