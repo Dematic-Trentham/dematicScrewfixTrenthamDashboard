@@ -473,7 +473,8 @@ export default function Home() {
 							if (
 								shuttle.currentLocation != shuttleLocationEnum.GTG &&
 								shuttle.currentLocation != shuttleLocationEnum.Service &&
-								shuttle.currentLocation != shuttleLocationEnum.Parts
+								shuttle.currentLocation != shuttleLocationEnum.Parts &&
+								shuttle.currentLocation != shuttleLocationEnum.Investigation
 							) {
 								return (
 									<DraggableItem

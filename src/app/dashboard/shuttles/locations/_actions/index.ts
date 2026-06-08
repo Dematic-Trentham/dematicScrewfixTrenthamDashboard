@@ -42,7 +42,7 @@ export const getShuttleLocations = async () => {
 };
 
 export const getShuttleFaultsAndCountsNumbers = async (days: number) => {
-	console.log("❌ MISS: fetching fresh data for", days);
+	//console.log("❌ MISS: fetching fresh data for", days);
 	const [faults, counts, locations] = await Promise.all([
 		getShuttleFaults(days),
 		getAllCounts(days),
@@ -74,7 +74,7 @@ export const getShuttleFaultsAndCountsNumbers = async (days: number) => {
 			count.totalIATs;
 	}
 
-	console.log(missionCounts);
+	//console.log(missionCounts);
 
 	// Sort the keys alphabetically
 	const sortedFaultCounts = Object.fromEntries(
