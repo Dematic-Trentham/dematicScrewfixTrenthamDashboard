@@ -17,12 +17,12 @@ export function DropColumn({
 	});
 
 	return (
-		<div className="col flex h-full w-full flex-col items-center rounded-xl rounded-t-2xl bg-gray-300 p-2 text-center lg:w-64">
+		<div className="col flex h-full w-full flex-col items-center rounded-xl rounded-t-2xl bg-gray-300 p-2 text-center lg:w-56">
 			<div className="w-full pb-2 font-bold">{title}</div>
 
 			<div
 				ref={setNodeRef}
-				className={`col flex min-h-32 w-full flex-wrap items-center justify-center ${
+				className={`col flex min-h-32 w-full flex-wrap items-center justify-center gap-2 ${
 					isOver ? "bg-blue-100" : ""
 				} items-center align-top`}
 			>
@@ -78,7 +78,7 @@ export function DraggableItem({
 	return (
 		<div
 			ref={setNodeRef}
-			className={`m-0.5 h-16 w-16 cursor-grab touch-none overflow-hidden rounded-2xl border border-black p-2 align-middle shadow ${bgLocal ? colours[bgLocal] : "bg-red-500"} flex items-center justify-center`}
+			className={`h-16 w-16 cursor-grab touch-none overflow-hidden rounded-2xl border border-black align-middle shadow ${bgLocal ? colours[bgLocal] : "bg-red-500"} flex items-center justify-center`}
 			style={style}
 			{...listeners}
 			{...attributes}

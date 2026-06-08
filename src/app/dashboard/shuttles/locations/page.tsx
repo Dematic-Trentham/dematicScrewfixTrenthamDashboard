@@ -467,7 +467,7 @@ export default function Home() {
 			<br />
 			<p className="text-center">Out of Aisle</p>
 			<DndContext onDragEnd={handleDragEnd}>
-				<div className="col flex w-full flex-wrap items-stretch justify-center lg:flex-row lg:space-x-2 lg:space-y-0">
+				<div className="col flex w-full flex-wrap items-stretch justify-center gap-2 lg:flex-row">
 					<DropColumn
 						id="unknown"
 						title={`Unknown (${maintenanceBay.filter((shuttle) => shuttle.currentLocation === undefined || shuttle.currentLocation === null || shuttle.currentLocation === "" || shuttle.currentLocation.toLowerCase() === "unknown").length})`}
