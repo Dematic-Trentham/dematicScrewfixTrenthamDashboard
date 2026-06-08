@@ -39,5 +39,6 @@ export enum shuttleLocationEnum {
 	Service = "Service",
 	Parts = "Parts",
 	MaintenanceBay = "Maintenance Bay",
+	Investigation = "Investigation",
 	Unknown = "Unknown",
 }

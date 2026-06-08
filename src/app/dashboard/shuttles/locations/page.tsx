@@ -142,7 +142,8 @@ export default function Home() {
 					loc.currentLocation.toLowerCase() === "unknown" ||
 					loc.currentLocation === shuttleLocationEnum.GTG ||
 					loc.currentLocation === shuttleLocationEnum.Service ||
-					loc.currentLocation === shuttleLocationEnum.Parts
+					loc.currentLocation === shuttleLocationEnum.Parts ||
+					loc.currentLocation === shuttleLocationEnum.Investigation
 				) {
 					maintenanceBayLocations.push(loc);
 
@@ -529,6 +530,24 @@ export default function Home() {
 									<DraggableItem
 										key={shuttle.shuttleID}
 										bg={shuttleLocationEnum.Parts}
+										currentSearchTime={timeToSearch.toString()}
+										highlight={selectedShuttle}
+										id={shuttle.shuttleID}
+										shuttle={shuttle}
+									/>
+								);
+							}
+						})}
+					</DropColumn>
+					<DropColumn id="Investigation" title="Investigation Required">
+						{maintenanceBay.map((shuttle, idx) => {
+							if (
+								shuttle.currentLocation === shuttleLocationEnum.Investigation
+							) {
+								return (
+									<DraggableItem
+										key={shuttle.shuttleID}
+										bg={shuttleLocationEnum.Investigation}
 										currentSearchTime={timeToSearch.toString()}
 										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
