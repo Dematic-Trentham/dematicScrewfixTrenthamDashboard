@@ -215,6 +215,15 @@ export const updateShuttleLocation2 = async (
 
 		updateTag(`getShuttleFaultsAndCountsNumbers`);
 
+		await db.dmsShuttleLastMaintenance.create({
+			data: {
+				macAddress: updatedShuttle.macAddress,
+				shuttleID: shuttleID,
+				maintenanceDetails: `shuttle status updated to ${newLocation}`,
+				lastMaintenanceDate: new Date(),
+			},
+		});
+
 		return { success: true, shuttle: updatedShuttle };
 	} catch (error) {
 		return { error: "Failed to update shuttle location: " + error };
