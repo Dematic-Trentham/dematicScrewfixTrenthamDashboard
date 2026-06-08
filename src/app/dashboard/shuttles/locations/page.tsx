@@ -468,7 +468,10 @@ export default function Home() {
 			<p className="text-center">Out of Aisle</p>
 			<DndContext onDragEnd={handleDragEnd}>
 				<div className="col flex w-full flex-wrap items-stretch justify-center lg:flex-row lg:space-x-2 lg:space-y-0">
-					<DropColumn id="unknown" title="Unknown Status">
+					<DropColumn
+						id="unknown"
+						title={`Unknown (${maintenanceBay.filter((shuttle) => shuttle.currentLocation === undefined || shuttle.currentLocation === null || shuttle.currentLocation === "" || shuttle.currentLocation.toLowerCase() === "unknown").length})`}
+					>
 						{maintenanceBay.map((shuttle, idx) => {
 							if (
 								shuttle.currentLocation != shuttleLocationEnum.GTG &&
@@ -490,7 +493,10 @@ export default function Home() {
 						})}
 					</DropColumn>
 
-					<DropColumn id="GTG" title="Good To Go">
+					<DropColumn
+						id="GTG"
+						title={`Good To Go (${maintenanceBay.filter((shuttle) => shuttle.currentLocation === shuttleLocationEnum.GTG).length})`}
+					>
 						{maintenanceBay.map((shuttle, idx) => {
 							if (shuttle.currentLocation === shuttleLocationEnum.GTG) {
 								return (
@@ -507,7 +513,10 @@ export default function Home() {
 						})}
 					</DropColumn>
 
-					<DropColumn id="Service" title="Needs Service">
+					<DropColumn
+						id="Service"
+						title={`Service Required (${maintenanceBay.filter((shuttle) => shuttle.currentLocation === shuttleLocationEnum.Service).length})`}
+					>
 						{maintenanceBay.map((shuttle, idx) => {
 							if (shuttle.currentLocation === shuttleLocationEnum.Service) {
 								return (
@@ -524,7 +533,10 @@ export default function Home() {
 						})}
 					</DropColumn>
 
-					<DropColumn id="Parts" title="Awaiting Parts">
+					<DropColumn
+						id="Parts"
+						title={`Awaiting Parts (${maintenanceBay.filter((shuttle) => shuttle.currentLocation === shuttleLocationEnum.Parts).length})`}
+					>
 						{maintenanceBay.map((shuttle, idx) => {
 							if (shuttle.currentLocation === shuttleLocationEnum.Parts) {
 								return (
@@ -540,7 +552,10 @@ export default function Home() {
 							}
 						})}
 					</DropColumn>
-					<DropColumn id="Investigation" title="Investigation Required">
+					<DropColumn
+						id="Investigation"
+						title={`Investigation Required (${maintenanceBay.filter((shuttle) => shuttle.currentLocation === shuttleLocationEnum.Investigation).length})`}
+					>
 						{maintenanceBay.map((shuttle, idx) => {
 							if (
 								shuttle.currentLocation === shuttleLocationEnum.Investigation
@@ -558,7 +573,10 @@ export default function Home() {
 							}
 						})}
 					</DropColumn>
-					<DropColumn id="AisleTestingRequired" title="Aisle Testing Required">
+					<DropColumn
+						id="AisleTestingRequired"
+						title={`Aisle Testing Required (${maintenanceBay.filter((shuttle) => shuttle.currentLocation === shuttleLocationEnum.AisleTestingRequired).length})`}
+					>
 						{maintenanceBay.map((shuttle, idx) => {
 							if (
 								shuttle.currentLocation ===
