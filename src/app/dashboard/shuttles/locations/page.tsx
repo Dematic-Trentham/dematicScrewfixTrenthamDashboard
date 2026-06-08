@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { DndContext } from "@dnd-kit/core";
 import { toast } from "react-toastify";
 
-import { shuttleLocation } from "../_types/shuttle";
+import { shuttleLocation, shuttleLocationEnum } from "../_types/shuttle";
 
 import {
 	aisleAndLevelAmount,
@@ -140,9 +140,9 @@ export default function Home() {
 					loc.currentLocation === null ||
 					loc.currentLocation === "" ||
 					loc.currentLocation.toLowerCase() === "unknown" ||
-					loc.currentLocation === "GTG" ||
-					loc.currentLocation === "Service" ||
-					loc.currentLocation === "Parts"
+					loc.currentLocation === shuttleLocationEnum.GTG ||
+					loc.currentLocation === shuttleLocationEnum.Service ||
+					loc.currentLocation === shuttleLocationEnum.Parts
 				) {
 					maintenanceBayLocations.push(loc);
 
@@ -470,9 +470,9 @@ export default function Home() {
 					<DropColumn id="unknown" title="Unknown Status">
 						{maintenanceBay.map((shuttle, idx) => {
 							if (
-								shuttle.currentLocation != "GTG" &&
-								shuttle.currentLocation != "Service" &&
-								shuttle.currentLocation != "Parts"
+								shuttle.currentLocation != shuttleLocationEnum.GTG &&
+								shuttle.currentLocation != shuttleLocationEnum.Service &&
+								shuttle.currentLocation != shuttleLocationEnum.Parts
 							) {
 								return (
 									<DraggableItem
@@ -490,11 +490,11 @@ export default function Home() {
 
 					<DropColumn id="GTG" title="Good To Go">
 						{maintenanceBay.map((shuttle, idx) => {
-							if (shuttle.currentLocation === "GTG") {
+							if (shuttle.currentLocation === shuttleLocationEnum.GTG) {
 								return (
 									<DraggableItem
 										key={shuttle.shuttleID}
-										bg="GTG"
+										bg={shuttleLocationEnum.GTG}
 										currentSearchTime={timeToSearch.toString()}
 										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
@@ -507,11 +507,11 @@ export default function Home() {
 
 					<DropColumn id="Service" title="Needs Service">
 						{maintenanceBay.map((shuttle, idx) => {
-							if (shuttle.currentLocation === "Service") {
+							if (shuttle.currentLocation === shuttleLocationEnum.Service) {
 								return (
 									<DraggableItem
 										key={shuttle.shuttleID}
-										bg="Service"
+										bg={shuttleLocationEnum.Service}
 										currentSearchTime={timeToSearch.toString()}
 										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
@@ -524,11 +524,11 @@ export default function Home() {
 
 					<DropColumn id="Parts" title="Awaiting Parts">
 						{maintenanceBay.map((shuttle, idx) => {
-							if (shuttle.currentLocation === "Parts") {
+							if (shuttle.currentLocation === shuttleLocationEnum.Parts) {
 								return (
 									<DraggableItem
 										key={shuttle.shuttleID}
-										bg="Parts"
+										bg={shuttleLocationEnum.Parts}
 										currentSearchTime={timeToSearch.toString()}
 										highlight={selectedShuttle}
 										id={shuttle.shuttleID}
