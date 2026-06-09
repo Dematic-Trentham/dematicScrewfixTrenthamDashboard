@@ -46,6 +46,8 @@ export default function ShuttlePage(props: {}) {
 	const [humanReadableLoaction, setHumanReadableLocation] =
 		useState<string>("");
 
+	const [inALocation, setInALocation] = useState<boolean>(false);
+
 	// const [allCounts, setAllCounts] = useState<
 	// 	{
 	// 		ID: string;
@@ -80,11 +82,14 @@ export default function ShuttlePage(props: {}) {
 				)
 			) {
 				setHumanReadableLocation(shuttle.currentLocation);
+
+				setInALocation(true);
 			} else {
 				const aisle = shuttle.currentLocation.substring(4, 6); //get the aisle number
 				const level = shuttle.currentLocation.substring(8, 10); //get the level number
 
 				setHumanReadableLocation(`Aisle ${aisle}, Level ${level}`);
+				setInALocation(false);
 			}
 
 			setShuttleID(shuttle.shuttleID || "Unknown");
@@ -206,13 +211,9 @@ export default function ShuttlePage(props: {}) {
 				>
 					<TabList>
 						<Tab>Faults Grouped From This Shuttle</Tab>
-						{currentLocation !== "Maintenance Bay" && (
-							<Tab>Faults Grouped From This Location</Tab>
-						)}
+						{!inALocation && <Tab>Faults Grouped From This Location</Tab>}
 						<Tab>Faults From This Shuttle</Tab>
-						{currentLocation !== "Maintenance Bay" && (
-							<Tab>Faults From This Location</Tab>
-						)}
+						{!inALocation && <Tab>Faults From This Location</Tab>}
 						<Tab>Counts</Tab>
 						<Tab>Settings</Tab>
 					</TabList>
@@ -224,7 +225,7 @@ export default function ShuttlePage(props: {}) {
 						/>
 					</TabPanel>
 
-					{currentLocation !== "Maintenance Bay" && (
+					{!inALocation && (
 						<TabPanel>
 							<ShuttlePageFaultsFromThisLocationGrouped
 								daysToSearch={timeToSearch}
@@ -239,7 +240,7 @@ export default function ShuttlePage(props: {}) {
 							macAddress={macAddress}
 						/>
 					</TabPanel>
-					{currentLocation !== "Maintenance Bay" && (
+					{!inALocation && (
 						<TabPanel>
 							<ShuttlePageFaultsFromThisLocation
 								daysToSearch={timeToSearch}

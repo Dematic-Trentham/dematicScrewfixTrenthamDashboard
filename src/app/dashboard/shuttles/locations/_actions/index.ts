@@ -199,6 +199,18 @@ export const updateShuttleLocation2 = async (
 ): Promise<{ success?: boolean; shuttle?: any; error?: string }> => {
 	console.log("Updating shuttle location for", shuttleID, "to", newLocation);
 	try {
+		//if already in the location, do nothing
+		const currentShuttle = await db.dmsShuttleLocations.findUnique({
+			where: { shuttleID: shuttleID },
+		});
+
+		if (!currentShuttle) {
+			return { error: "Shuttle not found" };
+		}
+		if (currentShuttle.currentLocation === newLocation) {
+			return { success: true, shuttle: currentShuttle };
+		}
+
 		console.log("Updating shuttle location for", shuttleID, "to", newLocation);
 		const updatedShuttle = await db.dmsShuttleLocations.update({
 			where: { shuttleID: shuttleID },
