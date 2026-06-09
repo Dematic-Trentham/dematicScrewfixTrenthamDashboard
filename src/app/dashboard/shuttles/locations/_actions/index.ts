@@ -172,6 +172,8 @@ export const addMaintenanceLog = async (
 				shuttleID: shuttle.shuttleID, // Add shuttleID from the found shuttle
 				maintenanceDetails: maintenanceLog,
 				lastMaintenanceDate: new Date(),
+				type: "Manual Log",
+				user: "Unknown User", // You can replace this with actual user info if available
 			},
 		});
 
@@ -190,7 +192,7 @@ export const getMaintenanceLogs = async (macAddress: string) => {
 
 		return logs;
 	} catch (error) {
-		return { error: "Failed to retrieve maintenance logs" };
+		return { error: "Failed to retrieve maintenance logs: " + error };
 	}
 };
 
@@ -234,6 +236,8 @@ export const updateShuttleLocation2 = async (
 				shuttleID: shuttleID,
 				maintenanceDetails: `shuttle status updated to ${newLocation}`,
 				lastMaintenanceDate: new Date(),
+				type: "Automatic Log",
+				user: "System", // You can replace this with actual user info if available
 			},
 		});
 
