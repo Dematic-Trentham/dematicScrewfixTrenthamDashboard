@@ -152,7 +152,7 @@ const ShuttlePageFaultsFromThisLocationGrouped: React.FC<
 									className="border border-black text-center hover:bg-yellow-200"
 								>
 									<td>
-										({fault.faultCode})
+										({fault.faultCode}) -
 										{faultCodeLookup.find(
 											(faultCode) => faultCode.ID === fault.faultCode
 										)?.faultMessage || "Unknown"}
