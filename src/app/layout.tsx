@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 		icon: "/favicon.ico",
 	},
 };
-
+ 
 export const viewport: Viewport = {
 	themeColor: [
 		{ media: "(prefers-color-scheme: light)", color: "white" },

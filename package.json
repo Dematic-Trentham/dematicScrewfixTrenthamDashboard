@@ -4,7 +4,8 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "next dev",
+		"dev": "concurrently \"next dev\" \"npm run watch:custom\"",
+		"watch:custom": "chokidar \"src/**/*\" -c \"node tools/versionInc.js\"",
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
@@ -85,6 +86,7 @@
 		"@types/uuid": "^10.0.0",
 		"@typescript-eslint/eslint-plugin": "^8.4.0",
 		"autoprefixer": "10.4.19",
+		"chokidar-cli": "^3.0.0",
 		"cross-env": "^7.0.3",
 		"eslint": "^8.57.1",
 		"eslint-config-next": "14.2.1",
