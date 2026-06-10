@@ -4,8 +4,7 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "concurrently \"next dev\" \"npm run watch:custom\"",
-		"watch:custom": "chokidar \"src/**/*\" -c \"node tools/versionInc.js\"",
+		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",

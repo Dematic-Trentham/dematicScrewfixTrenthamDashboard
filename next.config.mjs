@@ -28,4 +28,21 @@ const nextConfig = {
 	//},
 };
 
+const { randomUUID } = require("crypto");
+const fs = require("fs");
+const path = require("path");
+
+const buildId = randomUUID();
+
+fs.writeFileSync(
+	path.join(__dirname, "build-info.json"),
+	JSON.stringify({ buildId }, null, 2)
+);
+
+module.exports = {
+	env: {
+		NEXT_PUBLIC_BUILD_ID: buildId,
+	},
+};
+
 export default nextConfig;
