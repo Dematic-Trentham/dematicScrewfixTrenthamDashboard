@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 
+import os from "os";
+
 export async function GET() {
 	return NextResponse.json({
-		buildId: process.env.BUILD_ID || "unknown",
+		return: os.version(),
 	});
 }
