@@ -15,7 +15,7 @@
 		"prisma-pull": "npx prisma db pull --schema=./node_modules/masterPrismaSchema/prisma",
 		"prisma-push": "npx prisma db push --schema=./node_modules/masterPrismaSchema/prisma",
 		"packageJsonStripper": "node tools/packageJsonStripper.js",
-		"build-docker": "npm run prisma-merge && npm run packageJsonStripper && docker build -t dematicscrewfixtrenthamdashboard .",
+		"build-docker": "npm run prisma-merge && npm run packageJsonStripper && docker build -t dematicscrewfixtrenthamdashboard --build-arg APP_VERSION=$(git rev-parse HEAD) .",
 		"test": "jest",
 		"npm-check": "npm-check",
 		"lint:fix": "eslint . --ext .ts,.tsx -c .eslintrc.json --fix"

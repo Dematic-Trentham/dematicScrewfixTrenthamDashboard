@@ -24,6 +24,10 @@ RUN mkdir -p /app/public
 
 COPY . .
 
+# Set the APP_VERSION environment variable from the build argument
+ARG APP_VERSION
+ENV APP_VERSION=$APP_VERSION
+
 # Build the app
 RUN npm run build
 

@@ -38,7 +38,23 @@ export default function RootLayout({
 }) {
 	return (
 		<html suppressHydrationWarning lang="en">
-			<head />
+			<head>
+				<link href="/favicon.ico" rel="icon" />
+				<script>
+					{`
+						const storedVersion = localStorage.getItem('appVersion');
+						fetch('/version')
+							.then(res => res.text())
+							.then(version => {
+								if (storedVersion !== version) {
+									localStorage.setItem('appVersion', version);
+									window.location.reload();
+								}
+							})
+							.catch(err => console.error('Version check failed:', err));
+					`}
+				</script>
+			</head>
 
 			<body className="antialiased">
 				<Suspense>
