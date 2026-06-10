@@ -42,6 +42,8 @@ export default function RootLayout({
 				<link href="/favicon.ico" rel="icon" />
 				<script>
 					{`
+					setInterval(() => {
+					
 						const storedVersion = localStorage.getItem('appVersion');
 						fetch('/version')
 							.then(res => res.text())
@@ -52,7 +54,9 @@ export default function RootLayout({
 								}
 							})
 							.catch(err => console.error('Version check failed:', err));
-					`}
+					
+					}, 60*1000);`}
+						
 				</script>
 			</head>
 
