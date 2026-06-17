@@ -23,7 +23,7 @@ export const metadata: Metadata = {
 		icon: "/favicon.ico",
 	},
 };
- 
+
 export const viewport: Viewport = {
 	themeColor: [
 		{ media: "(prefers-color-scheme: light)", color: "white" },
@@ -40,24 +40,6 @@ export default function RootLayout({
 		<html suppressHydrationWarning lang="en">
 			<head>
 				<link href="/favicon.ico" rel="icon" />
-				<script>
-					{`
-					setInterval(() => {
-					
-						const storedVersion = localStorage.getItem('appVersion');
-						fetch('/version')
-							.then(res => res.text())
-							.then(version => {
-								if (storedVersion !== version) {
-									localStorage.setItem('appVersion', version);
-									window.location.reload();
-								}
-							})
-							.catch(err => console.error('Version check failed:', err));
-					
-					}, 60*1000);`}
-						
-				</script>
 			</head>
 
 			<body className="antialiased">
