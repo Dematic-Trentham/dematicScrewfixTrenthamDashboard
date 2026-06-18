@@ -2,8 +2,10 @@ import { useEffect, useState } from "react";
 import * as React from "react";
 import Tippy from "@tippyjs/react";
 import "tippy.js/dist/tippy.css";
+import { toast } from "react-toastify";
 
 import {
+	deleteShuttleMaintenance,
 	getFaultCodeLookup,
 	getLastMaintenances,
 	getShuttleFaults,
@@ -29,6 +31,8 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 	const [faultCodeLookup, setFaultCodeLookup] = useState<
 		shuttleFaultCodeLookup[]
 	>([]);
+
+	const [forceUpdate, setForceUpdate] = useState(0);
 
 	const [lastMaintenanceTime, setLastMaintenanceTime] = useState<Date | null>(
 		null
@@ -201,7 +205,7 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 		};
 
 		fetchShuttle();
-	}, [props]);
+	}, [props, forceUpdate]);
 
 	if (isLoading) {
 		return <div>is loading....</div>;
@@ -327,7 +331,7 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 						</tr>
 					) : (
 						faults.map((fault) => {
-							return makeFaultRow(fault, faultCodeLookup || []);
+							return makeFaultRow(fault, faultCodeLookup || [], setForceUpdate);
 						})
 					)}
 				</tbody>
@@ -338,7 +342,8 @@ const ShuttlePageFaultsFromThisShuttle: React.FC<
 
 function makeFaultRow(
 	fault: shuttleFault,
-	faultCodeLookup: shuttleFaultCodeLookup[]
+	faultCodeLookup: shuttleFaultCodeLookup[],
+	setForceUpdate: React.Dispatch<React.SetStateAction<number>>
 ) {
 	if (fault.faultCode === "-1") {
 		//This is a shuttle movement log
@@ -379,7 +384,24 @@ function makeFaultRow(
 			>
 				<td>{fault.timestamp.toLocaleString()}</td>
 				<td>Maintenace Performed </td>
-				<td colSpan={5}> {`Details: ${log.maintenanceDetails}`}</td>
+				<td colSpan={4}> {`Details: ${log.maintenanceDetails}`}</td>
+				<td>
+					<button
+						onClick={async () => {
+							const result = await deleteShuttleMaintenance(log.ID);
+
+							if (result.error) {
+								toast(result.error, { type: "error" });
+							} else {
+								toast(result.message, { type: "success" });
+								//force update the page
+								setForceUpdate((prev) => prev + 1);
+							}
+						}}
+					>
+						Delete
+					</button>
+				</td>
 			</tr>
 		);
 	} else {

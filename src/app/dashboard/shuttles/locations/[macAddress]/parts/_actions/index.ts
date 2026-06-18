@@ -2,6 +2,7 @@
 
 import { shuttleLocationEnum } from "../../../../_types/shuttle";
 
+import { hasPermission } from "@/utils/getUser";
 import db from "@/db/db";
 
 export const getShuttleFromId = async (shuttleID: string) => {
@@ -298,4 +299,35 @@ export const getLastMaintenances = async (macAddress: string) => {
 	console.log("Last maintenance fetched:", maintenances.length);
 
 	return maintenances;
+};
+
+export const deleteShuttleMaintenance = async (ID: string) => {
+	//check user is logged in
+	// if not logged in, return error
+	if (!(await hasPermission("ShuttleEdit"))) {
+		return {
+			error:
+				"You do not have permission to delete shuttle maintenance, please contact your administrator for permission 'ShuttleEdit'",
+		};
+	}
+
+	if (ID === "") {
+		return {
+			error: "ID cannot be empty",
+		};
+	}
+
+	if (ID.length < 1) {
+		return {
+			error: "ID cannot be less than 1 character",
+		};
+	}
+
+	let deleted = await db.dmsShuttleLastMaintenance.delete({
+		where: {
+			ID: ID,
+		},
+	});
+
+	return { message: "Shuttle maintenance deleted successfully" };
 };

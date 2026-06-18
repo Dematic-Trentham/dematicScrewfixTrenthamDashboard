@@ -108,6 +108,10 @@ export const getShuttleFaultsAndCountsNumbers = async (days: number) => {
 
 export const getShuttleFaultsAndCountsNumbersCache = async (days: number) => {
 	if (testingMode) {
+		console.log(
+			"Testing mode active, bypassing cache for getShuttleFaultsAndCountsNumbers"
+		);
+
 		return await getShuttleFaultsAndCountsNumbers(days);
 	}
 
