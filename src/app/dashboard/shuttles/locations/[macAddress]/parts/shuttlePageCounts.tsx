@@ -24,7 +24,6 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 			shuttleID: string;
 			totalPicks: number;
 			totalDrops: number;
-		
 		}[]
 	>([]);
 	const [faultCodeLookup, setFaultCodeLookup] = useState<
@@ -92,7 +91,7 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 							"Shuttle ID",
 							"Picks",
 							"Drops",
-							
+
 							"Total Counts",
 						],
 						...counts.map((count) => [
@@ -104,8 +103,8 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 							count.shuttleID,
 							count.totalPicks,
 							count.totalDrops,
-							
-							count.totalPicks + count.totalDrops ,
+
+							count.totalPicks + count.totalDrops,
 						]),
 					];
 					const csvString = csvContent.map((row) => row.join(",")).join("\n");
@@ -164,7 +163,7 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 								<th style={{ width: "250px" }}>Timestamp</th>
 								<th style={{ width: "150px" }}>Total Picks</th>
 								<th style={{ width: "100px" }}>Total Drops</th>
-							
+
 								<th style={{ width: "100px" }}>Total Counts</th>
 							</tr>
 						</thead>
@@ -183,10 +182,8 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 									</td>
 									<td>{count.totalPicks}</td>
 									<td>{count.totalDrops}</td>
-								
-									<td>
-										{count.totalPicks + count.totalDrops }
-									</td>
+
+									<td>{count.totalPicks + count.totalDrops}</td>
 								</tr>
 							))}
 						</tbody>
@@ -199,7 +196,7 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 								<th style={{ width: "150px" }}>Date</th>
 								<th style={{ width: "150px" }}>Total Picks</th>
 								<th style={{ width: "100px" }}>Total Drops</th>
-							
+
 								<th style={{ width: "100px" }}>Total Count</th>
 							</tr>
 						</thead>
@@ -211,7 +208,7 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 										{
 											totalPicks: number;
 											totalDrops: number;
-									
+
 											totalCounts: number;
 										}
 									>
@@ -224,15 +221,15 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 										acc[dateStr] = {
 											totalPicks: 0,
 											totalDrops: 0,
-										
+
 											totalCounts: 0,
 										};
 									}
 									acc[dateStr].totalPicks += count.totalPicks;
 									acc[dateStr].totalDrops += count.totalDrops;
-								
+
 									acc[dateStr].totalCounts +=
-										count.totalPicks + count.totalDrops ;
+										count.totalPicks + count.totalDrops;
 
 									return acc;
 								}, {})
@@ -244,7 +241,7 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 									<td>{date}</td>
 									<td>{totals.totalPicks}</td>
 									<td>{totals.totalDrops}</td>
-						
+
 									<td>{totals.totalCounts}</td>
 								</tr>
 							))}
@@ -261,10 +258,7 @@ const ShuttlePageCounts: React.FC<shuttlePageCountsProps> = (props) => {
 									).toLocaleDateString();
 
 									acc[dateStr] =
-										(acc[dateStr] || 0) +
-										count.totalPicks +
-										count.totalDrops +
-						
+										(acc[dateStr] || 0) + count.totalPicks + count.totalDrops;
 
 									return acc;
 								}, {})

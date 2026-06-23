@@ -70,10 +70,7 @@ export const getShuttleFaultsAndCountsNumbers = async (days: number) => {
 		const key = count.aisle.toString() + "." + count.level.toString();
 
 		missionCounts[key] =
-			(missionCounts[key] || 0) +
-			count.totalDrops +
-			count.totalPicks +
-			
+			(missionCounts[key] || 0) + count.totalDrops + count.totalPicks;
 	}
 
 	//console.log(missionCounts);
