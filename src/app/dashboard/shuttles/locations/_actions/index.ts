@@ -73,7 +73,7 @@ export const getShuttleFaultsAndCountsNumbers = async (days: number) => {
 			(missionCounts[key] || 0) +
 			count.totalDrops +
 			count.totalPicks +
-			count.totalIATs;
+			
 	}
 
 	//console.log(missionCounts);
