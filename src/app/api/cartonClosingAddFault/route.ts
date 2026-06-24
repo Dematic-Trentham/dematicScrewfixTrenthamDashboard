@@ -52,6 +52,8 @@ export async function POST(request: Request) {
 			!requestBody.machineType ||
 			!requestBody.faultMessage
 		) {
+			console.log("Missing required fields:", requestBody);
+
 			return Response.json(
 				//send back an error message with the missing fields
 				{
@@ -61,17 +63,6 @@ export async function POST(request: Request) {
 							["line", "machineType", "faultMessage"],
 							requestBody
 						),
-				},
-				{ status: 400 }
-			);
-		}
-
-		//check if feild values are valid
-		if (timestampIsInvalid(requestBody.timestamp)) {
-			return Response.json(
-				{
-					error:
-						"Invalid timestamp format, format should be yyyy-MM-ddTHH:mm:ss.sssZ",
 				},
 				{ status: 400 }
 			);
@@ -124,7 +115,7 @@ export async function POST(request: Request) {
 		const result = await db.autoCartonFaults.create({
 			data: {
 				timestamp: timestamp,
-				line: requestBody.line,
+				line: parseInt(requestBody.line, 10),
 				machineType: requestBody.machineType,
 				faultCode: faultCode.ID,
 			},
