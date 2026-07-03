@@ -133,7 +133,11 @@ export async function POST(request: Request) {
 			);
 		} else {
 			return Response.json(
-				{ error: "Failed to add new fault" },
+				{
+					error:
+						"Failed to add new fault  " +
+						(error instanceof Error ? error.message : String(error)),
+				},
 				{ status: 500 }
 			);
 		}
