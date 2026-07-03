@@ -37,7 +37,7 @@ const MachineDetailsPage = () => {
 		| "erector"
 		| "Lidder"
 		| "iPack"
-		| "labeler"
+		| "Labeler"
 		| "barcoder";
 
 	const [totalTime, setTotalTime] = useState(60);
@@ -98,8 +98,8 @@ const MachineDetailsPage = () => {
 			} else if (machineTypeString === "iPack") {
 				machineType = "iPack";
 				setOldDB(false);
-			} else if (machineTypeString === "labeler") {
-				machineType = "labeler";
+			} else if (machineTypeString === "Labeler") {
+				machineType = "Labeler";
 				setOldDB(true);
 			} else if (machineTypeString === "barcoder") {
 				machineType = "barcoder";

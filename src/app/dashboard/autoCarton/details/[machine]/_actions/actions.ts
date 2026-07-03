@@ -9,7 +9,7 @@ type autoCartonMachineType =
 	| "erector"
 	| "Lidder"
 	| "iPack"
-	| "labeler"
+	| "Labeler"
 	| "barcoder";
 
 export async function getAutoCartonFaults(
