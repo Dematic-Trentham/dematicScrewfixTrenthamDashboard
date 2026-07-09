@@ -10,11 +10,7 @@ import {
 	shuttleFault,
 	shuttleFaultCodeLookup,
 } from "@/app/dashboard/shuttles/_types/shuttle";
-import {
-	getTeamColour,
-	getTeamColourFromDateToHTML,
-	getTeamColourFromDateToTW,
-} from "@/utils/getTeamColour";
+import { getTeamColourFromDateToTW } from "@/utils/getTeamColour";
 
 interface ShuttlePageFaultsFromThisLocationProps {
 	location: string;
