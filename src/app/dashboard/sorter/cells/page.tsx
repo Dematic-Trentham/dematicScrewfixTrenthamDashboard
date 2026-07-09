@@ -11,6 +11,7 @@ import { updateUrlParams } from "@/utils/url/params";
 import config from "@/config";
 import "react-tabs/style/react-tabs.css";
 import Loading from "@/components/visual/loading";
+import { getTeamColourFromDateToTW } from "@/utils/getTeamColour";
 
 export default function CellsPage() {
 	const router = useRouter();
@@ -259,7 +260,11 @@ export default function CellsPage() {
 									>
 										<td>{cell.cellNumber}</td>
 										<td>{cell.disabled ? "Disabled" : "Enabled"}</td>
-										<td>
+										<td
+											className={getTeamColourFromDateToTW(
+												new Date(cell.dateChanged)
+											)}
+										>
 											{new Date(cell.dateChanged).toLocaleString("en-GB", {
 												hour: "2-digit",
 												minute: "2-digit",
@@ -311,7 +316,11 @@ export default function CellsPage() {
 									>
 										<td>{entry.cellNumber}</td>
 										<td>{entry.disabled ? "Disabled" : "Enabled"}</td>
-										<td>
+										<td
+											className={getTeamColourFromDateToTW(
+												new Date(entry.dateChanged)
+											)}
+										>
 											{new Date(entry.dateChanged).toLocaleString("en-GB", {
 												hour: "2-digit",
 												minute: "2-digit",

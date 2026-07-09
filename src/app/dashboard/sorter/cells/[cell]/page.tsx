@@ -10,6 +10,7 @@ import { getAllCells } from "../_actions/actions";
 import { getCellHistory } from "./_actions/actions";
 
 import PanelTop from "@/components/panels/panelTop";
+import { getTeamColourFromDateToTW } from "@/utils/getTeamColour";
 
 export default function ShuttlePage() {
 	const params = useParams<{ cell: string }>();
@@ -119,7 +120,11 @@ export default function ShuttlePage() {
 				<tbody>
 					{cellHistory.map((history) => (
 						<tr key={history.id}>
-							<td>
+							<td
+								className={getTeamColourFromDateToTW(
+									new Date(history.dateChanged)
+								)}
+							>
 								{new Date(history.dateChanged).toLocaleString("en-GB", {
 									hour: "2-digit",
 									minute: "2-digit",

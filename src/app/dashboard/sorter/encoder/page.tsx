@@ -10,6 +10,7 @@ import PanelTop from "@/components/panels/panelTop";
 import { changeDateToReadable } from "@/utils/changeDateToReadable";
 import "react-tabs/style/react-tabs.css";
 import Loading from "@/components/visual/loading";
+import { getTeamColourFromDateToTW } from "@/utils/getTeamColour";
 
 const EncoderDashboard: React.FC = () => {
 	const router = useRouter();
@@ -128,7 +129,13 @@ const EncoderDashboard: React.FC = () => {
 						<tbody>
 							{cells.map((cell) => (
 								<tr key={cell.id}>
-									<td>{changeDateToReadable(cell.createdAt)}</td>
+									<td
+										className={getTeamColourFromDateToTW(
+											new Date(cell.createdAt)
+										)}
+									>
+										{changeDateToReadable(cell.createdAt)}
+									</td>
 									<td>{cell.cell}</td>
 									<td>{cell.countPerHour}</td>
 								</tr>
@@ -148,7 +155,13 @@ const EncoderDashboard: React.FC = () => {
 						<tbody>
 							{photoCells.map((cell) => (
 								<tr key={cell.id}>
-									<td>{changeDateToReadable(cell.createdAt)}</td>
+									<td
+										className={getTeamColourFromDateToTW(
+											new Date(cell.createdAt)
+										)}
+									>
+										{changeDateToReadable(cell.createdAt)}
+									</td>
 									<td>{cell.photoCell}</td>
 									<td>{cell.countPerHour}</td>
 								</tr>

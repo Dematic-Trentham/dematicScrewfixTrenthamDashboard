@@ -10,6 +10,7 @@ import {
 	shuttleFault,
 	shuttleFaultCodeLookup,
 } from "@/app/dashboard/shuttles/_types/shuttle";
+import { getTeamColourFromDateToTW } from "@/utils/getTeamColour";
 
 interface ShuttlePageFaultsFromThisLocationProps {
 	location: string;
@@ -245,7 +246,9 @@ function makeFaultRow(
 				key={log.ID}
 				className="border border-black bg-blue-200 text-center hover:bg-blue-400"
 			>
-				<td>{log.timestamp.toLocaleString()}</td>
+				<td className={getTeamColourFromDateToTW(fault.timestamp)}>
+					{log.timestamp.toLocaleString()}
+				</td>
 				<td>Shuttle Swapped </td>
 				<td>{`From ${log.oldShuttleID}`}</td>
 				<td>{`To ${log.newShuttleID}`}</td>
@@ -258,9 +261,11 @@ function makeFaultRow(
 		return (
 			<tr
 				key={fault.ID}
-				className="border border-black text-center hover:bg-yellow-200"
+				className={"border border-black text-center hover:bg-yellow-200"}
 			>
-				<td>{fault.timestamp.toLocaleString()}</td>
+				<td className={getTeamColourFromDateToTW(fault.timestamp)}>
+					{fault.timestamp.toLocaleString()}
+				</td>
 				<td>{fault.resolvedTimestamp?.toLocaleString() || "Not Resolved"}</td>
 				<td>
 					{fault.resolvedTimestamp
