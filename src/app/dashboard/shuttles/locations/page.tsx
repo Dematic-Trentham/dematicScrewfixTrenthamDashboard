@@ -4,6 +4,7 @@ import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { DndContext } from "@dnd-kit/core";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 import { shuttleLocation, shuttleLocationEnum } from "../_types/shuttle";
 
@@ -600,6 +601,11 @@ export default function Home() {
 					</DropColumn>
 				</div>
 			</DndContext>
+			<Link className="text-white" href={"/dashboard/shuttles/locations/moves"}>
+				<button className="mt-2 rounded bg-blue-500 p-2 hover:bg-blue-700">
+					View Shuttle Moves
+				</button>
+			</Link>
 		</PanelTop>
 	);
 
