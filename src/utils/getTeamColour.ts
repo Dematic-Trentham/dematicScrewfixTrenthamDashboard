@@ -46,7 +46,7 @@ export const getTeamColourFromDateToTW = (date: Date): string => {
 	} else if (cyclePosition < 12) {
 		// 28-04 to 01-05
 		team =
-			hourOfDay >= 7 && hourOfDay < 19 ? TeamColours.GREEN : TeamColours.BLUE;
+			hourOfDay >= 7 && hourOfDay < 19 ? TeamColours.BLUE : TeamColours.GREEN;
 	} else {
 		// 02-05 to 05-05
 		team =
