@@ -41,6 +41,7 @@ const CartonClosingPage: React.FC = () => {
 					const endTime = performance.now();
 
 					console.log(`Fetch data took ${endTime - startTime} milliseconds.`);
+					console.log(data);
 				}
 			);
 		}

@@ -36,38 +36,47 @@ const CartonClosingComponent: React.FC<CartonClosingComponentProps> = ({
 		data[lineNumber]["Lidder"] = { faults: [], timeStamp: new Date() };
 	}
 
-	if (!dataold[lineNumber]["Labeler"] && haslabeler) {
-		dataold[lineNumber]["Labeler"] = { faults: [], timeStamp: new Date() };
+	if (!data[lineNumber]["addressLabeler"] && haslabeler) {
+		data[lineNumber]["addressLabeler"] = {
+			faults: [],
+			timeStamp: new Date(),
+		};
 	}
 
 	return (
 		<div className="flex w-96 flex-col">
 			<p className="self-center text-4xl">Line {lineNumber}</p>
-			<div className="flex flex-col">
-				{hasiPack && (
-					<CCPanel
-						faults={data[lineNumber]["iPack"] || []}
-						name="iPack"
-						onlyBoxes={onlyBoxes}
-						onClickLink={`/dashboard/autoCarton/details/iPack${lineNumber}?returnURL=cartonClosing&timeRange=${timeRange}`}
-					/>
-				)}
-				{hasLidder && (
-					<CCPanel
-						faults={data[lineNumber]["Lidder"] || []}
-						name="Lidder"
-						onlyBoxes={onlyBoxes}
-						onClickLink={`/dashboard/autoCarton/details/lidder${lineNumber}?returnURL=cartonClosing&timeRange=${timeRange}`}
-					/>
-				)}
-				{haslabeler && (
-					<CCPanel
-						faults={dataold[lineNumber]["Labeler"] || []}
-						name="Labeler"
-						onlyBoxes={onlyBoxes}
-						onClickLink={`/dashboard/autoCarton/details/labeler${lineNumber}?returnURL=cartonClosing&timeRange=${timeRange}`}
-					/>
-				)}
+
+			<div
+				className={`flex flex-col ${"justify-center"} gap-4`}
+				style={{ height: "100%" }}
+			>
+				<div className="flex flex-col">
+					{hasiPack && (
+						<CCPanel
+							faults={data[lineNumber]["iPack"] || []}
+							name="iPack"
+							onlyBoxes={onlyBoxes}
+							onClickLink={`/dashboard/autoCarton/details/iPack${lineNumber}?returnURL=cartonClosing&timeRange=${timeRange}`}
+						/>
+					)}
+					{hasLidder && (
+						<CCPanel
+							faults={data[lineNumber]["Lidder"] || []}
+							name="Lidder"
+							onlyBoxes={onlyBoxes}
+							onClickLink={`/dashboard/autoCarton/details/lidder${lineNumber}?returnURL=cartonClosing&timeRange=${timeRange}`}
+						/>
+					)}
+					{haslabeler && (
+						<CCPanel
+							faults={data[lineNumber]["addressLabeler"] || []}
+							name="Labeler"
+							onlyBoxes={onlyBoxes}
+							onClickLink={`/dashboard/autoCarton/details/addressLabeler${lineNumber}?returnURL=cartonClosing&timeRange=${timeRange}`}
+						/>
+					)}
+				</div>
 			</div>
 		</div>
 	);
