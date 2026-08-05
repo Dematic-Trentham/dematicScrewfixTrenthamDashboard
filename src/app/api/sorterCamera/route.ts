@@ -1,5 +1,5 @@
-import db from "@/db/db";
-import { checkObjectForKeysAndTypes } from "@/utils/findMissingParam.js";
+import db from "../../../db/db";
+import { checkObjectForKeysAndTypes } from "../../../utils/findMissingParam.js";
 
 const testingMode = process.env.TESTING_MODE === "true";
 
