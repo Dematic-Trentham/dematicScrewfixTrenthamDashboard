@@ -86,11 +86,29 @@ export async function POST(request: Request) {
 	}
 }
 
-export async function GET() {
+export async function GET(request: Request) {
 	try {
+		//if we have a query parameter called cellNumber, then filter the sorter camera positions by cellNumber
+		const url = new URL(request.url);
+		const cellNumber = url.searchParams.get("cellNumber");
+
+		let cacheForSorterCameraPositionsTemp: SorterCameraPositionType[] = [];
+
+		if (cellNumber) {
+			cacheForSorterCameraPositionsTemp = cacheForSorterCameraPositions.filter(
+				(position) => position.cellNumber === Number(cellNumber)
+			);
+		} else {
+			cacheForSorterCameraPositionsTemp = cacheForSorterCameraPositions;
+		}
+
 		//return the sorter camera positions from the in memory cache
 		return new Response(
-			JSON.stringify(cacheForSorterCameraPositions, null, 2),
+			JSON.stringify(
+				cacheForSorterCameraPositionsTemp ?? cacheForSorterCameraPositions,
+				null,
+				2
+			),
 			{
 				status: 200,
 			}
