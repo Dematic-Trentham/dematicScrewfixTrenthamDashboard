@@ -47,6 +47,7 @@ export async function POST(request: Request) {
 				status: 400,
 			});
 		}
+		console.log(requestBody);
 
 		//if the request body is valid, add the sorter camera position to the in memory cache
 		cacheForSorterCameraPositions.push(requestBody);
