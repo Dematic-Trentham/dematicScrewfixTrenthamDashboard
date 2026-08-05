@@ -43,9 +43,25 @@ export async function POST(request: Request) {
 			typeof requestBody.height !== "number" ||
 			typeof requestBody.confidence !== "number"
 		) {
-			return new Response("Bad Request: Invalid request body", {
-				status: 400,
-			});
+			return new Response(
+				"Bad Request: Invalid request body missing " +
+					[
+						!requestBody.hasOwnProperty("date") ? "date" : null,
+						!requestBody.hasOwnProperty("cellNumber") ? "cellNumber" : null,
+						!requestBody.hasOwnProperty("ulType") ? "ulType" : null,
+						!requestBody.hasOwnProperty("xPosition") ? "xPosition" : null,
+						!requestBody.hasOwnProperty("yPosition") ? "yPosition" : null,
+						!requestBody.hasOwnProperty("rotation") ? "rotation" : null,
+						!requestBody.hasOwnProperty("width") ? "width" : null,
+						!requestBody.hasOwnProperty("height") ? "height" : null,
+						!requestBody.hasOwnProperty("confidence") ? "confidence" : null,
+					]
+						.filter((key) => key !== null)
+						.join(", "),
+				{
+					status: 400,
+				}
+			);
 		}
 		console.log(requestBody);
 
