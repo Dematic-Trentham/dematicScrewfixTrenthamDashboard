@@ -79,9 +79,12 @@ export async function POST(request: Request) {
 export async function GET() {
 	try {
 		//return the sorter camera positions from the in memory cache
-		return new Response(JSON.stringify(cacheForSorterCameraPositions), {
-			status: 200,
-		});
+		return new Response(
+			JSON.stringify(cacheForSorterCameraPositions, null, 2),
+			{
+				status: 200,
+			}
+		);
 	} catch (err) {
 		const error = err as Error;
 
