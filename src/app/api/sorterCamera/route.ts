@@ -15,7 +15,17 @@ const SorterCameraPosition = {
 	confidence: Number,
 };
 
-type SorterCameraPositionType = typeof SorterCameraPosition;
+type SorterCameraPositionType = {
+	date: string;
+	cellNumber: number;
+	ulType: string;
+	xPosition: number;
+	yPosition: number;
+	rotation: number;
+	width: number;
+	height: number;
+	confidence: number;
+};
 
 export async function POST(request: Request) {
 	try {
@@ -93,3 +103,20 @@ export async function GET() {
 		});
 	}
 }
+
+//remove sorter camera positions from the in memory cache that are older than 2 hours every 5 minutes
+setInterval(
+	() => {
+		const twoHoursAgo = Date.now() - 2 * 60 * 60 * 1000;
+
+		//remove sorter camera positions from the in memory cache that are older than 2 hours
+		for (let i = cacheForSorterCameraPositions.length - 1; i >= 0; i--) {
+			const position = cacheForSorterCameraPositions[i];
+
+			if (new Date(position.date).getTime() < twoHoursAgo) {
+				cacheForSorterCameraPositions.splice(i, 1);
+			}
+		}
+	},
+	5 * 60 * 1000
+);
