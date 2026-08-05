@@ -1,6 +1,3 @@
-import db from "../../../db/db";
-import { checkObjectForKeysAndTypes } from "../../../utils/findMissingParam.js";
-
 const testingMode = process.env.TESTING_MODE === "true";
 
 //in memory cache for the sorter camera positions mapped by cellId +timestamp
@@ -25,20 +22,30 @@ export async function POST(request: Request) {
 		//get the request body
 		const requestBody = await request.json();
 
-		const typeCheckResult = checkObjectForKeysAndTypes(
-			requestBody,
-			SorterCameraPosition
-		);
-
-		if (!typeCheckResult.failed) {
-			return new Response(
-				`Validation Error: Missing Keys: ${typeCheckResult.missingKeys?.join(
-					", "
-				)} Type Errors: ${typeCheckResult.typeErrors?.join(", ")}`,
-				{
-					status: 400,
-				}
-			);
+		//check if the request body has all the required keys and types
+		if (
+			!requestBody.hasOwnProperty("date") ||
+			!requestBody.hasOwnProperty("cellNumber") ||
+			!requestBody.hasOwnProperty("ulType") ||
+			!requestBody.hasOwnProperty("xPosition") ||
+			!requestBody.hasOwnProperty("yPosition") ||
+			!requestBody.hasOwnProperty("rotation") ||
+			!requestBody.hasOwnProperty("width") ||
+			!requestBody.hasOwnProperty("height") ||
+			!requestBody.hasOwnProperty("confidence") ||
+			typeof requestBody.date !== "string" ||
+			typeof requestBody.cellNumber !== "number" ||
+			typeof requestBody.ulType !== "string" ||
+			typeof requestBody.xPosition !== "number" ||
+			typeof requestBody.yPosition !== "number" ||
+			typeof requestBody.rotation !== "number" ||
+			typeof requestBody.width !== "number" ||
+			typeof requestBody.height !== "number" ||
+			typeof requestBody.confidence !== "number"
+		) {
+			return new Response("Bad Request: Invalid request body", {
+				status: 400,
+			});
 		}
 
 		//if the request body is valid, add the sorter camera position to the in memory cache
