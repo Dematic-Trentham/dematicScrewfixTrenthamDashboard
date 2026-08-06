@@ -116,6 +116,8 @@ export async function GET(request: Request) {
 	} catch (err) {
 		const error = err as Error;
 
+		console.error("Error in GET /api/sorterCamera:", error);
+
 		return new Response(`Internal Server Error: ${error.message}`, {
 			status: 500,
 		});
